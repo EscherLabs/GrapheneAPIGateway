@@ -24,7 +24,7 @@ class CreateModuleInstancesTable extends Migration
             $table->json('route_user_map')->nullable();
             $table->json('database_instance_map')->nullable();
             $table->timestamps();
-            $table->foreign('app_id')->references('id')->on('apps');
+            $table->foreign('module_id')->references('id')->on('modules');
             $table->foreign('environment_id')->references('id')->on('environments');
         });
     }

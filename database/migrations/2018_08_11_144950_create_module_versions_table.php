@@ -35,6 +35,6 @@ class CreateModuleVersionTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('module_version');
+        Schema::dropIfExists('module_versions');
     }
 }

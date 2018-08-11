@@ -29,6 +29,6 @@ class CreateModuleEnvironmentsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('module_environments');
+        Schema::dropIfExists('environments');
     }
 }
