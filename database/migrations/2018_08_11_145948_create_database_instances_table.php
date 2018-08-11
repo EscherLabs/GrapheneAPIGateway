@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateScenariosTable extends Migration
+class CreateDatabaseInstancesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,15 @@ class CreateScenariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('scenarios', function (Blueprint $table) {
+        Schema::create('database_instances', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
-            $table->json('scenario')->nullable();
+            $table->integer('database_id')->unsigned()->index();
+            $table->json('config')->nullable();
             $table->timestamps();
+            $table->foreign('database_id')->references('id')->on('databases');
         });
+        
     }
 
     /**
@@ -28,6 +31,6 @@ class CreateScenariosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('scenarios');
+        Schema::dropIfExists('database_instances');
     }
 }

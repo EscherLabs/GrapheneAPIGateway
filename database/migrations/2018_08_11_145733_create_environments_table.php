@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTeamScenariosTable extends Migration
+class CreateModuleEnvironmentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,12 +13,12 @@ class CreateTeamScenariosTable extends Migration
      */
     public function up()
     {
-        Schema::create('team_scenarios', function (Blueprint $table) {
+        Schema::create('environments', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('team_id')->unsigned()->index();
-            $table->json('scenario')->nullable();
-            $table->integer('user_id')->unsigned()->index();
+            $table->string('domain')->unique();
+            $table->string('name')->nullalble()->default(null);
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 
@@ -29,6 +29,6 @@ class CreateTeamScenariosTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('team_scenarios');
+        Schema::dropIfExists('module_environments');
     }
 }

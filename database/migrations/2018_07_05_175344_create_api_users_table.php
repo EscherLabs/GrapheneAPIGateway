@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAssetsTable extends Migration
+class CreateUsersTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateAssetsTable extends Migration
      */
     public function up()
     {
-        Schema::create('assets', function (Blueprint $table) {
+        Schema::create('api_users', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->enum('type',['image', 'youtube','link'])->default('link');
+            $table->string('app_name')->nullable()->unique()->default(null);
+            $table->string('app_secret')->nullable();
+            $table->json('config')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateAssetsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('assets');
+        Schema::dropIfExists('users');
     }
 }

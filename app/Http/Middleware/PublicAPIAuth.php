@@ -21,9 +21,8 @@ class PublicAPIAuth
         if ($request->header('PHP_AUTH_USER', null) && $request->header('PHP_AUTH_PW', null)) {
             $username = $request->header('PHP_AUTH_USER');
             $password = $request->header('PHP_AUTH_PW');
-            // $user = APIUser::where('site_id',config('app.site')->id)->
-            //     where('app_name','=',$username)->first();
-            if ($username === 'pharmacyemr' && $password === 'pharmacyemr') {
+
+            if ($username == config('app.auth.password') && $password == config('app.auth.password')) {
                 $logged_in = true;
             }
         }
