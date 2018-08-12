@@ -11,6 +11,10 @@
 |
 */
 
+$router->get('/', [function () {
+    return 'Welcome!';
+}]);
+
 $router->group(['middleware' => 'public.api.auth','prefix' => 'config_api'], function () use ($router) {
 
     //** USERS **//
