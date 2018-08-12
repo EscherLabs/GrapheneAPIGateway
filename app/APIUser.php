@@ -3,11 +3,13 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Hash;
 
 class APIUser extends Model
 {
   protected $fillable = ['app_name', 'app_secret', 'config'];
   protected $casts = ['config' => 'object'];
+  protected $table = 'api_users';
 
   public function setAppSecretAttribute($secret) {
     if ($secret !== '*****') {
