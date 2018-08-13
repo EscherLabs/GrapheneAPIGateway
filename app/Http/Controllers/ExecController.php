@@ -70,6 +70,19 @@ class ExecController extends Controller
             }
         }
 
+        /* Configure Lumen PDO Database Stuff -- Experimental*/
+        foreach($database_instances as $database_instance) {
+            if ($database_instance->database->type == 'mysql') {
+                MySQLDB::config_database($database_instance->database->name,$database_instance->config);
+                config('database.connections.'.$database_instance->database->name,[
+                    'host'      => $database_instance->config->server,
+                    'database'  => $database_instance->config->name,
+                    'username'  => $database_instance->config->user,
+                    'password'  => $database_instance->config->pass,        
+                ]);
+            }
+        }
+
         /* Evaluate Code */
         foreach($module_version->code as $code_file) {
             $prepended_code = 'use \App\Libraries\MySQLDB;'."\n".'use \App\Libraries\OracleDB;'."\n";

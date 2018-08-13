@@ -65,6 +65,11 @@ class TestModule {
         MySQLDB::connect('PharmacyEMR');
         return MySQLDB::query('select * from users');
     }
+
+    public function mysql_test2(\$args) {
+        \$connection = DB::connection('PharmacyEMR');
+        return \$connection->table('users')->get();
+    }
 }"
             ]], 
             'databases'=>[$database->id], 
@@ -100,8 +105,15 @@ class TestModule {
                     'required'=>'',
                     'optional'=>'',
                     'verb' => 'GET',
+                ],
+                [
+                    'path'=>'/mysql_test2/*',
+                    'function_name' => 'mysql_test2',
+                    'description'=>'Tests Lumen PDO Database Connection for PharmacyEMR Database',
+                    'required'=>'',
+                    'optional'=>'',
+                    'verb' => 'GET',
                 ]
-
             ],
         ]);
         $module_version->save();
