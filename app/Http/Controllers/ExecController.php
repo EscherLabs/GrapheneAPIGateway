@@ -95,6 +95,9 @@ class ExecController extends Controller
         }
 
         /* Run Code */
-        return Router::handle_route();
+        $ret = Router::handle_route();
+        if (!is_bool($ret) && !is_null($ret)) {
+            return $ret;
+        }
     }   
 }
