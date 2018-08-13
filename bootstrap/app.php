@@ -82,6 +82,11 @@ $app->routeMiddleware([
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
 
+// Only Include Oci8 ServiceProvider if Installed
+if (class_exists(Yajra\Oci8\Oci8ServiceProvider::class)) {
+    $app->register(Yajra\Oci8\Oci8ServiceProvider::class);
+}
+
 /*
 |--------------------------------------------------------------------------
 | Load The Application Routes

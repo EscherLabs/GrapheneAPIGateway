@@ -73,14 +73,24 @@ class ExecController extends Controller
         /* Configure Lumen PDO Database Stuff -- Experimental*/
         foreach($database_instances as $database_instance) {
             if ($database_instance->database->type == 'mysql') {
-                MySQLDB::config_database($database_instance->database->name,$database_instance->config);
-                config(['database.connections.'.$database_instance->database->name=>[
+                config(['database.connections.'.$database_instance->database->name =>[
                     'driver'    => 'mysql',
-                    'port'      => 3306,
-                    'host'      => $database_instance->config->server,
-                    'database'  => $database_instance->config->name,
-                    'username'  => $database_instance->config->user,
-                    'password'  => $database_instance->config->pass,
+                    'port'      => isset($database_instance->config->port)?$database_instance->config->port:3306,
+                    'host'      => isset($database_instance->config->server)?$database_instance->config->server:'',
+                    'database'  => isset($database_instance->config->name)?$database_instance->config->name:'',
+                    'username'  => isset($database_instance->config->user)?$database_instance->config->user:'',
+                    'password'  => isset($database_instance->config->pass)?$database_instance->config->pass:'',
+                ]]);
+            } else if ($database_instance->database->type == 'oracle') {
+                config(['database.connections.'.$database_instance->database->name => [
+                    'driver'        => 'oracle',
+                    'tns'           => isset($database_instance->config->tns)?$database_instance->config->tns:'',
+                    'port'          => isset($database_instance->config->port)?$database_instance->config->port:1521,
+                    'username'      => isset($database_instance->config->user)?$database_instance->config->user:'',
+                    'password'      => isset($database_instance->config->pass)?$database_instance->config->pass:'',
+                    'charset'       => isset($database_instance->config->charset)?$database_instance->config->charset:'AL32UTF8',
+                    'host'          => isset($database_instance->config->server)?$database_instance->config->server:'',
+                    'database'      => isset($database_instance->config->name)?$database_instance->config->name:'',
                 ]]);
             }
         }
