@@ -25,13 +25,18 @@ class DatabaseSeeder extends Seeder
         $api_user3->save();
 
 
-        $database = new \App\Database(['name'=>'banner']);
+        $database = new \App\Database(['name'=>'PharmacyEMR','type'=>'mysql']);
         $database->save();
 
         $database_instance = new \App\DatabaseInstance([
-            'name'=>'bantmp',
+            'name'=>'local_dev',
             'database_id'=>$database->id,
-            'config'=>[],
+            'config'=>[
+                'server' => '127.0.0.1',
+                'user' => 'pharmacyemr',
+                'pass' => 'pharmacyemr',
+                'name' => 'PharmacyEMR',
+            ],
         ]);
         $database_instance->save();
 
@@ -56,9 +61,14 @@ class TestModule {
     public function echo(\$args) {
         return ['args'=>\$args];
     }
+
+    public function mysql_test(\$args) {
+        MySQLDB::connect('PharmacyEMR');
+        return MySQLDB::query('select * from users');
+    }
 }"
             ]], 
-            'databases'=>[$database->id], 
+            'databases'=>[$database->name], 
             'routes'=>[
                 [
                     'path'=>'/hello_world/*',
@@ -83,7 +93,16 @@ class TestModule {
                     'required'=>'',
                     'optional'=>'',
                     'verb' => 'GET',
+                ],
+                [
+                    'path'=>'/mysql_test/*',
+                    'function_name' => 'mysql_test',
+                    'description'=>'Tests Database Connection for PharmacyEMR Database',
+                    'required'=>'',
+                    'optional'=>'',
+                    'verb' => 'GET',
                 ]
+
             ],
         ]);
         $module_version->save();
@@ -111,7 +130,7 @@ class TestModule {
             ],
             'database_instance_map'=>[
                 [
-                    'database'=>$database->id,
+                    'database'=>$database->name,
                     'database_instance'=>$database_instance->id,
                 ]   
             ]

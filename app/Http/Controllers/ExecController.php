@@ -6,7 +6,10 @@ use \App\Module;
 use \App\ModuleInstance;
 use \App\ModuleVersion;
 use \App\APIUser;
+use \App\DatabaseInstance;
 use \App\Libraries\Router;
+use \App\Libraries\MySQLDB;
+use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
 
 class ExecController extends Controller
@@ -38,6 +41,9 @@ class ExecController extends Controller
                 $extra
             );
         }
+
+        /* Fetch and Enforce Permissions for this Module Instance & Route */
+        $user_id_arr = [];
         foreach($module_instance->route_user_map as $route_user_map_index => $route_user) {
             $user_id_arr[] = $route_user->api_user;
             $user_to_routes[$route_user->api_user][] = '/'.$slug.$route_user->route;
@@ -47,11 +53,30 @@ class ExecController extends Controller
         foreach($relevant_users as $user) {
             $users_arr[$user->app_name] = ['user'=>$user, 'pass'=>$user->app_secret,'ips'=>[''],'routes'=>$user_to_routes[$user->id]];
         }
+        ValidateUser::assert_valid_user($users_arr); // Bail if user is invalid!
 
-        ValidateUser::assert_valid_user($users_arr);
-        foreach($module_version->code as $code_file) {
-            eval($code_file->content);
+        /* Fetch and Configure Database for this Module Instance */
+        $database_instance_arr = [];
+        foreach($module_instance->database_instance_map as $database_map_index => $database_map) {
+            $database_instance_arr[] = $database_map->database_instance;
         }
+        $database_instances = DatabaseInstance::whereIn('id',$database_instance_arr)->with('database')->get();
+        $databases_config = [];
+        foreach($database_instances as $database_instance) {
+            if ($database_instance->database->type == 'mysql') {
+                MySQLDB::config_database($database_instance->database->name,$database_instance->config);
+            } else if ($database_instance->database->type == 'oracle') {
+                OracleDB::config_database($database_instance->database->name,$database_instance->config);
+            }
+        }
+
+        /* Evaluate Code */
+        foreach($module_version->code as $code_file) {
+            $prepended_code = 'use \App\Libraries\MySQLDB;'."\n".'use \App\Libraries\OracleDB;'."\n";
+            eval($prepended_code.$code_file->content);
+        }
+
+        /* Run Code */
         Router::handle_route();
     }   
 }

@@ -15,7 +15,7 @@ class CreateDatabasesTable extends Migration
     {
         Schema::create('databases', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
+            $table->string('name')->unique()->index();
             $table->enum('type',['oracle','mysql'])->default('mysql');
             $table->timestamps();
         });
