@@ -24,7 +24,6 @@ class DatabaseSeeder extends Seeder
         $api_user3->app_secret = 'test3';
         $api_user3->save();
 
-
         $database = new \App\Database(['name'=>'PharmacyEMR','type'=>'mysql']);
         $database->save();
 
@@ -68,7 +67,7 @@ class TestModule {
     }
 }"
             ]], 
-            'databases'=>[$database->name], 
+            'databases'=>[$database->id], 
             'routes'=>[
                 [
                     'path'=>'/hello_world/*',
@@ -130,7 +129,7 @@ class TestModule {
             ],
             'database_instance_map'=>[
                 [
-                    'database'=>$database->name,
+                    'database'=>$database->id,
                     'database_instance'=>$database_instance->id,
                 ]   
             ]
