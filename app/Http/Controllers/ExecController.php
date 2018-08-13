@@ -74,22 +74,27 @@ class ExecController extends Controller
         foreach($database_instances as $database_instance) {
             if ($database_instance->database->type == 'mysql') {
                 MySQLDB::config_database($database_instance->database->name,$database_instance->config);
-                config('database.connections.'.$database_instance->database->name,[
+                config(['database.connections.'.$database_instance->database->name=>[
+                    'driver'    => 'mysql',
+                    'port'      => 3306,
                     'host'      => $database_instance->config->server,
                     'database'  => $database_instance->config->name,
                     'username'  => $database_instance->config->user,
-                    'password'  => $database_instance->config->pass,        
-                ]);
+                    'password'  => $database_instance->config->pass,
+                ]]);
             }
         }
 
         /* Evaluate Code */
         foreach($module_version->code as $code_file) {
-            $prepended_code = 'use \App\Libraries\MySQLDB;'."\n".'use \App\Libraries\OracleDB;'."\n";
+            $prepended_code = 
+                'use \App\Libraries\MySQLDB;'."\n".
+                'use \App\Libraries\OracleDB;'."\n".
+                'use Illuminate\Support\Facades\DB;'."\n";
             eval($prepended_code.$code_file->content);
         }
 
         /* Run Code */
-        Router::handle_route();
+        return Router::handle_route();
     }   
 }

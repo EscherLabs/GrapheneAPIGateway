@@ -195,7 +195,8 @@ class Router
             if (strlen($output)) {
               echo $output;
             } else if (isset($return)){
-              PrintData::JSON($return);
+              return $return;
+              // PrintData::JSON($return);
             }
             return true;
           }
