@@ -17,7 +17,6 @@ class CreateApiUsersTable extends Migration
             $table->increments('id');
             $table->string('app_name')->nullable()->unique()->default(null);
             $table->string('app_secret')->nullable();
-            $table->json('config')->nullable();
             $table->timestamps();
         });
     }

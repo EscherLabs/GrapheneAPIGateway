@@ -15,14 +15,16 @@ $router->get('/', [function () {
     return 'Welcome!';
 }]);
 
-$router->group(['middleware' => 'public.api.auth','prefix' => 'config_api'], function () use ($router) {
-
-    //** USERS **//
-    $router->get('/users',['uses'=>'UserController@browse']);
-    $router->get('/users/{user_id}',['uses'=>'UserController@read']);
-    $router->put('/users/{user_id}',['uses'=>'UserController@edit']);
-    $router->post('/users',['uses'=>'UserController@add']);
-    $router->delete('/users/{user_id}',['uses'=>'UserController@delete']);
+$router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function () use ($router) {
+    $router->get('/api_users',['uses'=>'APIUsersController@browse']);
+    $router->get('/environments',['uses'=>'EnvironmentsController@browse']);
+    $router->get('/modules',['uses'=>'ModulesController@browse']);
+    $router->get('/module_versions',['uses'=>'ModuleVersionsController@browse']);
+    $router->get('/module_instances',['uses'=>'ModuleInstancesController@browse']);
+    $router->get('/module_instances/{module_instance_id}',['uses'=>'ModuleInstancesController@read']);
+    $router->get('/databases',['uses'=>'DatabasesController@browse']);
+    $router->get('/database_instances',['uses'=>'DatabaseInstancesController@browse']);
+    $router->get('/database_instances/{database_instance_id}',['uses'=>'DatabaseInstancesController@read']);
 });
 
 $router->get('/{slug}{any:.*}', ['uses'=>'ExecController@exec']);
