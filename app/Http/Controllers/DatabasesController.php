@@ -19,7 +19,7 @@ class DatabasesController extends Controller
         if (!is_null($database)) {
             return $database;
         } else {
-            response('database not found', 404);
+            return response('database not found', 404);
         }
     }
 

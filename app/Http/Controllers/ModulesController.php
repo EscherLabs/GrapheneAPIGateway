@@ -19,7 +19,7 @@ class ModulesController extends Controller
         if (!is_null($module)) {
             return $module;
         } else {
-            response('module not found', 404);
+            return response('module not found', 404);
         }
     }
 

@@ -19,7 +19,7 @@ class EnvironmentsController extends Controller
         if (!is_null($environment)) {
             return $environment;
         } else {
-            response('database not found', 404);
+            return response('database not found', 404);
         }
     }
 

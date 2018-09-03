@@ -19,7 +19,7 @@ class APIUsersController extends Controller
         if (!is_null($apiuser)) {
             return $apiuser;
         } else {
-            response('apiuser not found', 404);
+            return response('apiuser not found', 404);
         }
     }
 

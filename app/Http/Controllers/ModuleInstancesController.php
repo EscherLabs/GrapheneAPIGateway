@@ -20,7 +20,7 @@ class ModuleInstancesController extends Controller
         if (!is_null($module_instance)) {
             return $module_instance;
         } else {
-            response('module_instance not found', 404);
+            return response('module_instance not found', 404);
         }
     }   
 

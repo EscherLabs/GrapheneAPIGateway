@@ -19,7 +19,7 @@ class ModuleVersionsController extends Controller
         if (!is_null($module_version)) {
             return $module_version;
         } else {
-            response('module_version not found', 404);
+            return response('module_version not found', 404);
         }
     }
 

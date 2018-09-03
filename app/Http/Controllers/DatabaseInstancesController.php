@@ -19,7 +19,7 @@ class DatabaseInstancesController extends Controller
         if (!is_null($database_instance)) {
             return $database_instance;
         } else {
-            response('database_instance not found', 404);
+            return response('database_instance not found', 404);
         }
     }  
 
