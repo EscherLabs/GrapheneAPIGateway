@@ -12,4 +12,36 @@ class DatabasesController extends Controller
     public function browse() {
         return Database::all();
     }   
+
+    public function read($database_id)
+    {
+        $database = Database::where('id',$database_id)->first();
+        if (!is_null($database)) {
+            return $database;
+        } else {
+            response('database not found', 404);
+        }
+    }
+
+    public function edit(Request $request, $database_id)
+    {
+        $database = Database::where('id',$database_id)->first();
+        $database->update($request->all());
+        return $database;
+    }
+
+    public function add(Request $request)
+    {
+        $database = new Database($request->all());
+        $database->save();
+        return $database;
+    }
+
+    public function delete($database_id)
+    {
+        if ( Database::where('id',$database_id)->delete() ) {
+            return [true];
+        }
+    }
+
 }
