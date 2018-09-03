@@ -26,8 +26,13 @@ class DatabaseInstancesController extends Controller
     public function edit(Request $request, $database_instance_id)
     {
         $database_instance = DatabaseInstance::where('id',$database_instance_id)->first();
-        $database_instance->update($request->all());
-        return $database_instance;
+        if (!is_null($database_instance)) {
+            $database_instance->update($request->all());
+            return $database_instance;
+        } else {
+            return response('database_instance not found', 404);
+        }
+
     }
 
     public function add(Request $request)

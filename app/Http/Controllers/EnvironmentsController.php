@@ -19,15 +19,19 @@ class EnvironmentsController extends Controller
         if (!is_null($environment)) {
             return $environment;
         } else {
-            return response('database not found', 404);
+            return response('environment not found', 404);
         }
     }
 
     public function edit(Request $request, $environment_id)
     {
         $environment = Environment::where('id',$environment_id)->first();
-        $environment->update($request->all());
-        return $environment;
+        if (!is_null($environment)) {
+            $environment->update($request->all());
+            return $environment;
+        } else {
+            return response('environment not found', 404);
+        }
     }
 
     public function add(Request $request)

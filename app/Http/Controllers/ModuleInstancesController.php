@@ -27,8 +27,12 @@ class ModuleInstancesController extends Controller
     public function edit(Request $request, $module_instance_id)
     {
         $module_instance = ModuleInstance::where('id',$module_instance_id)->first();
-        $module_instance->update($request->all());
-        return $module_instance;
+        if (!is_null($module_instance)) {
+            $module_instance->update($request->all());
+            return $module_instance;
+        } else {
+            return response('module_instance not found', 404);
+        }
     }
 
     public function add(Request $request)

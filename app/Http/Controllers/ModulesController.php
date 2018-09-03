@@ -26,8 +26,12 @@ class ModulesController extends Controller
     public function edit(Request $request, $module_id)
     {
         $module = Module::where('id',$module_id)->first();
-        $module->update($request->all());
-        return $module;
+        if (!is_null($module)) {
+            $module->update($request->all());
+            return $module;
+        } else {
+            return response('module not found', 404);
+        }
     }
 
     public function add(Request $request)

@@ -26,8 +26,12 @@ class DatabasesController extends Controller
     public function edit(Request $request, $database_id)
     {
         $database = Database::where('id',$database_id)->first();
-        $database->update($request->all());
-        return $database;
+        if (!is_null($database)) {
+            $database->update($request->all());
+            return $database;
+        } else {
+            return response('database not found', 404);
+        }
     }
 
     public function add(Request $request)

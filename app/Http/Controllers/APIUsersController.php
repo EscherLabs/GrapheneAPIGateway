@@ -26,8 +26,12 @@ class APIUsersController extends Controller
     public function edit(Request $request, $apiuser_id)
     {
         $apiuser = APIUser::where('id',$apiuser_id)->first();
-        $apiuser->update($request->all());
-        return $apiuser;
+        if (!is_null($apiuser)) {
+            $apiuser->update($request->all());
+            return $apiuser;
+        } else {
+            return response('apiuser not found', 404);
+        }
     }
 
     public function add(Request $request)

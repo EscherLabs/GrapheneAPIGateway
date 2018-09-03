@@ -26,8 +26,12 @@ class ModuleVersionsController extends Controller
     public function edit(Request $request, $module_version_id)
     {
         $module_version = ModuleVersion::where('id',$module_version_id)->first();
-        $module_version->update($request->all());
-        return $module_version;
+        if (!is_null($module_version)) {
+            $module_version->update($request->all());
+            return $module_version;
+        } else {
+            return response('module_version not found', 404);
+        }
     }
 
     public function add(Request $request)
