@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use \App\Database;
+use Illuminate\Http\Request;
 
 class DatabasesController extends Controller
 {

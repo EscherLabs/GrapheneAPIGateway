@@ -11,6 +11,7 @@ use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
+use Illuminate\Http\Request;
 
 class ExecController extends Controller
 {

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use \App\APIUser;
+use Illuminate\Http\Request;
 
 class APIUsersController extends Controller
 {

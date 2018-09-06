@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use \App\Environment;
+use Illuminate\Http\Request;
 
 class EnvironmentsController extends Controller
 {

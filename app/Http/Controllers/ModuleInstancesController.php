@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use \App\ModuleInstance;
+use Illuminate\Http\Request;
 
 class ModuleInstancesController extends Controller
 {
