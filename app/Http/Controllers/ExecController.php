@@ -24,21 +24,26 @@ class ExecController extends Controller
         if (is_null($module_instance)) {
             abort(404);
         }
-        // return $module_instance;
         $module_version = ModuleVersion::where('id',$module_instance->module_version_id)->first();
         foreach($module_version->routes as $route_index =>$route) {
-            $required_params = explode(',',$route->required);
-            $optional_params = explode(',',$route->optional);
             $extra = [];
             if (isset($route->verb)) {$extra['verb']=$route->verb;}
-            if (count($required_params)>0 && $required_params[0]!='') {$extra['required']=$required_params;}
-            if (count($optional_params)>0 && $optional_params[0]!='') {$extra['optional']=$optional_params;}
+            if (isset($route->params)) {
+                foreach($route->params as $param) {
+                    if ($param->required == true || $param->required == 'true') {
+                        $extra['required'][]=$param->name;
+                    } else {
+                        $extra['optional'][]=$param->name;
+                    }
+                }
+            }
+            $description = isset($route->description)?$route->description:'';
 
             Router::add_route(
                 '/'.$slug.$route->path, 
                 $module_instance->module->name, 
                 $route->function_name, 
-                $route->description, 
+                $description, 
                 $extra
             );
         }
