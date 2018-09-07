@@ -48,6 +48,7 @@ class DatabaseSeeder extends Seeder
             'code'=>[[
                 'name'=>'main',
                 'content'=>"
+<?php
 class TestModule {
     public function hello_world(\$args) {
         return ['message'=>'hello world!'];

@@ -104,9 +104,11 @@ class ExecController extends Controller
         /* Evaluate Code */
         foreach($module_version->code as $code_file) {
             $prepended_code = 
+                '?><?php'."\n".
                 'use \App\Libraries\MySQLDB;'."\n".
                 'use \App\Libraries\OracleDB;'."\n".
-                'use Illuminate\Support\Facades\DB;'."\n";
+                'use Illuminate\Support\Facades\DB;'."\n".
+                '?>'."\n";
             eval($prepended_code.$code_file->content);
         }
 
