@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use \App\Module;
+use \App\ModuleVersion;
 use Illuminate\Http\Request;
 
 class ModulesController extends Controller
@@ -19,6 +20,18 @@ class ModulesController extends Controller
         $module = Module::where('id',$module_id)->first();
         if (!is_null($module)) {
             return $module;
+        } else {
+            return response('module not found', 404);
+        }
+    }
+
+    public function versions($module_id)
+    {
+        $versions = ModuleVersion::select('summary','description','stable','user_id','created_at','updated_at')
+            ->orderby('updated_at')
+            ->where('module_id',$module_id)->get();
+        if (!is_null($versions)) {
+            return $versions;
         } else {
             return response('module not found', 404);
         }

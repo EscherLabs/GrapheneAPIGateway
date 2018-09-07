@@ -30,6 +30,7 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
 
     $router->get('/modules',['uses'=>'ModulesController@browse']);
     $router->get('/modules/{module_id}',['uses'=>'ModulesController@read']);
+    $router->get('/modules/{module_id}/versions',['uses'=>'ModulesController@versions']);
     $router->put('/modules/{module_id}',['uses'=>'ModulesController@edit']);
     $router->post('/modules',['uses'=>'ModulesController@add']);
     $router->delete('/modules/{module_id}',['uses'=>'ModulesController@delete']);
