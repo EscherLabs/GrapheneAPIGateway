@@ -30,9 +30,9 @@ class ExecController extends Controller
             if (isset($route->verb)) {$extra['verb']=$route->verb;}
             if (isset($route->params)) {
                 foreach($route->params as $param) {
-                    if ($param->required == true || $param->required == 'true') {
+                    if ($param->required === true || $param->required == 'true') {
                         $extra['required'][]=$param->name;
-                    } else {
+                    } else if ($param->required === false || $param->required == 'false') {
                         $extra['optional'][]=$param->name;
                     }
                 }
