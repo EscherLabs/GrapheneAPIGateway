@@ -32,6 +32,7 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
     $router->get('/services/{service_id}',['uses'=>'ServicesController@read']);
     $router->get('/services/{service_id}/versions',['uses'=>'ServicesController@versions']);
     $router->put('/services/{service_id}',['uses'=>'ServicesController@edit']);
+    $router->put('/services/{service_id}/publish',['uses'=>'ServicesController@publish']);
     $router->post('/services',['uses'=>'ServicesController@add']);
     $router->delete('/services/{service_id}',['uses'=>'ServicesController@delete']);
 
