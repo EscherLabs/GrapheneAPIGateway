@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateDatabasesTable extends Migration
+class CreateResourcesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateDatabasesTable extends Migration
      */
     public function up()
     {
-        Schema::create('databases', function (Blueprint $table) {
+        Schema::create('resources', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique()->index();
-            $table->enum('type',['oracle','mysql'])->default('mysql');
+            $table->enum('type',['oracle','mysql','constant','rest'])->default('mysql');
+            $table->json('config')->nullable();
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateDatabasesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('databases');
+        Schema::dropIfExists('resources');
     }
 }

@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use \App\Module;
-use \App\ModuleInstance;
-use \App\ModuleVersion;
+use \App\Service;
+use \App\ServiceInstance;
+use \App\ServiceVersion;
 use \App\APIUser;
-use \App\DatabaseInstance;
+use \App\Resource;
 use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
@@ -20,12 +20,12 @@ class ExecController extends Controller
     
     public function exec($slug) {
 
-        $module_instance = ModuleInstance::where('slug',$slug)->with('module')->first();
-        if (is_null($module_instance)) {
+        $service_instance = ServiceInstance::where('slug',$slug)->with('service')->first();
+        if (is_null($service_instance)) {
             abort(404);
         }
-        $module_version = ModuleVersion::where('id',$module_instance->module_version_id)->first();
-        foreach($module_version->routes as $route_index =>$route) {
+        $service_version = ServiceVersion::where('id',$service_instance->service_version_id)->first();
+        foreach($service_version->routes as $route_index =>$route) {
             $extra = [];
             if (isset($route->verb)) {$extra['verb']=$route->verb;}
             if (isset($route->params)) {
@@ -41,16 +41,16 @@ class ExecController extends Controller
 
             Router::add_route(
                 '/'.$slug.$route->path, 
-                $module_instance->module->name, 
+                $service_instance->service->name, 
                 $route->function_name, 
                 $description, 
                 $extra
             );
         }
 
-        /* Fetch and Enforce Permissions for this Module Instance & Route */
+        /* Fetch and Enforce Permissions for this Service Instance & Route */
         $user_id_arr = [];
-        foreach($module_instance->route_user_map as $route_user_map_index => $route_user) {
+        foreach($service_instance->route_user_map as $route_user_map_index => $route_user) {
             $user_id_arr[] = $route_user->api_user;
             $user_to_routes[$route_user->api_user][] = '/'.$slug.$route_user->route;
         }
@@ -61,48 +61,51 @@ class ExecController extends Controller
         }
         ValidateUser::assert_valid_user($users_arr); // Bail if user is invalid!
 
-        /* Fetch and Configure Database for this Module Instance */
-        $database_instance_arr = [];
-        foreach($module_instance->database_instance_map as $database_map_index => $database_map) {
-            $database_instance_arr[] = $database_map->database_instance;
+        /* Fetch and Configure Database for this Service Instance */
+        $resources_arr = [];
+        $resources_name_map = [];
+        foreach($service_instance->resources as $resource_index => $resource_map) {
+            $resources_arr[] = $resource_map->resource;
+            $resources_name_map[$resource_map->resource] = $resource_map->name;
         }
-        $database_instances = DatabaseInstance::whereIn('id',$database_instance_arr)->with('database')->get();
-        $databases_config = [];
-        foreach($database_instances as $database_instance) {
-            if ($database_instance->database->type == 'mysql') {
-                MySQLDB::config_database($database_instance->database->name,$database_instance->config);
-            } else if ($database_instance->database->type == 'oracle') {
-                OracleDB::config_database($database_instance->database->name,$database_instance->config);
+        $resources = Resource::whereIn('id',$resources_arr)->get();
+        foreach($resources as $resource) {
+            if ($resource->type == 'mysql') {
+                MySQLDB::config_database($resources_name_map[$resource->id],$resource->config);
+            } else if ($resource->type == 'oracle') {
+                OracleDB::config_database($resources_name_map[$resource->id],$resource->config);
+            } else if ($resource->type == 'constant') {
+                define($resources_name_map[$resource->id],$resource->config->value);
             }
         }
 
         /* Configure Lumen PDO Database Stuff -- Experimental*/
-        foreach($database_instances as $database_instance) {
-            if ($database_instance->database->type == 'mysql') {
-                config(['database.connections.'.$database_instance->database->name =>[
+        foreach($resources as $resource) {
+            if ($resource->type == 'mysql') {
+                config(['database.connections.'.$resources_name_map[$resource->id] =>[
                     'driver'    => 'mysql',
-                    'port'      => isset($database_instance->config->port)?$database_instance->config->port:3306,
-                    'host'      => isset($database_instance->config->server)?$database_instance->config->server:'',
-                    'database'  => isset($database_instance->config->name)?$database_instance->config->name:'',
-                    'username'  => isset($database_instance->config->user)?$database_instance->config->user:'',
-                    'password'  => isset($database_instance->config->pass)?$database_instance->config->pass:'',
+                    'port'      => isset($resource->config->port)?$resource->config->port:3306,
+                    'host'      => isset($resource->config->server)?$resource->config->server:'',
+                    'database'  => isset($resource->config->name)?$resource->config->name:'',
+                    'username'  => isset($resource->config->user)?$resource->config->user:'',
+                    'password'  => isset($resource->config->pass)?$resource->config->pass:'',
                 ]]);
-            } else if ($database_instance->database->type == 'oracle') {
-                config(['database.connections.'.$database_instance->database->name => [
+            } else if ($resource->type == 'oracle') {
+                config(['database.connections.'.$resources_name_map[$resource->id] => [
                     'driver'        => 'oracle',
-                    'tns'           => isset($database_instance->config->tns)?$database_instance->config->tns:'',
-                    'port'          => isset($database_instance->config->port)?$database_instance->config->port:1521,
-                    'username'      => isset($database_instance->config->user)?$database_instance->config->user:'',
-                    'password'      => isset($database_instance->config->pass)?$database_instance->config->pass:'',
-                    'charset'       => isset($database_instance->config->charset)?$database_instance->config->charset:'AL32UTF8',
-                    'host'          => isset($database_instance->config->server)?$database_instance->config->server:'',
-                    'database'      => isset($database_instance->config->name)?$database_instance->config->name:'',
+                    'tns'           => isset($resource->config->tns)?$resource->config->tns:'',
+                    'port'          => isset($resource->config->port)?$resource->config->port:1521,
+                    'username'      => isset($resource->config->user)?$resource->config->user:'',
+                    'password'      => isset($resource->config->pass)?$resource->config->pass:'',
+                    'charset'       => isset($resource->config->charset)?$resource->config->charset:'AL32UTF8',
+                    'host'          => isset($resource->config->server)?$resource->config->server:'',
+                    'database'      => isset($resource->config->name)?$resource->config->name:'',
                 ]]);
             }
         }
 
         /* Evaluate Code */
-        foreach($module_version->code as $code_file) {
+        foreach($service_version->code as $code_file) {
             $prepended_code = 
                 '?><?php'."\n".
                 'use \App\Libraries\MySQLDB;'."\n".
