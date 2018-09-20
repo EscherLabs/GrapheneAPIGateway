@@ -2,11 +2,11 @@
 
 namespace App\Http\Controllers;
 
-use \App\Module;
-use \App\ModuleInstance;
-use \App\ModuleVersion;
+use \App\Service;
+use \App\ServiceInstance;
+use \App\ServiceVersion;
 use \App\APIUser;
-use \App\DatabaseInstance;
+use \App\Resource;
 use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
@@ -22,8 +22,8 @@ class ExecController extends Controller
     public function exec($slug) {
         $exec_service = new ExecService();
 
-        $module_instance = ModuleInstance::where('slug',$slug)->with('module')->first();
-        if (is_null($module_instance)) {
+        $service_instance = ServiceInstance::where('slug',$slug)->with('service')->first();
+        if (is_null($service_instance)) {
             abort(404);
         }
         $module_version = ModuleVersion::where('id',$module_instance->module_version_id)->first();

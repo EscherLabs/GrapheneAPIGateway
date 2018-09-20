@@ -24,12 +24,9 @@ class DatabaseSeeder extends Seeder
         $api_user3->app_secret = 'test3';
         $api_user3->save();
 
-        $database = new \App\Database(['name'=>'PharmacyEMR','type'=>'mysql']);
-        $database->save();
-
-        $database_instance = new \App\DatabaseInstance([
-            'name'=>'local_dev',
-            'database_id'=>$database->id,
+        $resource = new \App\Resource([
+            'name'=>'PharmacyEMR_local',
+            'type'=>'mysql',
             'config'=>[
                 'server' => '127.0.0.1',
                 'user' => 'pharmacyemr',
@@ -37,19 +34,28 @@ class DatabaseSeeder extends Seeder
                 'name' => 'PharmacyEMR',
             ],
         ]);
-        $database_instance->save();
+        $resource->save();
 
-        $module = new \App\Module(['name'=>'TestModule','description'=>'This is a test']);
-        $module->save();
+        $resource2 = new \App\Resource([
+            'name'=>'PI',
+            'type'=>'constant',
+            'config'=>[
+                'value' => '3.14159',
+            ],
+        ]);
+        $resource2->save();
 
-        $module_version = new \App\ModuleVersion([
-            'module_id'=>$module->id, 
+        $service = new \App\Service(['name'=>'TestService','description'=>'This is a test']);
+        $service->save();
+
+        $service_version = new \App\ServiceVersion([
+            'service_id'=>$service->id, 
             'summary'=>'First Version',
             'code'=>[[
                 'name'=>'main',
                 'content'=>"
 <?php
-class TestModule {
+class TestService {
     public function hello_world(\$args) {
         return ['message'=>'hello world!'];
     }
@@ -59,6 +65,7 @@ class TestModule {
     }
 
     public function echo(\$args) {
+        \$args['pi'] = PI;
         return ['args'=>\$args];
     }
 
@@ -73,7 +80,10 @@ class TestModule {
     }
 }"
             ]], 
-            'databases'=>[$database->id], 
+            'resources'=>[
+                ['name'=>'PharmacyEMR','type'=>'mysql'],
+                ['name'=>'PI','type'=>'constant'],
+            ], 
             'routes'=>[
                 [
                     'path'=>'/hello_world/*',
@@ -112,15 +122,15 @@ class TestModule {
                 ]
             ],
         ]);
-        $module_version->save();
+        $service_version->save();
 
-        $module_instance = new \App\ModuleInstance([
-            'name'=>'New TestModule Instance',
+        $service_instance = new \App\ServiceInstance([
+            'name'=>'New TestService Instance',
             'slug'=>'test',
             'public'=>false,
-            'module_version_id'=>$module_version->id,
+            'service_version_id'=>$service_version->id,
             'environment_id'=>$environment->id,
-            'module_id'=>$module->id,
+            'service_id'=>$service->id,
             'route_user_map'=>[
                 [
                     'route'=>'/hello_world*',
@@ -135,13 +145,17 @@ class TestModule {
                     'api_user'=>$api_user3->id
                 ]
             ],
-            'database_instance_map'=>[
+            'resources'=>[
                 [
-                    'database'=>$database->id,
-                    'database_instance'=>$database_instance->id,
-                ]   
+                    'name'=>'PharmacyEMR',
+                    'resource'=>$resource->id,
+                ],
+                [
+                    'name'=>'PI',
+                    'resource'=>$resource2->id,
+                ]  
             ]
         ]);
-        $module_instance->save();
+        $service_instance->save();
     }
 }
