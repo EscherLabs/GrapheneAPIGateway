@@ -6,7 +6,7 @@ use \App\Module;
 use \App\ModuleInstance;
 use \App\ModuleVersion;
 use \App\APIUser;
-use \App\DatabaseInstance;
+use \App\Resource;
 use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
