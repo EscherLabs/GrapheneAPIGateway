@@ -4,9 +4,9 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Cron\CronExpression;
-use \App\Module;
-use \App\ModuleInstance;
-use \App\ModuleVersion;
+use \App\Service;
+use \App\ServiceInstance;
+use \App\ServiceVersion;
 use \App\APIUser;
 use \App\DatabaseInstance;
 use \App\Libraries\Router;
@@ -48,16 +48,16 @@ class Kernel extends ConsoleKernel
                     echo "do a thing!";
                     $exec_service = new ExecService();
 
-                    $module_instance = ModuleInstance::where('id',$task['service_instance_id'])->with('module')->first();
-                    if (is_null($module_instance)) {
+                    $service_instance = ServiceInstance::where('id',$task['service_instance_id'])->with('Service')->first();
+                    if (is_null($service_instance)) {
                         abort(404);
                     }
-                    $module_version = ModuleVersion::where('id',$module_instance->module_version_id)->first();
-                    $exec_service->build_routes($module_instance,$module_version,$module_instance->slug);
-                    // $users_arr = $exec_service->build_permissions($module_instance,$module_instance->slug);
+                    $service_version = ServiceVersion::where('id',$service_instance->service_version_id)->first();
+                    $exec_service->build_routes($service_instance,$service_version,$service_instance->slug);
+                    // $users_arr = $exec_service->build_permissions($service_instance,$service_instance->slug);
                     // ValidateUser::assert_valid_user($users_arr); // Bail if user is invalid!
-                    $exec_service->build_resources($module_instance);
-                    return $exec_service->eval_code($module_version);
+                    $exec_service->build_resources($service_instance);
+                    return $exec_service->eval_code($service_version);
                             }
             }
             

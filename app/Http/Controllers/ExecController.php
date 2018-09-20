@@ -26,12 +26,12 @@ class ExecController extends Controller
         if (is_null($service_instance)) {
             abort(404);
         }
-        $module_version = ModuleVersion::where('id',$module_instance->module_version_id)->first();
-        $exec_service->build_routes($module_instance,$module_version,$slug);
-        $users_arr = $exec_service->build_permissions($module_instance,$slug);
+        $service_version = ServiceVersion::where('id',$service_instance->service_version_id)->first();
+        $exec_service->build_routes($service_instance,$service_version,$slug);
+        $users_arr = $exec_service->build_permissions($service_instance,$slug);
         ValidateUser::assert_valid_user($users_arr); // Bail if user is invalid!
-        $exec_service->build_resources($module_instance);
-        return $exec_service->eval_code($module_version);
+        $exec_service->build_resources($service_instance);
+        return $exec_service->eval_code($service_version);
 
     }   
 }
