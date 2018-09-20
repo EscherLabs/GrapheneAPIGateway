@@ -15,8 +15,8 @@ use Illuminate\Http\Request;
 
 class ExecService {
 
-    public function build_routes($module_instance,$module_version,$slug) {
-        foreach($module_version->routes as $route_index =>$route) {
+    public function build_routes($service_instance,$service_version,$slug) {
+        foreach($service_version->routes as $route_index =>$route) {
             $extra = [];
             if (isset($route->verb)) {$extra['verb']=$route->verb;}
             if (isset($route->params)) {
@@ -32,7 +32,7 @@ class ExecService {
 
             Router::add_route(
                 '/'.$slug.$route->path, 
-                $module_instance->module->name, 
+                $service_instance->service->name, 
                 $route->function_name, 
                 $description, 
                 $extra
@@ -40,10 +40,10 @@ class ExecService {
         }
     } 
 
-    public function build_permissions($module_instance,$slug) {
+    public function build_permissions($service_instance,$slug) {
         /* Fetch and Enforce Permissions for this Module Instance & Route */
         $user_id_arr = [];
-        foreach($module_instance->route_user_map as $route_user_map_index => $route_user) {
+        foreach($service_instance->route_user_map as $route_user_map_index => $route_user) {
             $user_id_arr[] = $route_user->api_user;
             $user_to_routes[$route_user->api_user][] = '/'.$slug.$route_user->route;
         }
@@ -55,10 +55,10 @@ class ExecService {
         return $users_arr;
     }
 
-    public function build_resources($module_instance) {
+    public function build_resources($service_instance) {
         /* Fetch and Configure Database for this Module Instance */
         $database_instance_arr = [];
-        foreach($module_instance->database_instance_map as $database_map_index => $database_map) {
+        foreach($service_instance->database_instance_map as $database_map_index => $database_map) {
             $database_instance_arr[] = $database_map->database_instance;
         }
         $database_instances = DatabaseInstance::whereIn('id',$database_instance_arr)->with('database')->get();
@@ -97,9 +97,9 @@ class ExecService {
         }
     }
 
-    public function eval_code($module_version) {
+    public function eval_code($service_version) {
         /* Evaluate Code */
-        foreach($module_version->code as $code_file) {
+        foreach($service_version->code as $code_file) {
             $prepended_code = 
                 ''."\n".
                 'use \App\Libraries\MySQLDB;'."\n".
