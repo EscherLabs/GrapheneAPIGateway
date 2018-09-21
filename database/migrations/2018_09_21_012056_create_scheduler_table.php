@@ -15,7 +15,6 @@ class CreateSchedulerTable extends Migration
     {
         Schema::create('scheduler', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('environment_id')->unsigned()->index();
             $table->string('name')->default('');
             $table->string('cron')->default('0 0 5 31 2 ?');
             $table->integer('service_instance_id')->unsigned()->index();

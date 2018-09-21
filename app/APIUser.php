@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 
 class APIUser extends Model
 {
-  protected $fillable = ['app_name', 'app_secret', 'config'];
+  protected $fillable = ['app_name', 'app_secret', 'config','environment_id'];
   protected $casts = ['config' => 'object'];
   protected $table = 'api_users';
 
