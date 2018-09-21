@@ -16,11 +16,11 @@ class Scheduler extends Model
   public function getNextRuntimesAttribute() {
     $cron = CronExpression::factory($this->attributes['cron']);
     return [
+      $cron->getNextRunDate(null,0)->format('Y-m-d H:i:s'),
       $cron->getNextRunDate(null,1)->format('Y-m-d H:i:s'),
       $cron->getNextRunDate(null,2)->format('Y-m-d H:i:s'),
       $cron->getNextRunDate(null,3)->format('Y-m-d H:i:s'),
       $cron->getNextRunDate(null,4)->format('Y-m-d H:i:s'),
-      $cron->getNextRunDate(null,5)->format('Y-m-d H:i:s'),
     ];
   }
 
