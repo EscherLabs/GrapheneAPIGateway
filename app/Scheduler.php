@@ -9,6 +9,6 @@ class Scheduler extends Model
   protected $table = 'scheduler';
 
   protected $fillable = ['cron','service_instance_id','route'];
-  protected $casts = ['params' => 'object'];
+  protected $casts = ['args' => 'object'];
 
 }
