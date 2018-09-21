@@ -49,4 +49,33 @@ class SchedulerController extends Controller
         }
     }
 
+    public function run($scheduler_id)
+    {
+        $task = Scheduler::where('id',$scheduler_id)->first();
+        if (!is_null($task)) {
+            $exec_service = new ExecService();
+            $service_instance = ServiceInstance::where('id',$task->service_instance_id)->with('Service')->first();
+            if (is_null($service_instance)) {
+                response('service instance not found', 404);
+            }
+            $_SERVER['REQUEST_METHOD'] = $task->verb;
+            $_SERVER['REQUEST_URI'] = '/'.$service_instance->slug.$task->route;
+            $args = [];
+            foreach($task->args as $arg) {
+                $args[$arg->name] = $arg->value;
+            }
+            $_GET = $args;
+            $service_version = ServiceVersion::where('id',$service_instance->service_version_id)->first();
+            $exec_service->build_routes($service_instance,$service_version,$service_instance->slug);
+            $exec_service->build_resources($service_instance);
+            $result =  $exec_service->eval_code($service_version);
+            return $result;
+        } else {
+            return response('scheduler task not found', 404);
+        }
+    }
+
+
+
+
 }
