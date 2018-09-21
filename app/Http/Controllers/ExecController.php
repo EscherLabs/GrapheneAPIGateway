@@ -26,7 +26,7 @@ class ExecController extends Controller
         if (is_null($service_instance)) {
             abort(404);
         }
-        $service_version = $service_instace->find_version();
+        $service_version = $service_instance->find_version();
         $exec_service->build_routes($service_instance,$service_version);
         $users_arr = $exec_service->build_permissions($service_instance);
         ValidateUser::assert_valid_user($users_arr); // Bail if user is invalid!
