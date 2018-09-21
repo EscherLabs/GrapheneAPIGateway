@@ -17,6 +17,7 @@ class CreateEnvironmentsTable extends Migration
             $table->increments('id');
             $table->string('domain')->unique();
             $table->string('name')->nullalble()->default(null);
+            $table->enum('type',['dev','test','prod'])->default('dev');
             $table->timestamps();
             $table->softDeletes();
         });

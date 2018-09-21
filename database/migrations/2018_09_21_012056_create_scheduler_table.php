@@ -15,12 +15,16 @@ class CreateSchedulerTable extends Migration
     {
         Schema::create('scheduler', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('environment_id')->unsigned()->index();
             $table->string('name')->default('');
             $table->string('cron')->default('0 0 5 31 2 ?');
             $table->integer('service_instance_id')->unsigned()->index();
             $table->string('route')->nullable();
             $table->json('args')->nullable();
             $table->string('verb')->default('GET');
+            $table->dateTime('last_exec_cron')->nullable()->default(null);
+            $table->dateTime('last_exec_real')->nullable()->default(null);
+            $table->json('last_response')->nullable();
             $table->timestamps();
         });
     }
