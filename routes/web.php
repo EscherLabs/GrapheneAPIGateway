@@ -52,9 +52,15 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
     
     $router->get('/resources',['uses'=>'ResourcesController@browse']);
     $router->get('/resources/{resource_id}',['uses'=>'ResourcesController@read']);
-    $router->put('/datresourcesabases/{resource_id}',['uses'=>'ResourcesController@edit']);
+    $router->put('/resources/{resource_id}',['uses'=>'ResourcesController@edit']);
     $router->post('/resources',['uses'=>'ResourcesController@add']);
     $router->delete('/resources/{resource_id}',['uses'=>'ResourcesController@delete']);
+
+    $router->get('/scheduler',['uses'=>'SchedulerController@browse']);
+    $router->get('/scheduler/{scheduler_id}',['uses'=>'SchedulerController@read']);
+    $router->put('/scheduler/{scheduler_id}',['uses'=>'SchedulerController@edit']);
+    $router->post('/scheduler',['uses'=>'SchedulerController@add']);
+    $router->delete('/scheduler/{scheduler_id}',['uses'=>'SchedulerController@delete']);
 });
 
 $router->get('/{slug}{any:.*}', ['uses'=>'ExecController@exec']);
