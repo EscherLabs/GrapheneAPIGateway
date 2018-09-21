@@ -66,18 +66,18 @@ class ExecService {
 
         $resources = Resource::whereIn('id',$resources_arr)->get();
         foreach($resources as $resource) {
-            if ($resource->type == 'mysql') {
+            if ($resource->resource_type == 'mysql') {
                 MySQLDB::config_database($resources_name_map[$resource->id],$resource->config);
-            } else if ($resource->type == 'oracle') {
+            } else if ($resource->resource_type == 'oracle') {
                 OracleDB::config_database($resources_name_map[$resource->id],$resource->config);
-            } else if ($resource->type == 'constant') {
+            } else if ($resource->resource_type == 'constant') {
                 define($resources_name_map[$resource->id],$resource->config->value);
             }
         }
 
         /* Configure Lumen PDO Database Stuff -- Experimental*/
         foreach($resources as $resource) {
-            if ($resource->type == 'mysql') {
+            if ($resource->resource_type == 'mysql') {
                 config(['database.connections.'.$resources_name_map[$resource->id] =>[
                     'driver'    => 'mysql',
                     'port'      => isset($resource->config->port)?$resource->config->port:3306,
@@ -86,7 +86,7 @@ class ExecService {
                     'username'  => isset($resource->config->user)?$resource->config->user:'',
                     'password'  => isset($resource->config->pass)?$resource->config->pass:'',
                 ]]);
-            } else if ($resource->type == 'oracle') {
+            } else if ($resource->resource_type == 'oracle') {
                 config(['database.connections.'.$resources_name_map[$resource->id] => [
                     'driver'        => 'oracle',
                     'tns'           => isset($resource->config->tns)?$resource->config->tns:'',
