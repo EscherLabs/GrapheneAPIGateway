@@ -168,7 +168,6 @@ class TestService {
 
         $scheduler = new \App\Scheduler([
             'name'=>'Echo Every Min',
-            'environment_id' => $environment->id,
             'cron' => '* * * * *',
             'service_instance_id' => $service_instance->id,
             'route' => '/echo/',
