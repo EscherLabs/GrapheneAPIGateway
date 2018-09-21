@@ -16,7 +16,8 @@ class CreateResourcesTable extends Migration
         Schema::create('resources', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name')->unique()->index();
-            $table->enum('type',['oracle','mysql','constant','rest'])->default('mysql');
+            $table->enum('resource_type',['oracle','mysql','constant','rest'])->default('mysql');
+            $table->enum('type',['dev','test','prod'])->default('dev');
             $table->json('config')->nullable();
             $table->timestamps();
         });

@@ -18,7 +18,7 @@ class CreateServicesTable extends Migration
             $table->string('name');
             $table->string('description')->default('');
             $table->string('tags')->default('');
-            $table->integer('user_id')->unsigned()->index()->nullable()->default(null);
+            $table->string('user_id')->nullable()->unique()->default(null);
             $table->timestamps();
             $table->softDeletes();
         });

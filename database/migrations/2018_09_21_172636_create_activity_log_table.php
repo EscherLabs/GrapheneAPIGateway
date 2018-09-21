@@ -15,8 +15,9 @@ class CreateActivityLogTable extends Migration
     {
         Schema::create('activity_log', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('event');
             $table->enum('type',['dev','test','prod'])->default('dev');
-            $table->integer('user_id')->unsigned()->index()->nullable()->default(null);
+            $table->string('user_id')->nullable()->unique()->default(null);
             $table->mediumText('comment');
             $table->timestamps();
         });
