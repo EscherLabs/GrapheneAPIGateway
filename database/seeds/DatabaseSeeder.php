@@ -33,7 +33,8 @@ class DatabaseSeeder extends Seeder
 
         $resource = new \App\Resource([
             'name'=>'PharmacyEMR_local',
-            'type'=>'mysql',
+            'resource_type'=>'mysql',
+            'type'=>'dev',
             'config'=>[
                 'server' => '127.0.0.1',
                 'user' => 'pharmacyemr',
@@ -45,7 +46,8 @@ class DatabaseSeeder extends Seeder
 
         $resource2 = new \App\Resource([
             'name'=>'PI',
-            'type'=>'constant',
+            'resource_type'=>'constant',
+            'type'=>'dev',
             'config'=>[
                 'value' => '3.14159',
             ],
