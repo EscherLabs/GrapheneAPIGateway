@@ -55,6 +55,11 @@ class ServicesController extends Controller
         $service = new Service($request->all());
         $service->save();
         return $service;
+
+        $service_version = new ServiceVersion($request->all());
+        $service_version->service_id = $service->id;
+        $service_version->save();
+        return $service_version;
     }
 
     public function delete($service_id)
@@ -81,32 +86,26 @@ class ServicesController extends Controller
     }
 
     public function code(Request $request, $service_id) { 
-        $service_version = ServiceVersion::where('service_id','=',$service_id)->orderBy('created_at', 'desc')->where('stable','=',0)->first();
-        if($service_version) {
-            $post_data = Input::all();
-            if(!isset($post_data['updated_at']) && !isset($post_data['force']) ){
-                abort(403, $service_version);
-            }
+        $service_version = ServiceVersion::where('service_id','=',$service_id)->orderBy('created_at', 'desc')->first();
+        $post_data = Input::all();
+        if(!isset($post_data['updated_at']) && !isset($post_data['force']) ){
+            abort(403, $service_version);
+        }
 
-            $first = Carbon::parse($post_data['updated_at']);
-            $second = Carbon::parse($service_version->updated_at);
+        $first = Carbon::parse($post_data['updated_at']);
+        $second = Carbon::parse($service_version->updated_at);
 
-            if($service_version->stable){
-                $service_version = new ServiceVersion();
-                $service_version->service_id = $service_id;
-            }else if(!($first->gte($second) || isset($post_data['force']))){
-                abort(409, $service_version);
-            }
+        if(is_null($service_version) || $service_version->stable){
+            $service_version = new ServiceVersion();
+            $service_version->service_id = $service_id;
+        }else if(!($first->gte($second) || isset($post_data['force']))){
+            abort(409, $service_version);
+        }
 
-            $service_version->code = $request->code;
-            $service_version->user_id = null;
-            $service_version->save();
-            return $service_version;
-        } else {
-            return response('service not found', 404);
-    }
-
-
+        $service_version->code = $request->code;
+        $service_version->user_id = null;
+        $service_version->save();
+        return $service_version;
     }
 
 
