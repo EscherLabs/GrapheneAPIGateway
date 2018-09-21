@@ -50,7 +50,11 @@ class Kernel extends ConsoleKernel
                     }
                     $_SERVER['REQUEST_METHOD'] = $task->verb;
                     $_SERVER['REQUEST_URI'] = '/'.$service_instance->slug.$task->route;
-                    $_POST = $task->args;
+                    $args = [];
+                    foreach($task->args as $arg) {
+                        $args[$arg->name] = $arg->value;
+                    }
+                    $_GET = $args;
                     $service_version = ServiceVersion::where('id',$service_instance->service_version_id)->first();
                     $exec_service->build_routes($service_instance,$service_version,$service_instance->slug);
                     $exec_service->build_resources($service_instance);
