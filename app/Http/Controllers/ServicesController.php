@@ -89,7 +89,7 @@ class ServicesController extends Controller
             }
 
             $first = Carbon::parse($post_data['updated_at']);
-            $second = Carbon::parse($app_version->updated_at);
+            $second = Carbon::parse($service_version->updated_at);
 
             if($service_version->stable){
                 $service_version = new ServiceVersion();
