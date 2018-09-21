@@ -23,7 +23,8 @@ class CreateSchedulerTable extends Migration
             $table->json('args')->nullable();
             $table->string('verb')->default('GET');
             $table->dateTime('last_exec_cron')->nullable()->default(null);
-            $table->dateTime('last_exec_real')->nullable()->default(null);
+            $table->dateTime('last_exec_start')->nullable()->default(null);
+            $table->dateTime('last_exec_stop')->nullable()->default(null);
             $table->json('last_response')->nullable();
             $table->timestamps();
         });

@@ -52,7 +52,7 @@ class Kernel extends ConsoleKernel
                 $current_minute = Carbon::now()->format("Y-m-d H:i:00");
                 if (is_null(Scheduler::where('id',$task->id)->where('last_exec_cron',$current_minute)->first())) {
                     $task->last_exec_cron = $current_minute;
-                    $task->last_exec_real = Carbon::now()->format("Y-m-d H:i:s");
+                    $task->last_exec_start = Carbon::now()->format("Y-m-d H:i:s");
                     $task->update();
                     $exec_service = new ExecService();
                     $service_instance = ServiceInstance::where('id',$task->service_instance_id)->with('Service')->first();
@@ -71,6 +71,7 @@ class Kernel extends ConsoleKernel
                     $exec_service->build_resources($service_instance);
                     $result =  $exec_service->eval_code($service_version);
                     $task->last_response = $result;
+                    $task->last_exec_stop = Carbon::now()->format("Y-m-d H:i:s");
                     $task->update();
                     var_dump($result);
                 } else {
