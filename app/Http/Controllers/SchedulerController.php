@@ -76,7 +76,7 @@ class SchedulerController extends Controller
                 $args[$arg->name] = $arg->value;
             }
             $_GET = $args;
-            $service_version = $service_instace->find_version();
+            $service_version = $service_instance->find_version();
             $exec_service->build_routes($service_instance,$service_version);
             $exec_service->build_resources($service_instance);
             $result =  $exec_service->eval_code($service_version);
