@@ -11,17 +11,24 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $environment = new \App\Environment(['domain'=>'localhost:8000','name'=>'localdev']);
+        $environment = new \App\Environment([
+            'domain'=>'localhost:8000',
+            'name'=>'localdev',
+            'type'=>'dev',
+        ]);
         $environment->save();
 
         $api_user = new \App\APIUser(['app_name'=>'test']);
         $api_user->app_secret = 'test';
+        $api_user->environment_id = $environment->id;
         $api_user->save();
         $api_user2 = new \App\APIUser(['app_name'=>'test2']);
         $api_user2->app_secret = 'test2';
+        $api_user2->environment_id = $environment->id;
         $api_user2->save();
         $api_user3 = new \App\APIUser(['app_name'=>'test3']);
         $api_user3->app_secret = 'test3';
+        $api_user3->environment_id = $environment->id;
         $api_user3->save();
 
         $resource = new \App\Resource([
@@ -51,6 +58,7 @@ class DatabaseSeeder extends Seeder
         $service_version = new \App\ServiceVersion([
             'service_id'=>$service->id, 
             'summary'=>'First Version',
+            'description'=>'From DB Seed',
             'code'=>[[
                 'name'=>'main',
                 'content'=>"
@@ -157,5 +165,16 @@ class TestService {
             ]
         ]);
         $service_instance->save();
+
+        $scheduler = new \App\Scheduler([
+            'name'=>'Echo Every Min',
+            'environment_id' => $environment->id,
+            'cron' => '* * * * *',
+            'service_instance_id' => $service_instance->id,
+            'route' => '/echo/',
+            'args'=>[['name'=>'hello','value'=>'world']],
+            'verb'=>'GET',
+        ]);
+        $scheduler->save();
     }
 }
