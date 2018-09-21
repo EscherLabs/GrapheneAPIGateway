@@ -18,7 +18,7 @@ class CreateSchedulerTable extends Migration
             $table->string('cron')->unique()->index();
             $table->integer('service_instance_id')->unsigned()->index();
             $table->string('route')->nullable();
-            $table->json('config')->nullable();
+            $table->json('args')->nullable();
             $table->timestamps();
         });
     }

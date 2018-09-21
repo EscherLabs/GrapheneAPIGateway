@@ -39,6 +39,17 @@ class ServicesController extends Controller
         }
     }
 
+    public function latest_version($service_id)
+    {
+        $service_version = ServiceVersion::where('service_id','=',$service_id)->orderBy('created_at', 'desc')->first();
+        if (!is_null($service_version)) {
+            return $service_version;
+        } else {
+            return response('service has no latest version', 404);
+        }
+    }
+
+
     public function edit(Request $request, $service_id)
     {
         $service = Service::where('id',$service_id)->first();
@@ -101,8 +112,9 @@ class ServicesController extends Controller
         }else if(!($first->gte($second) || isset($post_data['force']))){
             abort(409, $service_version);
         }
-
         $service_version->code = $request->code;
+        $service_version->resources = $request->resources;
+        $service_version->routes = $request->routes;
         $service_version->user_id = null;
         $service_version->save();
         return $service_version;
