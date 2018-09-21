@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use \App\SchedulerController;
+use \App\Scheduler;
 use Illuminate\Http\Request;
 
 class SchedulerController extends Controller
@@ -11,12 +11,12 @@ class SchedulerController extends Controller
     }
     
     public function browse() {
-        return SchedulerController::all();
+        return Scheduler::all();
     }   
 
     public function read($scheduler_id)
     {
-        $scheduler = SchedulerController::where('id',$scheduler_id)->first();
+        $scheduler = Scheduler::where('id',$scheduler_id)->first();
         if (!is_null($scheduler)) {
             return $scheduler;
         } else {
@@ -26,7 +26,7 @@ class SchedulerController extends Controller
 
     public function edit(Request $request, $scheduler_id)
     {
-        $scheduler = SchedulerController::where('id',$scheduler_id)->first();
+        $scheduler = Scheduler::where('id',$scheduler_id)->first();
         if (!is_null($scheduler)) {
             $scheduler->update($request->all());
             return $scheduler;
@@ -37,14 +37,14 @@ class SchedulerController extends Controller
 
     public function add(Request $request)
     {
-        $scheduler = new SchedulerController($request->all());
+        $scheduler = new Scheduler($request->all());
         $scheduler->save();
         return $scheduler;
     }
 
     public function delete($scheduler_id)
     {
-        if ( SchedulerController::where('id',$scheduler_id)->delete() ) {
+        if ( Scheduler::where('id',$scheduler_id)->delete() ) {
             return [true];
         }
     }

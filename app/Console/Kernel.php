@@ -9,6 +9,7 @@ use \App\ServiceInstance;
 use \App\ServiceVersion;
 use \App\APIUser;
 use \App\DatabaseInstance;
+use \App\Scheduler;
 use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
@@ -42,23 +43,23 @@ class Kernel extends ConsoleKernel
             $schedule = [
                 ['cron'=>'* * * * *','service_instance_id'=>'1'],
             ];
+            $schedule = Scheduler::all();
             foreach($schedule as $task) {
-                $cron = CronExpression::factory($task['cron']);
+                $cron = CronExpression::factory($task->cron);
                 if ($cron->isDue()) {
                     echo "do a thing!";
                     $exec_service = new ExecService();
-
-                    $service_instance = ServiceInstance::where('id',$task['service_instance_id'])->with('Service')->first();
+                    $service_instance = ServiceInstance::where('id',$task->service_instance_id)->with('Service')->first();
                     if (is_null($service_instance)) {
                         abort(404);
                     }
+                    $_SERVER['REQUEST_URI'] = '/'.$service_instance->slug.'/'.$task->route;
+                    $_POST = $task->$args;
                     $service_version = ServiceVersion::where('id',$service_instance->service_version_id)->first();
                     $exec_service->build_routes($service_instance,$service_version,$service_instance->slug);
-                    // $users_arr = $exec_service->build_permissions($service_instance,$service_instance->slug);
-                    // ValidateUser::assert_valid_user($users_arr); // Bail if user is invalid!
                     $exec_service->build_resources($service_instance);
                     return $exec_service->eval_code($service_version);
-                            }
+                }
             }
             
         })->everyMinute();
