@@ -15,7 +15,7 @@ use Illuminate\Http\Request;
 
 class ExecService {
 
-    public function build_routes($service_instance,$service_version,$slug) {
+    public function build_routes($service_instance,$service_version) {
         foreach($service_version->routes as $route_index =>$route) {
             $extra = [];
             if (isset($route->verb)) {$extra['verb']=$route->verb;}
@@ -31,7 +31,7 @@ class ExecService {
             $description = isset($route->description)?$route->description:'';
 
             Router::add_route(
-                '/'.$slug.$route->path, 
+                '/'.$service_instance->slug.$route->path, 
                 $service_instance->service->name, 
                 $route->function_name, 
                 $description, 
@@ -40,12 +40,12 @@ class ExecService {
         }
     } 
 
-    public function build_permissions($service_instance,$slug) {
+    public function build_permissions($service_instance) {
         /* Fetch and Enforce Permissions for this Module Instance & Route */
         $user_id_arr = [];
         foreach($service_instance->route_user_map as $route_user_map_index => $route_user) {
             $user_id_arr[] = $route_user->api_user;
-            $user_to_routes[$route_user->api_user][] = '/'.$slug.$route_user->route;
+            $user_to_routes[$route_user->api_user][] = '/'.$service_instance->slug.$route_user->route;
         }
         $relevant_users = APIUser::whereIn('id',$user_id_arr)->get();
         $users_arr = [];

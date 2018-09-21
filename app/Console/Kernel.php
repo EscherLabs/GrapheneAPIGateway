@@ -66,8 +66,8 @@ class Kernel extends ConsoleKernel
                         $args[$arg->name] = $arg->value;
                     }
                     $_GET = $args;
-                    $service_version = ServiceVersion::where('id',$service_instance->service_version_id)->first();
-                    $exec_service->build_routes($service_instance,$service_version,$service_instance->slug);
+                    $service_version = $service_instance->find_version();
+                    $exec_service->build_routes($service_instance,$service_version);
                     $exec_service->build_resources($service_instance);
                     $result =  $exec_service->eval_code($service_version);
                     $task->last_response = $result;

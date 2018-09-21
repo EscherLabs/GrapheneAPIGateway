@@ -2,6 +2,7 @@
 
 namespace App;
 
+use App\ServiceVersion;
 use Illuminate\Database\Eloquent\Model;
 
 class ServiceInstance extends Model
@@ -18,5 +19,17 @@ class ServiceInstance extends Model
   public function environment() {
     return $this->belongsTo(Environment::class);
   }
+  public function find_version() {
+    $service_version = null;
+    if(is_null($this->service_version_id)){
+        $service_version = ServiceVersion::where('service_id','=',$this->service_id)->orderBy('created_at', 'desc')->first();
+    }else if($this->service_version_id == 0){
+        $service_version = ServiceVersion::where('service_id','=',$this->service_id)->where('stable','=',1)->orderBy('created_at', 'desc')->first();
+    }else{
+        $service_version = ServiceVersion::where('id','=',$this->service_version_id)->first();
+    }
+    return $service_version;
+  }
+
 
 }
