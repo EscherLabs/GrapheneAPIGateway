@@ -21,7 +21,7 @@ class Environment extends Model
         $activity_log = new ActivityLog([
           'event' => class_basename($model),
           'new' => $model,
-          'old' => $model->getOriginal();
+          'old' => $model->getOriginal(),
         ]);
         $activity_log->save();
       }
