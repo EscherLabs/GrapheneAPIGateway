@@ -36,7 +36,7 @@ class ServiceInstance extends Model
   {
     parent::boot();
     self::saved(function($model){
-      if (!is_null(app('request')->method)) {
+      if (!is_null(app('request')->method())) {
         $activity_log = new ActivityLog([
           'data' => $model,
           'event' => class_basename($model),
