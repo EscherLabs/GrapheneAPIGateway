@@ -22,14 +22,15 @@ class ServiceVersion extends Model
   public static function boot()
   {
     parent::boot();
-    self::saved(function($model){
-      $activity_log = new ActivityLog([
-        'data' => $model,
-        'event' => snake_case(class_basename($model)),
-      ]);
-      $activity_log->save();
+    self::updated(function($model){
+      if (!is_null(app('request')->method)) {
+        $activity_log = new ActivityLog([
+          'data' => $model,
+          'event' => class_basename($model),
+        ]);
+        $activity_log->save();
+      }
     });
   }
-
 
 }
