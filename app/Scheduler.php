@@ -33,7 +33,7 @@ class Scheduler extends Model
   {
     parent::boot();
     self::saved(function($model){
-      if (!is_null(app('request')->method())) {
+      if (!app()->runningInConsole()) {
         $activity_log = new ActivityLog([
           'data' => $model,
           'event' => class_basename($model),
