@@ -10,7 +10,7 @@ class ActivityLog extends Model
   protected $table = 'activity_log';
 
   protected $fillable = ['action','event','type','user_id','comment','data','event_id'];
-  protected $casts = ['data' => 'object'];
+  protected $casts = ['new' => 'object','old' => 'object'];
 
   public static function boot()
   {
