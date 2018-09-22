@@ -25,7 +25,6 @@ class ServiceVersion extends Model
     self::saved(function($model){
       if (!app()->runningInConsole()) {
         $activity_log = new ActivityLog([
-          'data' => $model,
           'event' => class_basename($model),
         ]);
         $activity_log->save();

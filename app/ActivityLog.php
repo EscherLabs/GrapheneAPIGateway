@@ -16,28 +16,32 @@ class ActivityLog extends Model
   {
     parent::boot();
     self::saving(function($model){
+        $request_params = app('request')->all();
         $model->user_id = '';
         $model->type = '';
         $model->comment = '';
         $model->action = app('request')->method();
         if (app('request')->has('user_id')) {
             $model->user_id = request()->input('user_id');
+            unset($request_params['user_id']);
         }
-        if (app('request')->has('environment_id')) {
+        if (app('request')->has('type')) {
+            $model->type = request()->input('type');
+            unset($request_params['type']);
+        } else if (app('request')->has('environment_id')) {
             $environment = Environment::where('id',app('request')->environment_id)->first();
             if (!is_null($environment)) {
                 $model->type = $environment->type;
             }
         }
-        if (app('request')->has('type')) {
-            $model->type = request()->input('type');
-        }
-        if (app('request')->has('summary')) {
-            $model->comment = request()->input('summary');
-        }
         if (app('request')->has('comment')) {
             $model->comment = request()->input('comment');
+            unset($request_params['comment']);
+        } else if (app('request')->has('summary')) {
+            $model->comment = request()->input('summary');
+            unset($request_params['summary']);
         }
+        $model->data = $request_params;
     });
   }
 
