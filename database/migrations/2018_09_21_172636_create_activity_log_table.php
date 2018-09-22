@@ -15,10 +15,12 @@ class CreateActivityLogTable extends Migration
     {
         Schema::create('activity_log', function (Blueprint $table) {
             $table->increments('id');
+            $table->enum('action',['POST','PUT','GET','PATCH','DELETE',''])->default('');
             $table->string('event');
-            $table->enum('type',['dev','test','prod'])->default('dev');
+            $table->enum('type',['dev','test','prod',''])->default('');
             $table->string('user_id')->nullable()->unique()->default(null);
             $table->mediumText('comment');
+            $table->json('data')->nullable();
             $table->timestamps();
         });
     }

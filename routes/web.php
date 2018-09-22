@@ -63,6 +63,8 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
     $router->post('/scheduler',['uses'=>'SchedulerController@add']);
     $router->delete('/scheduler/{scheduler_id}',['uses'=>'SchedulerController@delete']);
 
+    $router->get('/activity_log',['uses'=>'ActivityLogController@browse']);
+
 });
 
 $router->get('/{slug}{any:.*}', ['uses'=>'ExecController@exec']);

@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\ActivityLog;
 
 class Service extends Model
 {
@@ -16,5 +17,18 @@ class Service extends Model
   {
     return $this->hasMany(ServiceVersion::class);
   }
+
+  public static function boot()
+  {
+    parent::boot();
+    self::saved(function($model){
+      $activity_log = new ActivityLog([
+        'data' => $model,
+        'event' => snake_case(class_basename($model)),
+      ]);
+      $activity_log->save();
+    });
+  }
+
 
 }
