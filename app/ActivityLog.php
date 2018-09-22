@@ -22,11 +22,11 @@ class ActivityLog extends Model
         $model->comment = '';
         $model->action = app('request')->method();
         if (app('request')->has('user_id')) {
-            $model->user_id = request()->input('user_id');
+            $model->user_id = app('request')->input('user_id');
             unset($request_params['user_id']);
         }
         if (app('request')->has('type')) {
-            $model->type = request()->input('type');
+            $model->type = app('request')->input('type');
             unset($request_params['type']);
         } else if (app('request')->has('environment_id')) {
             $environment = Environment::where('id',app('request')->environment_id)->first();
@@ -35,10 +35,10 @@ class ActivityLog extends Model
             }
         }
         if (app('request')->has('comment')) {
-            $model->comment = request()->input('comment');
+            $model->comment = app('request')->input('comment');
             unset($request_params['comment']);
         } else if (app('request')->has('summary')) {
-            $model->comment = request()->input('summary');
+            $model->comment = app('request')->input('summary');
             unset($request_params['summary']);
         }
         $model->data = $request_params;
