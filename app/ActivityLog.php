@@ -3,6 +3,7 @@
 namespace App;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Environment;
 
 class ActivityLog extends Model
 {
@@ -21,6 +22,12 @@ class ActivityLog extends Model
         $model->action = app('request')->method();
         if (app('request')->has('user_id')) {
             $model->user_id = request()->input('user_id');
+        }
+        if (app('request')->has('environment_id')) {
+            $environment = Environment::where('id',app('request')->environment_id)->first();
+            if (!is_null($environment)) {
+                $model->type = $environment->type;
+            }
         }
         if (app('request')->has('type')) {
             $model->type = request()->input('type');
