@@ -18,7 +18,7 @@ class CreateActivityLogTable extends Migration
             $table->enum('action',['POST','PUT','GET','PATCH','DELETE',''])->default('');
             $table->string('event');
             $table->enum('type',['dev','test','prod',''])->default('');
-            $table->string('user_id')->nullable()->unique()->default(null);
+            $table->string('user_id')->nullable()->default(null);
             $table->mediumText('comment');
             $table->json('data')->nullable();
             $table->timestamps();
