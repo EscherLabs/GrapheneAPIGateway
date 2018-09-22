@@ -18,18 +18,19 @@ class Service extends Model
     return $this->hasMany(ServiceVersion::class);
   }
 
-  public static function boot()
-  {
-    parent::boot();
-    self::saved(function($model){
-      if (!app()->runningInConsole()) {
-        $activity_log = new ActivityLog([
-          'event' => class_basename($model),
-        ]);
-        $activity_log->save();
-      }
-    });
-  }
+  // public static function boot()
+  // {
+  //   parent::boot();
+  //   self::saved(function($model){
+  //     if (!app()->runningInConsole()) {
+  //       $activity_log = new ActivityLog([
+  //         'event' => class_basename($model),
+  //         'data' => $model,
+  //       ]);
+  //       $activity_log->save();
+  //     }
+  //   });
+  // }
 
 
 

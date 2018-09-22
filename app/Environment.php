@@ -20,6 +20,8 @@ class Environment extends Model
       if (!app()->runningInConsole()) {
         $activity_log = new ActivityLog([
           'event' => class_basename($model),
+          'new' => $model,
+          'old' => $model->getOriginal();
         ]);
         $activity_log->save();
       }
