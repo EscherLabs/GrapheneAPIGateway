@@ -62,8 +62,10 @@ class Kernel extends ConsoleKernel
                     $_SERVER['REQUEST_METHOD'] = $task->verb;
                     $_SERVER['REQUEST_URI'] = '/'.$service_instance->slug.$task->route;
                     $args = [];
-                    foreach($task->args as $arg) {
-                        $args[$arg->name] = $arg->value;
+                    if (isset($task->args) && is_array($task->args)) {
+                        foreach($task->args as $arg) {
+                            $args[$arg->name] = $arg->value;
+                        }
                     }
                     $_GET = $args;
                     $service_version = $service_instance->find_version();
