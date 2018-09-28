@@ -113,7 +113,9 @@ class ServicesController extends Controller
         }
         $service_version->code = $request->code;
         $service_version->resources = $request->resources;
-        $service_version->routes = $request->routes;
+        if ($request->has('routes')) {
+            $service_version->routes = $request->routes;
+        }
         $service_version->user_id = null;
         $service_version->save();
         return $service_version;
