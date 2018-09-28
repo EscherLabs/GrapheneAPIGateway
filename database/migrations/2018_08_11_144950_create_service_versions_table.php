@@ -22,7 +22,7 @@ class CreateServiceVersionsTable extends Migration
             $table->json('code')->nullable();
             $table->json('resources')->nullable();
             $table->json('routes')->nullable();
-            $table->string('user_id')->nullable()->unique()->default(null);
+            $table->string('user_id')->nullable()->default(null);
             $table->timestamps();
             $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
         });

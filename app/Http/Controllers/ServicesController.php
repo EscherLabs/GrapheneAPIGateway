@@ -65,12 +65,11 @@ class ServicesController extends Controller
     {
         $service = new Service($request->all());
         $service->save();
-        return $service;
 
         $service_version = new ServiceVersion($request->all());
         $service_version->service_id = $service->id;
         $service_version->save();
-        return $service_version;
+        return $service;
     }
 
     public function delete($service_id)
