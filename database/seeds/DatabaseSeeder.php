@@ -61,32 +61,34 @@ class DatabaseSeeder extends Seeder
             'service_id'=>$service->id, 
             'summary'=>'First Version',
             'description'=>'From DB Seed',
-            'code'=>[[
+            'functions'=>[[
+                'name'=>'Constructor',
+                'content'=>"",
+            ],[
+                'name'=>'hello_world',
+                'content'=>"return ['message'=>'hello world!'];\n",
+            ],[
+                'name'=>'whoami',
+                'content'=>"return ['youare'=>\$args['name']];\n",
+            ],[
+                'name'=>'echo',
+                'content'=>"\$args['pi'] = PI;
+return ['args'=>\$args];\n",
+            ],[
+                'name'=>'mysql_test',
+                'content'=>"MySQLDB::connect('PharmacyEMR');
+return MySQLDB::query('select * from users');\n",
+            ],[
+                'name'=>'mysql_test2',
+                'content'=>"\$connection = DB::connection('PharmacyEMR');
+return \$connection->table('users')->get();\n",
+            ]],
+            'files'=>[[
                 'name'=>'main',
-                'content'=>"
-<?php
-class TestService {
-    public function hello_world(\$args) {
-        return ['message'=>'hello world!'];
-    }
-
-    public function whoami(\$args) {
-        return ['youare'=>\$args['name']];
-    }
-
-    public function echo(\$args) {
-        \$args['pi'] = PI;
-        return ['args'=>\$args];
-    }
-
-    public function mysql_test(\$args) {
-        MySQLDB::connect('PharmacyEMR');
-        return MySQLDB::query('select * from users');
-    }
-
-    public function mysql_test2(\$args) {
-        \$connection = DB::connection('PharmacyEMR');
-        return \$connection->table('users')->get();
+                'content'=>"<?php
+class AnotherClass {
+    public function whatever(\$args) {
+        return 'whatever';
     }
 }"
             ]], 

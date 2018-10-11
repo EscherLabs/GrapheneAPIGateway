@@ -19,7 +19,8 @@ class CreateServiceVersionsTable extends Migration
             $table->string('summary')->default('');
             $table->string('description')->default('');
             $table->boolean('stable')->default(false);
-            $table->json('code')->nullable();
+            $table->json('files')->nullable();
+            $table->json('functions')->nullable();
             $table->json('resources')->nullable();
             $table->json('routes')->nullable();
             $table->string('user_id')->nullable()->default(null);

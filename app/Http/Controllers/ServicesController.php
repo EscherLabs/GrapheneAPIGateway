@@ -29,7 +29,7 @@ class ServicesController extends Controller
 
     public function versions($service_id)
     {
-        $versions = ServiceVersion::select('summary','description','stable','user_id','created_at','updated_at')
+        $versions = ServiceVersion::select('id','summary','description','stable','user_id','created_at','updated_at')
             ->orderby('updated_at')
             ->where('service_id',$service_id)->get();
         if (!is_null($versions)) {
@@ -111,7 +111,8 @@ class ServicesController extends Controller
         }else if(!($first->gte($second) || isset($post_data['force']))){
             abort(409, $service_version);
         }
-        $service_version->code = $request->code;
+        $service_version->files = $request->input('files');
+        $service_version->functions = $request->functions;
         $service_version->resources = $request->resources;
         if ($request->has('routes')) {
             $service_version->routes = $request->routes;

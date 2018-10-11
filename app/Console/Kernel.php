@@ -49,6 +49,9 @@ class Kernel extends ConsoleKernel
                 }
             }
             foreach($to_do as $task) {
+                // Look at forking processes for these...
+                // http://php.net/manual/en/function.pcntl-fork.php
+                // tjc 10/11/18
                 $current_minute = Carbon::now()->format("Y-m-d H:i:00");
                 if (is_null(Scheduler::where('id',$task->id)->where('last_exec_cron',$current_minute)->first())) {
                     $task->last_exec_cron = $current_minute;

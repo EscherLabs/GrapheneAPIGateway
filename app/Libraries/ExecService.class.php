@@ -101,9 +101,31 @@ class ExecService {
         }
     }
 
-    public function eval_code($service_version) {
-        /* Evaluate Code */
-        foreach($service_version->code as $code_file) {
+    public function eval_code($service_instance, $service_version) {
+        /* Evaluate Functions */
+        $main_class = "\n".
+            'use \App\Libraries\MySQLDB;'."\n".
+            'use \App\Libraries\OracleDB;'."\n".
+            'use Illuminate\Support\Facades\DB;'."\n\n".
+            'class '.$service_instance->service->name.' {'."\n";
+
+        foreach($service_version->functions as $function) {
+            if ($function->name === 'Constructor') {
+                $main_class .= 'function __construct($args=[]) {'."\n".
+                    $function->content.
+                    '}'."\n\n";
+                } else {
+                $main_class .= 'public function '.$function->name.'($args) {'."\n".
+                    $function->content."\n".
+                    '}'."\n\n";
+                }
+        }
+        $main_class .= "}?>";
+        // dd($main_class);
+        eval($main_class);
+
+        /* Evaluate Files */
+        foreach($service_version->files as $code_file) {
             $prepended_code = 
                 '?><?php'."\n".
                 'use \App\Libraries\MySQLDB;'."\n".

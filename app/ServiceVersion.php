@@ -8,8 +8,8 @@ use App\ActivityLog;
 class ServiceVersion extends Model
 {
 
-  protected $fillable = ['service_id', 'summary', 'description', 'stable' ,'code', 'resources', 'routes', 'user_id'];
-  protected $casts = ['code' => 'object', 'resources' => 'object', 'routes' => 'object'];
+  protected $fillable = ['service_id', 'summary', 'description', 'stable' ,'files', 'functions', 'resources', 'routes', 'user_id'];
+  protected $casts = ['files' => 'object', 'functions'=> 'object','resources' => 'object', 'routes' => 'object'];
 
 
   public function service() {

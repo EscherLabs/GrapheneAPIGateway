@@ -31,7 +31,7 @@ class ExecController extends Controller
         $users_arr = $exec_service->build_permissions($service_instance);
         ValidateUser::assert_valid_user($users_arr); // Bail if user is invalid!
         $exec_service->build_resources($service_instance);
-        return $exec_service->eval_code($service_version);
+        return $exec_service->eval_code($service_instance,$service_version);
 
     }   
 }
