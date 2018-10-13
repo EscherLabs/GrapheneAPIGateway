@@ -23,13 +23,12 @@ class ExecService {
                 foreach($route->params as $param) {
                     if ($param->required === true || $param->required == 'true') {
                         $extra['required'][]=$param->name;
-                    } else if ($param->required === false || $param->required == 'false') {
+                    } else if ($param->required === false || $param->required == 'false' || $param->required=="0") {
                         $extra['optional'][]=$param->name;
                     }
                 }
             }
             $description = isset($route->description)?$route->description:'';
-
             Router::add_route(
                 '/'.$service_instance->slug.$route->path, 
                 $service_instance->service->name, 
@@ -59,9 +58,11 @@ class ExecService {
         /* Fetch and Configure Database for this Service Instance */
         $resources_arr = [];
         $resources_name_map = [];
-        foreach($service_instance->resources as $resource_index => $resource_map) {
-            $resources_arr[] = $resource_map->resource;
-            $resources_name_map[$resource_map->resource] = $resource_map->name;
+        if (is_array($service_instance->resources)) {
+            foreach($service_instance->resources as $resource_index => $resource_map) {
+                $resources_arr[] = $resource_map->resource;
+                $resources_name_map[$resource_map->resource] = $resource_map->name;
+            }
         }
 
         $resources = Resource::whereIn('id',$resources_arr)->get();

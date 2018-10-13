@@ -136,6 +136,49 @@ class AnotherClass {
         ]);
         $service_version->save();
 
+        $nosql_service = new \App\Service(['name'=>'NoSQLDB','description'=>'This is a default NoSQL Database Service']);
+        $nosql_service->save();
+
+        $files = <<<'EOD'
+[  
+    {  
+        "name":"Constructor",
+        "content":""
+    },
+    {  
+        "name":"read",
+        "content":"if (isset($args[\"id\"])) {\n    $document = \\App\\NoSQLDB::where(\"id\",$args[\"id\"])->first();\n    if (!is_null($document)) {\n        return self::flatten($document);\n    } else {\n        return response(\"document not found\", 404);\n    }\n} else {\n    $documents_obj = \\App\\NoSQLDB::where(\"type\",$args[\"type\"])->get();\n    $documents_arr = [];\n    foreach($documents_obj as $document) {\n        $documents_arr[] = self::flatten($document);\n    }\n    return $documents_arr;\n}"
+    },
+    {  
+        "name":"edit",
+        "content":"$document = \\App\\NoSQLDB::where(\"id\",$args[\"id\"])->first();\nif (!is_null($document)) {\n    $document->update([\"data\"=>$request->except([\"created_at\",\"updated_at\",\"id\",\"type\"])]);\n    return self::flatten($document);\n} else {\n    return response(\"document not found\", 404);\n}"
+    },
+    {  
+        "name":"add",
+        "content":"$document = new \\App\\NoSQLDB([\"type\"=>$args[\"type\"], \"data\"=>$request->except([\"created_at\",\"updated_at\",\"id\",\"type\"])]);\n$document->save();\nreturn self::flatten($document);"
+    },
+    {  
+        "name":"delete",
+        "content":"if ( \\App\\NoSQLDB::where(\"id\",$args[\"id\"])->delete() ) {\n    return [true];\n}"
+    },
+    {  
+        "name":"flatten",
+        "content":"$document = $args;\n$document_arr = [\n    \"id\"=>$document->id,\n    \"created_at\"=>$document->created_at->toDateTimeString(),\n    \"updated_at\"=>$document->updated_at->toDateTimeString(),\n];\n$document_arr = array_merge($document_arr,$document->data);\nreturn $document_arr;"
+    }
+]
+EOD;
+
+        $nosql_service_version = new \App\ServiceVersion([
+            'service_id'=>$nosql_service->id, 
+            'summary'=>'First Version',
+            'description'=>'From DB Seed',
+            'functions'=>json_decode($files),
+            'files'=>[], 
+            'resources'=>[], 
+            'routes'=>json_decode('[{"path": "/*", "verb": "GET", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "0"}], "description": "", "function_name": "read"}, {"path": "/*", "verb": "PUT", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "edit"}, {"path": "/*", "verb": "POST", "params": [{"name": "type", "required": "true"}], "description": "", "function_name": "add"}, {"path": "/*", "verb": "DELETE", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "delete"}]'),
+        ]);
+        $nosql_service_version->save();
+
         $service_instance = new \App\ServiceInstance([
             'name'=>'New TestService Instance',
             'slug'=>'test',
@@ -170,6 +213,23 @@ class AnotherClass {
         ]);
         $service_instance->save();
 
+        $nosql_service_instance = new \App\ServiceInstance([
+            'name'=>'NoSQL Demo',
+            'slug'=>'nosqldb_demo',
+            'public'=>false,
+            'service_version_id'=>$nosql_service_version->id,
+            'environment_id'=>$environment->id,
+            'service_id'=>$nosql_service->id,
+            'route_user_map'=>[
+                [
+                    'route'=>'*',
+                    'api_user'=>$api_user3->id
+                ]
+            ],
+            'resources'=>[]
+        ]);
+        $nosql_service_instance->save();
+
         $scheduler = new \App\Scheduler([
             'name'=>'Echo Every Min',
             'cron' => '* * * * *',
@@ -179,5 +239,16 @@ class AnotherClass {
             'verb'=>'GET',
         ]);
         $scheduler->save();
+
+        $nosqldoc = new \App\NoSQLDB([
+            'type'=>'demo',
+            'data' => ["hello"=>"world"],
+        ]);
+        $nosqldoc->save();
+        $nosqldoc = new \App\NoSQLDB([
+            'type'=>'demo',
+            'data' => [1,3,4,5,6,7,8,9,0],
+        ]);
+        $nosqldoc->save();
     }
 }
