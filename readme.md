@@ -1,7 +1,7 @@
-# Graphene ProxyServer
+# GrapheneAPIGateway
 
-Graphene ProxyServer is a standalone API-Configured toolset for generating web services for various connected databases.  It can be used with or without Graphene.
+GrapheneAPIGateway is a standalone API-Configured toolset for generating web services for various connected databases.  Though GrapheneAPIGateway is designed to work with Graphene, it is capable of functioning without it.
 
 ## License
 
-Graphene Proxy is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
+GrapheneAPIGateway is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT)
