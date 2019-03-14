@@ -18,7 +18,7 @@ class ExecService {
     public function build_routes($service_instance,$service_version) {
         foreach($service_version->routes as $route_index =>$route) {
             $extra = [];
-            if (isset($route->verb)) {$extra['verb']=$route->verb;}
+            if (isset($route->verb)) {$verb = $route->verb;} else { $verb = 'all';}
             if (isset($route->params)) {
                 foreach($route->params as $param) {
                     if ($param->required === true || $param->required == 'true') {
@@ -28,31 +28,15 @@ class ExecService {
                     }
                 }
             }
-            $description = isset($route->description)?$route->description:'';
             Router::add_route(
                 '/'.$service_instance->slug.$route->path, 
                 $service_instance->service->name, 
                 $route->function_name, 
-                $description, 
-                $extra
+                $extra,
+                $verb
             );
         }
     } 
-
-    public function build_permissions($service_instance) {
-        /* Fetch and Enforce Permissions for this Module Instance & Route */
-        $user_id_arr = [];
-        foreach($service_instance->route_user_map as $route_user_map_index => $route_user) {
-            $user_id_arr[] = $route_user->api_user;
-            $user_to_routes[$route_user->api_user][] = '/'.$service_instance->slug.$route_user->route;
-        }
-        $relevant_users = APIUser::whereIn('id',$user_id_arr)->get();
-        $users_arr = [];
-        foreach($relevant_users as $user) {
-            $users_arr[$user->app_name] = ['user'=>$user, 'pass'=>$user->app_secret,'ips'=>[''],'routes'=>$user_to_routes[$user->id]];
-        }
-        return $users_arr;
-    }
 
     public function build_resources($service_instance) {
         /* Fetch and Configure Database for this Service Instance */
