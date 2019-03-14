@@ -98,35 +98,35 @@ class AnotherClass {
             ], 
             'routes'=>[
                 [
-                    'path'=>'/hello_world/*',
+                    'path'=>'/hello_world',
                     'function_name' => 'hello_world',
                     'description'=>'Prints Hello World',
                     'params'=>[['name'=>'other','required'=>false]],
                     'verb' => 'GET',
                 ],
                 [
-                    'path'=>'/whoami/*',
+                    'path'=>'/whoami',
                     'function_name' => 'whoami',
                     'description'=>'Prints out who you are',
                     'params'=>[['name'=>'name','required'=>true],['name'=>'other','required'=>false]],
                     'verb' => 'GET',
                 ],
                 [
-                    'path'=>'/echo/*',
+                    'path'=>'/echo',
                     'function_name' => 'echo',
                     'description'=>'Prints out all args which are sent',
                     'params'=>[],
                     'verb' => 'GET',
                 ],
                 [
-                    'path'=>'/mysql_test/*',
+                    'path'=>'/mysql_test',
                     'function_name' => 'mysql_test',
                     'description'=>'Tests Database Connection for PharmacyEMR Database',
                     'params'=>[],
                     'verb' => 'GET',
                 ],
                 [
-                    'path'=>'/mysql_test2/*',
+                    'path'=>'/mysql_test2',
                     'function_name' => 'mysql_test2',
                     'description'=>'Tests Lumen PDO Database Connection for PharmacyEMR Database',
                     'params'=>[],
@@ -175,7 +175,7 @@ EOD;
             'functions'=>json_decode($files),
             'files'=>[], 
             'resources'=>[], 
-            'routes'=>json_decode('[{"path": "/*", "verb": "GET", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "0"}], "description": "", "function_name": "read"}, {"path": "/*", "verb": "PUT", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "edit"}, {"path": "/*", "verb": "POST", "params": [{"name": "type", "required": "true"}], "description": "", "function_name": "add"}, {"path": "/*", "verb": "DELETE", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "delete"}]'),
+            'routes'=>json_decode('[{"path": "/", "verb": "GET", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "0"}], "description": "", "function_name": "read"}, {"path": "/", "verb": "PUT", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "edit"}, {"path": "/", "verb": "POST", "params": [{"name": "type", "required": "true"}], "description": "", "function_name": "add"}, {"path": "/", "verb": "DELETE", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "delete"}]'),
         ]);
         $nosql_service_version->save();
 
@@ -188,15 +188,15 @@ EOD;
             'service_id'=>$service->id,
             'route_user_map'=>[
                 [
-                    'route'=>'/hello_world*',
+                    'route'=>'/hello_world',
                     'api_user'=>$api_user->id
                 ],
                 [
-                    'route'=>'/echo*',
+                    'route'=>'/echo',
                     'api_user'=>$api_user2->id
                 ],
                 [
-                    'route'=>'*',
+                    'route'=>'',
                     'api_user'=>$api_user3->id
                 ]
             ],
@@ -222,7 +222,7 @@ EOD;
             'service_id'=>$nosql_service->id,
             'route_user_map'=>[
                 [
-                    'route'=>'*',
+                    'route'=>'',
                     'api_user'=>$api_user3->id
                 ]
             ],
@@ -234,7 +234,7 @@ EOD;
             'name'=>'Echo Every Min',
             'cron' => '* * * * *',
             'service_instance_id' => $service_instance->id,
-            'route' => '/echo/',
+            'route' => '/echo',
             'args'=>[['name'=>'hello','value'=>'world']],
             'verb'=>'GET',
         ]);
