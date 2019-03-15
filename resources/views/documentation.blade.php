@@ -243,7 +243,7 @@
       <div class="page-wrapper">
          <div class="dark-box"></div>
          <div class="content">
-            <h1 id='introduction'><i>{{ $service_instance->name }}</i> API</h1>
+            <h1 id='introduction'><i>{{ $service_instance->name }}</i> API <span style="float:right;color:red;font-size:15px;">({{$service_instance->environment->type}})</span></h1>
 
             <p>Welcome to the <i>{{ $service_instance->name }}</i> API</p>
             <p>Description: {{ $service_instance->service->description }}</p>

@@ -20,7 +20,7 @@ class DocumentationController extends Controller
     }
     
     public function docs($slug) {
-        $service_instance = ServiceInstance::where('slug',$slug)->with('service')->first();
+        $service_instance = ServiceInstance::where('slug',$slug)->with('service')->with('environment')->first();
         if (is_null($service_instance)) {
             abort(404);
         }
