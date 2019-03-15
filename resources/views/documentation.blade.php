@@ -249,8 +249,19 @@
             <p>Description: {{ $service_instance->service->description }}</p>
 <!-- Authentication -->
             <h1 id='authentication'>Authentication</h1>
+            <blockquote class="highlight graphene tab-graphene">
+               <p>Create an Endpoint with the following configuration:</p>
+            </blockquote>
+            <pre class="highlight graphene tab-graphene">
+            <code>
+Auth Type: HTTP Basic Auth
+URL: {{ url($service_instance->slug) }}
+Username: username
+Password: password
+            </code>
+            </pre>
             <blockquote class="highlight shell tab-shell">
-               <p>To authorize, use this code:</p>
+               <p>You can authenticate against this API with the following:</p>
             </blockquote>
             <pre class="highlight shell tab-shell">
             <code>
@@ -258,11 +269,11 @@ curl {{ url($service_instance->slug) }}
     -u username:password
             </code>
             </pre>
-            <blockquote class="highlight shell tab-shell">
+            <blockquote class="highlight">
                <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials.</p>
             </blockquote>
             <p>The <i>{{ $service_instance->name }}</i> API uses HTTP basic authentication to allow access to the API.  Contact the API Developer @isset($service_instance->service->user)({{ $service_instance->service->user }}) @endisset to generate a username/password to use this API</a>.</p>
-            <aside class="success">There are currently {{count($service_instance->route_user_map)}} user accounts / app usernames for the <i>{{ $service_instance->name }}</i> API:
+            <aside class="success">There is/are currently {{count($service_instance->route_user_map)}} user account(s) / app username(s) for the <i>{{ $service_instance->name }}</i> API:
                 <ul>
                     @foreach($users as $user)
                     <li>{{ $user->app_name }}</li>
@@ -276,6 +287,28 @@ curl {{ url($service_instance->slug) }}
 <!-- First One -->
 
             <h2 id='api-route-{{$si_key}}'>/{{$service_instance->slug}}{{$si_route->path}}</h2>
+<pre class="highlight graphene tab-graphene">
+<b><u>Endpoint Definition</u></b>
+Auth Type: HTTP Basic Auth
+URL: {{ url($service_instance->slug) }}
+Username: username
+Password: password
+
+<b><u>MicroApp</u></b>
+Resource Path: {{ $si_route->path }}
+<?php if ($si_route->verb === 'all') {
+    echo "Resource Fetch: true or false (configurable)\n";
+    echo "JavaScript Methods: this.app.get, this.app.post, this.app.put, this.app.delete\n";
+
+} else if ($si_route->verb === 'GET') {
+    echo "Resource Fetch: true or false (configurable)\n";
+    echo "JavaScript Method: this.app.".strtolower($si_route->verb)."\n";
+
+} else {
+    echo "Resource Fetch: false (Can't perform fetch on non GET API!)\n";
+    echo "JavaScript Method: this.app.".strtolower($si_route->verb)."\n";
+}?>
+</pre>
 @if ($si_route->verb === 'all')
 <pre class="highlight shell tab-shell">
 <code>
@@ -321,38 +354,40 @@ curl {{ url($service_instance->slug.$si_route->path) }}
 </code>
 </pre>
 @endif
-@endif   
-            <blockquote class="highlight shell tab-shell">
-               <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials</p>
-               @if (count($si_route->params)>0)
-                <p>Make sure to replace var0 --> varN with the relevant values.</p>
-               @endif
-            </blockquote>
+@endif  
+<blockquote>
+    <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials</p>
+    @if (count($si_route->params)>0)
+</blockquote>
+<blockquote class="highlight shell tab-shell">
+    <p>Make sure to replace <code>var0</code> through <code>varN</code> with the relevant values.</p>
+    @endif
+</blockquote>
 
             <p>{{$si_route->description}}</p>
             @if ($si_route->verb === 'all')
                 <h3 id='http-request'>HTTP Request</h3>
-                <p><code>GET {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
-                <p><code>POST {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
-                <p><code>PUT {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
-                <p><code>DELETE {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
+                <p><code>GET {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>POST {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>PUT {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>DELETE {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
                 @if (count($si_route->params)>0)
-                    <aside class="note">Required parameters can be sent as "POSTed" variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                    <aside class="note">Required parameters can be sent as x-www-form-urlencoded variables, query string variables (example: <code>?{{$si_route->params[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
                 @endif
-                <aside class="note">Optional parameters can be sent as "POSTed" variables or GET/query variables (example: ?tacos=good)</aside>
+                <aside class="note">Optional parameters can be sent as x-www-form-urlencoded variables or query string variables (example: <code>?tacos=good</code>)</aside>
             @else
                 <h3 id='http-request'>HTTP {{$si_route->verb}} Request</h3>
-                <p><code>{{$si_route->verb}} {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
+                <p><code>{{$si_route->verb}} {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
                 @if ($si_route->verb === 'GET')
                     @if (count($si_route->params)>0)
-                        <aside class="note">Required parameters can be sent as either GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                        <aside class="note">Required parameters can be sent as either query string variables (example: <code>?{{$si_route->params[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
                     @endif
-                    <aside class="note">Optional parameters must be sent as  GET/query variables (example: ?tacos=good)</aside>
+                    <aside class="note">Optional parameters must be sent as  query string variables (example: <code>?tacos=good</code>)</aside>
                 @else
                     @if (count($si_route->params)>0)
-                        <aside class="note">Required parameters can be sent as "POSTed" {{$si_route->verb}} variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                        <aside class="note">Required parameters can be sent as x-www-form-urlencoded {{$si_route->verb}} variables, query string variables (example: <code>?{{$si_route->params[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
                     @endif
-                    <aside class="note">Optional parameters can be sent as "POSTed" {{$si_route->verb}} variables or GET/query variables (example: ?tacos=good)</aside>
+                    <aside class="note">Optional parameters can be sent as x-www-form-urlencoded {{$si_route->verb}} variables or query string variables (example: <code>?tacos=good</code>)</aside>
                 @endif
             @endif
             <h3>Parameters</h3>
@@ -379,9 +414,9 @@ curl {{ url($service_instance->slug.$si_route->path) }}
                 @endforeach
                </tbody>
             </table>
-            <aside class="warning">There may be additional unlisted optional parameters!</aside>
+            <aside class="warning">There may be additional unlisted optional parameters</aside>
             @else 
-                <aside class="warning">There are no required or optional parameters listed (there may be unlisted optional parameters)</aside>
+                <aside class="warning">There are no optional parameters listed (there may be unlisted optional parameters)</aside>
             @endif
 @endforeach
 <!-- Errors -->
@@ -420,8 +455,8 @@ curl {{ url($service_instance->slug.$si_route->path) }}
          </div>
          <div class="dark-box">
             <div class="lang-selector">
+               <a href="#" data-language-name="graphene">Graphene MicroApps</a>
                <a href="#" data-language-name="shell">Shell / curl</a>
-               <a href="#" data-language-name="graphene">Graphene</a>
             </div>
          </div>
       </div>
