@@ -288,7 +288,7 @@ foreach($service_instance->resources as $si_resource_index => $si_resource) {
     </tbody>
 </table>
 @else
-There are no resources.
+<p>This API has no resources.</p>
 @endif
 
 <!-- Authentication -->
