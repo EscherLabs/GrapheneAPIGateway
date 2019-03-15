@@ -69,4 +69,7 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
 
 $router->get('/{slug}', ['uses'=>'DocumentationController@docs']);
 $router->get('/{slug}{any:.*}', ['uses'=>'ExecController@exec']);
+$router->post('/{slug}{any:.*}', ['uses'=>'ExecController@exec']);
+$router->put('/{slug}{any:.*}', ['uses'=>'ExecController@exec']);
+$router->delete('/{slug}{any:.*}', ['uses'=>'ExecController@exec']);
 

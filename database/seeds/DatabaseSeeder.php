@@ -109,7 +109,7 @@ class AnotherClass {
                     'function_name' => 'whoami',
                     'description'=>'Prints out who you are',
                     'params'=>[['name'=>'name','required'=>true],['name'=>'other','required'=>false]],
-                    'verb' => 'all',
+                    'verb' => 'ALL',
                 ],
                 [
                     'path'=>'/echo',

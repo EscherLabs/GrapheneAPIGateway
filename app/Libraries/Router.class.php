@@ -59,6 +59,7 @@ class Router
   static public function handle_route() {
     $PWD = self::get_pwd();
     $thisRoute = '/'.implode('/',$PWD);
+    $wrong_verb = false;
     foreach (self::$routes as $path => $path_info)
     {
       $path_regex = '/^'.str_replace ('/','\/',$path).'/';
@@ -82,9 +83,15 @@ class Router
               return $return;
             }
             return true;
+          } else {
+            $wrong_verb = true;
           }
         }  
       }
+    }
+    if ($wrong_verb) {
+      return response(json_encode(['error'=>$_SERVER['REQUEST_METHOD'].' Method not allowed']),405)
+        ->header('Content-type', 'application/json');
     }
     return response(json_encode(['error'=>'API call does not exist']),404)
       ->header('Content-type', 'application/json');
