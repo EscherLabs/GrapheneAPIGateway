@@ -237,7 +237,7 @@
             </li>
          </ul>
          <ul class="toc-footer">
-            <li><a href='https://github.com/escherlabs/GrapheneAPIGateway'>Documentation and APIs Powered by GrapheneAPIGateway</a></li>
+            <li><a href='https://github.com/escherlabs/GrapheneAPIGateway'>Powered by GrapheneAPIGateway</a></li>
          </ul>
       </div>
       <div class="page-wrapper">
@@ -337,22 +337,22 @@ curl {{ url($service_instance->slug.$si_route->path) }}
                 <p><code>PUT {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
                 <p><code>DELETE {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
                 @if (count($si_route->params)>0)
-                    <aside class="note">Required parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                    <aside class="note">Required parameters can be sent as "POSTed" variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
                 @endif
-                <aside class="note">Optional parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables or GET/query variables (example: ?tacos=good)</aside>
+                <aside class="note">Optional parameters can be sent as "POSTed" variables or GET/query variables (example: ?tacos=good)</aside>
             @else
                 <h3 id='http-request'>HTTP {{$si_route->verb}} Request</h3>
                 <p><code>{{$si_route->verb}} {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
                 @if ($si_route->verb === 'GET')
                     @if (count($si_route->params)>0)
-                        <aside class="note">Required parameters can optionally be sent as either GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                        <aside class="note">Required parameters can be sent as either GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
                     @endif
                     <aside class="note">Optional parameters must be sent as  GET/query variables (example: ?tacos=good)</aside>
                 @else
                     @if (count($si_route->params)>0)
-                        <aside class="note">Required parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                        <aside class="note">Required parameters can be sent as "POSTed" {{$si_route->verb}} variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
                     @endif
-                    <aside class="note">Optional parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables or GET/query variables (example: ?tacos=good)</aside>
+                    <aside class="note">Optional parameters can be sent as "POSTed" {{$si_route->verb}} variables or GET/query variables (example: ?tacos=good)</aside>
                 @endif
             @endif
             <h3>Parameters</h3>
