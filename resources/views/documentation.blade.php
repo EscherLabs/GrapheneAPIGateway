@@ -331,22 +331,22 @@ curl {{ url($service_instance->slug.$si_route->path) }}
                 <p><code>PUT {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
                 <p><code>DELETE {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
                 @if (count($si_route->params)>0)
-                    <aside class="note">Note: Required parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                    <aside class="note">Required parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
                 @endif
-                <aside class="note">Note: Optional parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables or GET/query variables (example: ?tacos=good)</aside>
+                <aside class="note">Optional parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables or GET/query variables (example: ?tacos=good)</aside>
             @else
                 <h3 id='http-request'>HTTP {{$si_route->verb}} Request</h3>
                 <p><code>{{$si_route->verb}} {{ url($service_instance->slug.$si_route->path) }}@foreach ($si_route->params as $param)@if ($param->required === true || $param->required === "true")/&lt;{{$param->name}}&gt; @endif @endforeach</code></p>
                 @if ($si_route->verb === 'GET')
                     @if (count($si_route->params)>0)
-                        <aside class="note">Note: Required parameters can optionally be sent as either GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                        <aside class="note">Required parameters can optionally be sent as either GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
                     @endif
-                    <aside class="note">Note: Optional parameters must be sent as  GET/query variables (example: ?tacos=good)</aside>
+                    <aside class="note">Optional parameters must be sent as  GET/query variables (example: ?tacos=good)</aside>
                 @else
                     @if (count($si_route->params)>0)
-                        <aside class="note">Note: Required parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
+                        <aside class="note">Required parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables, GET/query variables (example: ?{{$si_route->params[0]->name}}=pizza) or as part of the directory path (example: /pizza)</aside>
                     @endif
-                    <aside class="note">Note: Optional parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables or GET/query variables (example: ?tacos=good)</aside>
+                    <aside class="note">Optional parameters can optionally be sent as "POSTed" {{$si_route->verb}} variables or GET/query variables (example: ?tacos=good)</aside>
                 @endif
             @endif
             <h3>Parameters</h3>
@@ -373,7 +373,7 @@ curl {{ url($service_instance->slug.$si_route->path) }}
                 @endforeach
                </tbody>
             </table>
-            <aside class="warning">Note that there may be additional unlisted optional parameters!</aside>
+            <aside class="warning">There may be additional unlisted optional parameters!</aside>
             @else 
                 <aside class="warning">There are no required or optional parameters listed (there may be unlisted optional parameters)</aside>
             @endif
