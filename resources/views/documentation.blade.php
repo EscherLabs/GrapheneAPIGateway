@@ -4,7 +4,7 @@
       <meta charset="utf-8">
       <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-      <title>API Reference</title>
+      <title>{{ $service_instance->name }} API Documentation</title>
       <style>
          .highlight table td { padding: 5px; }
          .highlight table pre { margin: 0; }
@@ -227,7 +227,7 @@
                <ul class="toc-list-h2">
                @foreach ($service_version->routes as $si_key => $si_route)
                   <li>
-                     <a href="#api-route-{{$si_key}}" class="toc-h2 toc-link" data-title="{{$si_route->path}}">{{$si_route->path}}</a>
+                     <a href="#api-route-{{$si_key}}" class="toc-h2 toc-link" data-title="/{{$service_instance->slug}}{{$si_route->path}}">/{{$service_instance->slug}}{{$si_route->path}}</a>
                   </li>
                 @endforeach
                </ul>
@@ -269,7 +269,7 @@ curl {{ url($service_instance->slug) }}
 @foreach ($service_version->routes as $si_key => $si_route)
 <!-- First One -->
 
-            <h2 id='api-route-{{$si_key}}'>{{$si_route->path}}</h2>
+            <h2 id='api-route-{{$si_key}}'>/{{$service_instance->slug}}{{$si_route->path}}</h2>
 @if ($si_route->verb === 'all')
 <pre class="highlight shell tab-shell">
 <code>
