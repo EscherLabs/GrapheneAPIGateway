@@ -262,7 +262,13 @@ curl {{ url($service_instance->slug) }}
                <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials.</p>
             </blockquote>
             <p>The <i>{{ $service_instance->name }}</i> API uses HTTP basic authentication to allow access to the API.  Contact the API Developer @isset($service_instance->service->user)({{ $service_instance->service->user }}) @endisset to generate a username/password to use this API</a>.</p>
-            <aside class="success">There are currently {{count($service_instance->route_user_map)}} user accounts for the <i>{{ $service_instance->name }}</i> API.</aside>
+            <aside class="success">There are currently {{count($service_instance->route_user_map)}} user accounts / app usernames for the <i>{{ $service_instance->name }}</i> API:
+                <ul>
+                    @foreach($users as $user)
+                    <li>{{ $user->app_name }}</li>
+                    @endforeach
+                </ul>
+            </aside>
 <!-- End Authentication -->
 <!-- API --> 
             <h1 id='api-routes'>API Routes</h1>

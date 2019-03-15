@@ -54,7 +54,7 @@ class ExecController extends Controller
         }
         if (!($userisok && $ipisok && $routeisok)) {
             return response(json_encode(['error'=>'Unauthorized User']),401)
-                ->header('WWW-Authenticate', 'Basic realm="GrapheneAPIGateway Server"')
+                ->header('WWW-Authenticate', 'Basic realm="'.$service_instance->name.' API"')
                 ->header('Content-type', 'application/json');
         } else {
             return true;
