@@ -109,14 +109,14 @@ class AnotherClass {
                     'function_name' => 'whoami',
                     'description'=>'Prints out who you are',
                     'params'=>[['name'=>'name','required'=>true],['name'=>'other','required'=>false]],
-                    'verb' => 'GET',
+                    'verb' => 'all',
                 ],
                 [
                     'path'=>'/echo',
                     'function_name' => 'echo',
                     'description'=>'Prints out all args which are sent',
                     'params'=>[],
-                    'verb' => 'GET',
+                    'verb' => 'POST',
                 ],
                 [
                     'path'=>'/mysql_test',

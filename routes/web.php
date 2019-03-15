@@ -67,6 +67,6 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
 
 });
 
+$router->get('/{slug}', ['uses'=>'DocumentationController@docs']);
 $router->get('/{slug}{any:.*}', ['uses'=>'ExecController@exec']);
-
 

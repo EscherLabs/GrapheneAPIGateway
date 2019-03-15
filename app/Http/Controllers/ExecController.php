@@ -30,7 +30,6 @@ class ExecController extends Controller
         foreach($relevant_users as $user) {
             $users[$user->app_name] = ['user'=>$user, 'pass'=>$user->app_secret,'ips'=>[''],'routes'=>$user_to_routes[$user->id]];
         }
-
         $userisok = false; $ipisok = false; $routeisok = false;
         /* Validate Username & Password */
         $userisok = (isset($_SERVER['PHP_AUTH_USER']) && array_key_exists($_SERVER['PHP_AUTH_USER'],$users) && $users[$_SERVER['PHP_AUTH_USER']]['user']->check_app_secret($_SERVER['PHP_AUTH_PW']) );
@@ -61,7 +60,7 @@ class ExecController extends Controller
             return true;
         }
     }
-    
+
     public function exec($slug) {
         $exec_service = new ExecService();
 
