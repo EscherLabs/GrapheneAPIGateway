@@ -51,4 +51,33 @@ class DocumentationController extends Controller
             'resources'=>$resources,
         ]);
     }
+
+    public function fetch($slug) {
+        if (is_numeric($slug)) {
+            $service_instance = ServiceInstance::where('id',$slug)->with('service')->with('environment')->first();
+        } else {
+            $service_instance = ServiceInstance::where('slug',$slug)->with('service')->with('environment')->first();
+        }
+        if (is_null($service_instance)) {
+            abort(404);
+        }
+        $service_version = $service_instance->find_version();
+        $user_id_arr = [];
+        foreach($service_instance->route_user_map as $route_user_map_index => $route_user) {
+            $user_id_arr[] = $route_user->api_user;
+            $user_to_routes[$route_user->api_user][] = '/'.$service_instance->slug.$route_user->route;
+        }
+        $relevant_users = APIUser::whereIn('id',$user_id_arr)->get();
+        $resources = Resource::all();
+        $data = [
+            'service_instance' => $service_instance, 
+            'service_version'=>$service_version, 
+            'users'=>$relevant_users,
+            'resources'=>$resources,
+        ];
+        $docs = view('documentation',$data)->render();
+        $data['docs'] = $docs;
+        return $data;
+    }
+
 }

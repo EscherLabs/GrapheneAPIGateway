@@ -194,10 +194,10 @@
          color: #f92672;
          }
       </style>
-      <link href="/assets/css/all.css" rel="stylesheet" media="screen" />
-      <link href="/assets/css/screen.css" rel="stylesheet" media="screen" />
-      <link href="/assets/css/print.css" rel="stylesheet" media="print" />
-      <script src="/assets/js/all.js"></script>
+      <link href="/assets/css/fontawesome.5.7.2.css" rel="stylesheet" media="screen" />
+      <link href="/assets/css/slate_screen.css" rel="stylesheet" media="screen" />
+      <link href="/assets/css/slate_print.css" rel="stylesheet" media="print" />
+      <script src="/assets/js/slate_all.js"></script>
    </head>
    <body class="index" data-languages="[&quot;shell&quot;,&quot;graphene&quot;]">
       <a href="#" id="nav-button">
