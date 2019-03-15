@@ -43,6 +43,12 @@ class DocumentationController extends Controller
                 ->header('Content-type', 'application/json');
         }
 
-        return view('documentation', ['service_instance' => $service_instance, 'service_version'=>$service_version, 'users'=>$relevant_users]);
+        $resources = Resource::all();
+        return view('documentation', [
+            'service_instance' => $service_instance, 
+            'service_version'=>$service_version, 
+            'users'=>$relevant_users,
+            'resources'=>$resources,
+        ]);
     }
 }

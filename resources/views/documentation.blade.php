@@ -220,6 +220,10 @@
                <a href="#introduction" class="toc-h1 toc-link" data-title="Introduction">Introduction</a>
             </li>
             <li>
+               <a href="#resources" class="toc-h1 toc-link" data-title="Resources">Resources</a>
+            </li>
+
+            <li>
                <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
             </li>
             <li>
@@ -246,7 +250,47 @@
             <h1 id='introduction'><i>{{ $service_instance->name }}</i> API <span style="float:right;color:red;font-size:15px;">({{$service_instance->environment->type}})</span></h1>
 
             <p>Welcome to the <i>{{ $service_instance->name }}</i> API</p>
-            <p>Description: {{ $service_instance->service->description }}</p>
+            <p>{{ $service_instance->service->description }}</p>
+
+<!-- Resources -->
+            <h1 id='resources'>Resources</h1>
+            @if(count($service_instance->resources) > 0)
+            <p>These are the resources (databases, external APIs, etc) which are consumed by the <i>{{ $service_instance->name }}</i> API</p>
+            <p>The table below can be used to identify the type of resources being used (mysql/oracle database), as well as the resource classification (dev/test/prod)</p>
+<?php
+$local_resources = [];
+foreach($service_instance->resources as $si_resource_index => $si_resource) {
+    foreach($resources as $resource) {
+        if ( $si_resource->resource === $resource->id ) {
+            $local_resources[$si_resource->name] = $resource;
+        }
+    }
+}
+?>
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Resource</th>
+            <th>Type</th>
+            <th>Dev/Test/Prod</th>
+        </tr>
+    </thead>
+    <tbody>
+    @foreach ($local_resources as $local_resource_name => $local_resource)
+        <tr>
+            <td>{{$local_resource_name}}</td>
+            <td>{{ $local_resource->name }}</td>
+            <td>{{ $local_resource->resource_type }}</td>
+            <td>{{ $local_resource->type }}</td>
+        </tr>
+    @endforeach
+    </tbody>
+</table>
+@else
+There are no resources.
+@endif
+
 <!-- Authentication -->
             <h1 id='authentication'>Authentication</h1>
             <blockquote class="highlight graphene tab-graphene">
