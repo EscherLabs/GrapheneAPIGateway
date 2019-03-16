@@ -194,7 +194,7 @@
          color: #f92672;
          }
       </style>
-      <link href="/assets/css/fontawesome.5.7.2.css" rel="stylesheet" media="screen" />
+      <link href="/assets/css/font-awesome.min.css" rel="stylesheet" media="screen" />
       <link href="/assets/css/slate_screen.css" rel="stylesheet" media="screen" />
       <link href="/assets/css/slate_print.css" rel="stylesheet" media="print" />
       <script src="/assets/js/slate_all.js"></script>
@@ -202,7 +202,7 @@
    <body class="index" data-languages="[&quot;shell&quot;,&quot;graphene&quot;]">
       <a href="#" id="nav-button">
       <span>
-      NAV <i class="fa fa-hamburger fa-rotate-90"></i>
+      NAV <i class="fa fa-bars fa-rotate-90"></i>
       <!-- <img src="/assets/images/navbar.png" alt="Navbar" /> -->
       </span>
       </a>
