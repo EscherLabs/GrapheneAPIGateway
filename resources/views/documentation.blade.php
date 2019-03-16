@@ -1,4 +1,8 @@
-<!doctype html>
+<?php 
+$envurl = function ($path) use ($service_instance) {
+    return "http".(app('request')->secure()?'s':'')."://".$service_instance->environment->domain.'/'.$path;
+}
+?><!doctype html>
 <html>
    <head>
       <meta charset="utf-8">
@@ -318,7 +322,7 @@ foreach($service_instance->resources as $si_resource_index => $si_resource) {
             <pre class="highlight graphene tab-graphene">
             <code>
 Auth Type: HTTP Basic Auth
-URL: {{ url($service_instance->slug) }}
+URL: {{ $envurl($service_instance->slug) }}
 Username: username
 Password: password
             </code>
@@ -328,7 +332,7 @@ Password: password
             </blockquote>
             <pre class="highlight shell tab-shell">
             <code>
-curl {{ url($service_instance->slug) }}
+curl {{ $envurl($service_instance->slug) }}
     -u username:password
             </code>
             </pre>
@@ -354,7 +358,7 @@ curl {{ url($service_instance->slug) }}
 <pre class="highlight graphene tab-graphene">
 <b><u>Endpoint Definition</u></b>
 Auth Type: HTTP Basic Auth
-URL: {{ url($service_instance->slug) }}
+URL: {{ $envurl($service_instance->slug) }}
 Username: username
 Password: password
 
@@ -376,24 +380,24 @@ Resource Path: {{ $si_route->path }}
 @if ($si_route->verb === 'ALL')
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ url($service_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
+curl {{ $envurl($service_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
 
   -u username:password
 </code>
 <code>
-curl {{ url($service_instance->slug.$si_route->path) }}
+curl {{ $envurl($service_instance->slug.$si_route->path) }}
   -X POST
   -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
 </code>
 <code>
-curl {{ url($service_instance->slug.$si_route->path) }}
+curl {{ $envurl($service_instance->slug.$si_route->path) }}
   -X PUT
   -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
 </code>
 <code>
-curl {{ url($service_instance->slug.$si_route->path) }}
+curl {{ $envurl($service_instance->slug.$si_route->path) }}
   -X DELETE
   -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
@@ -403,7 +407,7 @@ curl {{ url($service_instance->slug.$si_route->path) }}
 @if ($si_route->verb === 'GET')
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ url($service_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
+curl {{ $envurl($service_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
 
   -u username:password
 </code>
@@ -411,7 +415,7 @@ curl {{ url($service_instance->slug.$si_route->path) }}?@foreach ($si_route->par
 @else 
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ url($service_instance->slug.$si_route->path) }}
+curl {{ $envurl($service_instance->slug.$si_route->path) }}
   -X {{$si_route->verb}}
   -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
@@ -431,10 +435,10 @@ curl {{ url($service_instance->slug.$si_route->path) }}
             <p>{{$si_route->description}}</p>
             @if ($si_route->verb === 'ALL')
                 <h3 id='http-request'>HTTP Request</h3>
-                <p><code>GET {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>POST {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>PUT {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>DELETE {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>GET {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>POST {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>PUT {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>DELETE {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
                 <h3>Parameters</h3>
                 @if (count($si_route->params)>0)
                     <aside class="note">Required parameters can be sent as x-www-form-urlencoded variables, query string variables (example: <code>?{{$si_route->params[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
@@ -442,7 +446,7 @@ curl {{ url($service_instance->slug.$si_route->path) }}
                 <aside class="note">Optional parameters can be sent as x-www-form-urlencoded variables or query string variables (example: <code>?tacos=good</code>)</aside>
             @else
                 <h3 id='http-request'>HTTP {{$si_route->verb}} Request</h3>
-                <p><code>{{$si_route->verb}} {{ url($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>{{$si_route->verb}} {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
                 <h3>Parameters</h3>
                 @if ($si_route->verb === 'GET')
                     @if (count($si_route->params)>0)
