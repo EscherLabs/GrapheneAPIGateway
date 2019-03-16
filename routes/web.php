@@ -65,7 +65,7 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
 
     $router->get('/activity_log',['uses'=>'ActivityLogController@browse']);
 
-    $router->get('/service_docs/{slug}',['uses'=>'DocumentationController@fetch']);
+    $router->get('/service_docs/{service_instance_id}',['uses'=>'DocumentationController@fetch']);
 });
 
 $router->get('/{slug}', ['uses'=>'DocumentationController@docs']);

@@ -63,7 +63,7 @@ class ExecController extends Controller
 
     public function exec($slug) {
         $exec_service = new ExecService();
-
+        // TJC -- need to limit slug to current environment based on URL (could have same slug for multiple envts)
         $service_instance = ServiceInstance::where('slug',$slug)->with('service')->first();
         if (is_null($service_instance)) {
             abort(404);

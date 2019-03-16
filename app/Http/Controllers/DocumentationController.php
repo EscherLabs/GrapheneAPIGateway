@@ -20,6 +20,7 @@ class DocumentationController extends Controller
     }
     
     public function docs($slug) {
+        // TJC -- need to limit slug to current environment based on URL (could have same slug for multiple envts)
         $service_instance = ServiceInstance::where('slug',$slug)->with('service')->with('environment')->first();
         if (is_null($service_instance)) {
             abort(404);
@@ -52,12 +53,9 @@ class DocumentationController extends Controller
         ]);
     }
 
-    public function fetch($slug) {
-        if (is_numeric($slug)) {
-            $service_instance = ServiceInstance::where('id',$slug)->with('service')->with('environment')->first();
-        } else {
-            $service_instance = ServiceInstance::where('slug',$slug)->with('service')->with('environment')->first();
-        }
+    public function fetch($service_instance_id) {
+        $service_instance = ServiceInstance::where('id',$service_instance_id)->with('service')->with('environment')->first();
+
         if (is_null($service_instance)) {
             abort(404);
         }
