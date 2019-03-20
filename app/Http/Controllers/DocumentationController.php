@@ -24,7 +24,7 @@ class DocumentationController extends Controller
             $q->where('domain','=',$_SERVER['HTTP_HOST']);
         })->first();
         if (is_null($service_instance)) {
-            return response(json_encode(['error'=>'API Not Found']),404);
+            return response(json_encode(['error'=>'API Not Found']),404)->header('Content-type', 'application/json');;
         }
         $service_version = $service_instance->find_version();
 
@@ -58,7 +58,7 @@ class DocumentationController extends Controller
         $service_instance = ServiceInstance::where('id',$service_instance_id)->with('service')->with('environment')->first();
 
         if (is_null($service_instance)) {
-            return response(json_encode(['error'=>'API Not Found']),404);
+            return response(json_encode(['error'=>'API Not Found']),404)->header('Content-type', 'application/json');;
         }
         $service_version = $service_instance->find_version();
         $user_id_arr = [];
