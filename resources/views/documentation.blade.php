@@ -197,6 +197,9 @@ $envurl = function ($path) use ($service_instance) {
          .highlight .o {
          color: #f92672;
          }
+         .content code {
+             hyphens:none;
+         }
       </style>
       <link href="/assets/css/font-awesome.min.css" rel="stylesheet" media="screen" />
       <link href="/assets/css/slate_screen.css" rel="stylesheet" media="screen" />
@@ -231,12 +234,12 @@ $envurl = function ($path) use ($service_instance) {
                <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
             </li>
             <li>
-               <a href="#api-routes" class="toc-h1 toc-link" data-title="API Routes">API Routes</a>
+               <a href="#api-routes" class="toc-h1 toc-link" data-title="API Routes">/{{$service_instance->slug}} API</a>
                <ul class="toc-list-h2">
                @foreach ($service_version->routes as $si_key => $si_route)
                <?php if (!isset($si_route->params)) { $si_route->params = []; } ?>
                   <li>
-                     <a href="#api-route-{{$si_key}}" class="toc-h2 toc-link" data-title="/{{$service_instance->slug}}{{$si_route->path}}">/{{$service_instance->slug}}{{$si_route->path}}</a>
+                     <a href="#api-route-{{$si_key}}" class="toc-h2 toc-link" data-title="/{{$service_instance->slug}}{{$si_route->path}}">@if($si_route->verb == 'ALL') [ALL] @else {{$si_route->verb}} @endif {{$si_route->path}}</a>
                   </li>
                 @endforeach
                </ul>
@@ -349,12 +352,12 @@ curl {{ $envurl($service_instance->slug) }}
             </aside>
 <!-- End Authentication -->
 <!-- API --> 
-            <h1 id='api-routes'>API Routes</h1>
+            <h1 id='api-routes'>/{{$service_instance->slug}} API</h1>
 @foreach ($service_version->routes as $si_key => $si_route)
 <?php if (!isset($si_route->params)) { $si_route->params = []; } ?>
 <!-- First One -->
 
-            <h2 id='api-route-{{$si_key}}'>/{{$service_instance->slug}}{{$si_route->path}}</h2>
+            <h2 id='api-route-{{$si_key}}'>@if($si_route->verb == 'ALL') GET,POST,PUT,DELETE @else {{$si_route->verb}} @endif /{{$service_instance->slug}}{{$si_route->path}}</h2>
 <pre class="highlight graphene tab-graphene">
 <b><u>Endpoint Definition</u></b>
 Auth Type: HTTP Basic Auth
