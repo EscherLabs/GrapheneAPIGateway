@@ -62,10 +62,11 @@ class Router
     $wrong_verb = false;
     foreach (self::$routes as $path => $path_info)
     {
-      $path_regex = '/^'.str_replace ('/','\/',$path).'/';
+      /* Match Path (Must either end or have a slash) */
+      $path_regex = '/^'.str_replace ('/','\/',$path).'(\/|\z)/';
       if (preg_match($path_regex, $thisRoute) == 1) {
         foreach($path_info as $verb => $path_info_info) {
-          if($_SERVER['REQUEST_METHOD'] == $verb || $verb == 'all') {
+          if($_SERVER['REQUEST_METHOD'] == $verb || $verb == 'ALL') {
             $routeHandlerClass = new $path_info_info['class'];
             $routeHandlerFunction = $path_info_info['function'];
             ob_start();
