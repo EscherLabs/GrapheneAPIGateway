@@ -25,7 +25,7 @@ class OracleDB {
     {
         self::$objConnect = \oci_connect(self::$databases[$db_name]->user,
                                         self::$databases[$db_name]->pass,
-                                        self::$databases[$db_name]->tns_name,
+                                        self::$databases[$db_name]->tns,
                                         'AL32UTF8');
 
         if (!self::$objConnect) {
