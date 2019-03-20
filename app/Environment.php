@@ -9,8 +9,8 @@ class Environment extends Model
 {
   protected $fillable = ['domain', 'name' ,'type'];
 
-  public function service_instances() {
-    return $this->hasMany(ServiceInstance::class);
+  public function api_instances() {
+    return $this->hasMany(APIInstance::class);
   }
 
   public static function boot()

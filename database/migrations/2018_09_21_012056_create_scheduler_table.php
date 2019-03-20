@@ -17,7 +17,7 @@ class CreateSchedulerTable extends Migration
             $table->increments('id');
             $table->string('name')->default('');
             $table->string('cron')->default('0 0 5 31 2 ?');
-            $table->integer('service_instance_id')->unsigned()->index();
+            $table->integer('api_instance_id')->unsigned()->index();
             $table->string('route')->nullable();
             $table->json('args')->nullable();
             $table->string('verb')->default('GET');

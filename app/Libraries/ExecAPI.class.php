@@ -2,9 +2,9 @@
 
 namespace App\Libraries;
 
-use \App\Module;
-use \App\ModuleInstance;
-use \App\ModuleVersion;
+use \App\API;
+use \App\APIInstance;
+use \App\APIVersion;
 use \App\APIUser;
 use \App\Resource;
 use \App\Libraries\Router;
@@ -13,10 +13,10 @@ use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
 use Illuminate\Http\Request;
 
-class ExecService {
+class ExecAPI {
 
-    public function build_routes($service_instance,$service_version) {
-        foreach($service_version->routes as $route_index =>$route) {
+    public function build_routes($api_instance,$api_version) {
+        foreach($api_version->routes as $route_index =>$route) {
             $extra = [];
             if (isset($route->verb)) {$verb = $route->verb;} else { $verb = 'all';}
             if (isset($route->params)) {
@@ -29,8 +29,8 @@ class ExecService {
                 }
             }
             Router::add_route(
-                '/'.$service_instance->slug.$route->path, 
-                $service_instance->service->name, 
+                '/'.$api_instance->slug.$route->path, 
+                $api_instance->api->name, 
                 $route->function_name, 
                 $extra,
                 $verb
@@ -38,12 +38,12 @@ class ExecService {
         }
     } 
 
-    public function build_resources($service_instance) {
-        /* Fetch and Configure Database for this Service Instance */
+    public function build_resources($api_instance) {
+        /* Fetch and Configure Database for this API Instance */
         $resources_arr = [];
         $resources_name_map = [];
-        if (is_array($service_instance->resources)) {
-            foreach($service_instance->resources as $resource_index => $resource_map) {
+        if (is_array($api_instance->resources)) {
+            foreach($api_instance->resources as $resource_index => $resource_map) {
                 $resources_arr[] = $resource_map->resource;
                 $resources_name_map[$resource_map->resource] = $resource_map->name;
             }
@@ -86,15 +86,15 @@ class ExecService {
         }
     }
 
-    public function eval_code($service_instance, $service_version) {
+    public function eval_code($api_instance, $api_version) {
         /* Evaluate Functions */
         $main_class = "\n".
             'use \App\Libraries\MySQLDB;'."\n".
             'use \App\Libraries\OracleDB;'."\n".
             'use Illuminate\Support\Facades\DB;'."\n\n".
-            'class '.$service_instance->service->name.' {'."\n";
+            'class '.$api_instance->api->name.' {'."\n";
 
-        foreach($service_version->functions as $function) {
+        foreach($api_version->functions as $function) {
             if ($function->name === 'Constructor') {
                 $main_class .= 'function __construct($args=[]) {'."\n".
                     $function->content.
@@ -110,7 +110,7 @@ class ExecService {
         eval($main_class);
 
         /* Evaluate Files */
-        foreach($service_version->files as $code_file) {
+        foreach($api_version->files as $code_file) {
             $prepended_code = 
                 '?><?php'."\n".
                 'use \App\Libraries\MySQLDB;'."\n".

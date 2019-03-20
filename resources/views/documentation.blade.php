@@ -1,6 +1,6 @@
 <?php 
-$envurl = function ($path) use ($service_instance) {
-    return "http".(app('request')->secure()?'s':'')."://".$service_instance->environment->domain.'/'.$path;
+$envurl = function ($path) use ($api_instance) {
+    return "http".(app('request')->secure()?'s':'')."://".$api_instance->environment->domain.'/'.$path;
 }
 ?><!doctype html>
 <html>
@@ -8,7 +8,7 @@ $envurl = function ($path) use ($service_instance) {
       <meta charset="utf-8">
       <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
       <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
-      <title>{{ $service_instance->name }} API Documentation</title>
+      <title>{{ $api_instance->name }} API Documentation</title>
       <style>
          .highlight table td { padding: 5px; }
          .highlight table pre { margin: 0; }
@@ -225,7 +225,7 @@ $envurl = function ($path) use ($service_instance) {
          <ul class="search-results"></ul>
          <ul id="toc" class="toc-list-h1">
             <li>
-               <a href="#introduction" class="toc-h1 toc-link" data-title="{{ $service_instance->name }} API">{{ $service_instance->name }} API</a>
+               <a href="#introduction" class="toc-h1 toc-link" data-title="{{ $api_instance->name }} API">{{ $api_instance->name }} API</a>
             </li>
             <li>
                <a href="#resources" class="toc-h1 toc-link" data-title="Resources">Resources</a>
@@ -234,12 +234,12 @@ $envurl = function ($path) use ($service_instance) {
                <a href="#authentication" class="toc-h1 toc-link" data-title="Authentication">Authentication</a>
             </li>
             <li>
-               <a href="#api-routes" class="toc-h1 toc-link" data-title="API Routes">/{{$service_instance->slug}} API</a>
+               <a href="#api-routes" class="toc-h1 toc-link" data-title="API Routes">/{{$api_instance->slug}} API</a>
                <ul class="toc-list-h2">
-               @foreach ($service_version->routes as $si_key => $si_route)
+               @foreach ($api_version->routes as $si_key => $si_route)
                <?php if (!isset($si_route->params)) { $si_route->params = []; } ?>
                   <li>
-                     <a href="#api-route-{{$si_key}}" class="toc-h2 toc-link" data-title="/{{$service_instance->slug}}{{$si_route->path}}">@if($si_route->verb == 'ALL') [ALL] @else {{$si_route->verb}} @endif {{$si_route->path}}</a>
+                     <a href="#api-route-{{$si_key}}" class="toc-h2 toc-link" data-title="/{{$api_instance->slug}}{{$si_route->path}}">@if($si_route->verb == 'ALL') [ALL] @else {{$si_route->verb}} @endif {{$si_route->path}}</a>
                   </li>
                 @endforeach
                </ul>
@@ -255,13 +255,13 @@ $envurl = function ($path) use ($service_instance) {
       <div class="page-wrapper">
          <div class="dark-box"></div>
          <div class="content">
-            <h1 id='introduction'><i>{{ $service_instance->name }}</i> API <span style="float:right;color:red;font-size:15px;">({{$service_instance->environment->type}})</span></h1>
-            <p>Welcome to the <i>{{ $service_instance->name }}</i> API</p>
+            <h1 id='introduction'><i>{{ $api_instance->name }}</i> API <span style="float:right;color:red;font-size:15px;">({{$api_instance->environment->type}})</span></h1>
+            <p>Welcome to the <i>{{ $api_instance->name }}</i> API</p>
             <h3>Description</h3>
-            <p>{{ $service_instance->service->description }}</p>
+            <p>{{ $api_instance->api->description }}</p>
             <h3>Version Information</h3>
-            <p>{{ $service_version->summary }}</p>
-            <p>{{ $service_version->description }}</p>
+            <p>{{ $api_version->summary }}</p>
+            <p>{{ $api_version->description }}</p>
             <table>
                <thead>
                   <tr>
@@ -272,20 +272,20 @@ $envurl = function ($path) use ($service_instance) {
                </thead>
                <tbody>
                   <tr>
-                     <td>{{ $service_version->updated_at }}</td>
-                     <td>{{ $service_version->stable }}</td>
-                     <td>{{ $service_version->user_id }}</td>
+                     <td>{{ $api_version->updated_at }}</td>
+                     <td>{{ $api_version->stable }}</td>
+                     <td>{{ $api_version->user_id }}</td>
                   </tr>
                </tbody>
             </table>
 <!-- Resources -->
             <h1 id='resources'>Resources</h1>
-            @if(count($service_instance->resources) > 0)
-            <p>These are the resources (databases, external APIs, etc) which are consumed by the <i>{{ $service_instance->name }}</i> API</p>
+            @if(count($api_instance->resources) > 0)
+            <p>These are the resources (databases, external APIs, etc) which are consumed by the <i>{{ $api_instance->name }}</i> API</p>
             <p>The table below can be used to identify the type of resources being used (mysql/oracle database), as well as the resource classification (dev/test/prod)</p>
 <?php
 $local_resources = [];
-foreach($service_instance->resources as $si_resource_index => $si_resource) {
+foreach($api_instance->resources as $si_resource_index => $si_resource) {
     foreach($resources as $resource) {
         if ( $si_resource->resource == $resource->id ) {
             $local_resources[$si_resource->name] = $resource;
@@ -325,7 +325,7 @@ foreach($service_instance->resources as $si_resource_index => $si_resource) {
             <pre class="highlight graphene tab-graphene">
             <code>
 Auth Type: HTTP Basic Auth
-URL: {{ $envurl($service_instance->slug) }}
+URL: {{ $envurl($api_instance->slug) }}
 Username: username
 Password: password
             </code>
@@ -335,15 +335,15 @@ Password: password
             </blockquote>
             <pre class="highlight shell tab-shell">
             <code>
-curl {{ $envurl($service_instance->slug) }}
+curl {{ $envurl($api_instance->slug) }}
     -u username:password
             </code>
             </pre>
             <blockquote class="highlight">
                <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials.</p>
             </blockquote>
-            <p>The <i>{{ $service_instance->name }}</i> API uses HTTP basic authentication to allow access to the API.  Contact the API Developer @isset($service_instance->service->user)({{ $service_instance->service->user }}) @endisset to generate a username/password to use this API</a>.</p>
-            <aside class="success">There is/are currently {{count($service_instance->route_user_map)}} user account(s) / app username(s) for the <i>{{ $service_instance->name }}</i> API:
+            <p>The <i>{{ $api_instance->name }}</i> API uses HTTP basic authentication to allow access to the API.  Contact the API Developer @isset($api_instance->api->user)({{ $api_instance->api->user }}) @endisset to generate a username/password to use this API</a>.</p>
+            <aside class="success">There is/are currently {{count($api_instance->route_user_map)}} user account(s) / app username(s) for the <i>{{ $api_instance->name }}</i> API:
                 <ul>
                     @foreach($users as $user)
                     <li>{{ $user->app_name }}</li>
@@ -352,16 +352,16 @@ curl {{ $envurl($service_instance->slug) }}
             </aside>
 <!-- End Authentication -->
 <!-- API --> 
-            <h1 id='api-routes'>/{{$service_instance->slug}} API</h1>
-@foreach ($service_version->routes as $si_key => $si_route)
+            <h1 id='api-routes'>/{{$api_instance->slug}} API</h1>
+@foreach ($api_version->routes as $si_key => $si_route)
 <?php if (!isset($si_route->params)) { $si_route->params = []; } ?>
 <!-- First One -->
 
-            <h2 id='api-route-{{$si_key}}'>@if($si_route->verb == 'ALL') GET,POST,PUT,DELETE @else {{$si_route->verb}} @endif /{{$service_instance->slug}}{{$si_route->path}}</h2>
+            <h2 id='api-route-{{$si_key}}'>@if($si_route->verb == 'ALL') GET,POST,PUT,DELETE @else {{$si_route->verb}} @endif /{{$api_instance->slug}}{{$si_route->path}}</h2>
 <pre class="highlight graphene tab-graphene">
 <b><u>Endpoint Definition</u></b>
 Auth Type: HTTP Basic Auth
-URL: {{ $envurl($service_instance->slug) }}
+URL: {{ $envurl($api_instance->slug) }}
 Username: username
 Password: password
 
@@ -383,24 +383,24 @@ Resource Path: {{ $si_route->path }}
 @if ($si_route->verb === 'ALL')
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ $envurl($service_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
+curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
 
   -u username:password
 </code>
 <code>
-curl {{ $envurl($service_instance->slug.$si_route->path) }}
+curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X POST
   -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
 </code>
 <code>
-curl {{ $envurl($service_instance->slug.$si_route->path) }}
+curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X PUT
   -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
 </code>
 <code>
-curl {{ $envurl($service_instance->slug.$si_route->path) }}
+curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X DELETE
   -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
@@ -410,7 +410,7 @@ curl {{ $envurl($service_instance->slug.$si_route->path) }}
 @if ($si_route->verb === 'GET')
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ $envurl($service_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
+curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
 
   -u username:password
 </code>
@@ -418,7 +418,7 @@ curl {{ $envurl($service_instance->slug.$si_route->path) }}?@foreach ($si_route-
 @else 
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ $envurl($service_instance->slug.$si_route->path) }}
+curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X {{$si_route->verb}}
   -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
@@ -438,10 +438,10 @@ curl {{ $envurl($service_instance->slug.$si_route->path) }}
             <p>{{$si_route->description}}</p>
             @if ($si_route->verb === 'ALL')
                 <h3 id='http-request'>HTTP Request</h3>
-                <p><code>GET {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>POST {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>PUT {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>DELETE {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>GET {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>POST {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>PUT {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>DELETE {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
                 <h3>Parameters</h3>
                 @if (count($si_route->params)>0)
                     <aside class="note">Required parameters can be sent as x-www-form-urlencoded variables, query string variables (example: <code>?{{$si_route->params[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
@@ -449,7 +449,7 @@ curl {{ $envurl($service_instance->slug.$si_route->path) }}
                 <aside class="note">Optional parameters can be sent as x-www-form-urlencoded variables or query string variables (example: <code>?tacos=good</code>)</aside>
             @else
                 <h3 id='http-request'>HTTP {{$si_route->verb}} Request</h3>
-                <p><code>{{$si_route->verb}} {{ $envurl($service_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>{{$si_route->verb}} {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
                 <h3>Parameters</h3>
                 @if ($si_route->verb === 'GET')
                     @if (count($si_route->params)>0)
@@ -496,7 +496,7 @@ curl {{ $envurl($service_instance->slug.$si_route->path) }}
 @endforeach
 <!-- Errors -->
             <h1 id='errors'>Errors</h1>
-            <p>The <i>{{ $service_instance->name }}</i> API uses the following HTTP error codes:</p>
+            <p>The <i>{{ $api_instance->name }}</i> API uses the following HTTP error codes:</p>
             <table>
                <thead>
                   <tr>

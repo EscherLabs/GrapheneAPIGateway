@@ -54,11 +54,11 @@ class DatabaseSeeder extends Seeder
         ]);
         $resource2->save();
 
-        $service = new \App\Service(['name'=>'TestService','description'=>'This is a test']);
-        $service->save();
+        $api = new \App\API(['name'=>'TestAPI','description'=>'This is a test']);
+        $api->save();
 
-        $service_version = new \App\ServiceVersion([
-            'service_id'=>$service->id, 
+        $api_version = new \App\APIVersion([
+            'api_id'=>$api->id, 
             'summary'=>'First Version',
             'description'=>'From DB Seed',
             'functions'=>[[
@@ -134,10 +134,10 @@ class AnotherClass {
                 ]
             ],
         ]);
-        $service_version->save();
+        $api_version->save();
 
-        $nosql_service = new \App\Service(['name'=>'NoSQLDB','description'=>'This is a default NoSQL Database Service']);
-        $nosql_service->save();
+        $nosql_api = new \App\API(['name'=>'NoSQLDB','description'=>'This is a default NoSQL Database API']);
+        $nosql_api->save();
 
         $files = <<<'EOD'
 [  
@@ -168,8 +168,8 @@ class AnotherClass {
 ]
 EOD;
 
-        $nosql_service_version = new \App\ServiceVersion([
-            'service_id'=>$nosql_service->id, 
+        $nosql_api_version = new \App\APIVersion([
+            'api_id'=>$nosql_api->id, 
             'summary'=>'First Version',
             'description'=>'From DB Seed',
             'functions'=>json_decode($files),
@@ -177,15 +177,15 @@ EOD;
             'resources'=>[], 
             'routes'=>json_decode('[{"path": "/", "verb": "GET", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "0"}], "description": "", "function_name": "read"}, {"path": "/", "verb": "PUT", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "edit"}, {"path": "/", "verb": "POST", "params": [{"name": "type", "required": "true"}], "description": "", "function_name": "add"}, {"path": "/", "verb": "DELETE", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "delete"}]'),
         ]);
-        $nosql_service_version->save();
+        $nosql_api_version->save();
 
-        $service_instance = new \App\ServiceInstance([
-            'name'=>'New TestService Instance',
+        $api_instance = new \App\APIInstance([
+            'name'=>'New TestAPI Instance',
             'slug'=>'test',
             'public'=>false,
-            'service_version_id'=>$service_version->id,
+            'api_version_id'=>$api_version->id,
             'environment_id'=>$environment->id,
-            'service_id'=>$service->id,
+            'api_id'=>$api->id,
             'route_user_map'=>[
                 [
                     'route'=>'/hello_world',
@@ -211,15 +211,15 @@ EOD;
                 ]  
             ]
         ]);
-        $service_instance->save();
+        $api_instance->save();
 
-        $nosql_service_instance = new \App\ServiceInstance([
+        $nosql_api_instance = new \App\APIInstance([
             'name'=>'NoSQL Demo',
             'slug'=>'nosqldb_demo',
             'public'=>false,
-            'service_version_id'=>$nosql_service_version->id,
+            'api_version_id'=>$nosql_api_version->id,
             'environment_id'=>$environment->id,
-            'service_id'=>$nosql_service->id,
+            'api_id'=>$nosql_api->id,
             'route_user_map'=>[
                 [
                     'route'=>'',
@@ -228,12 +228,12 @@ EOD;
             ],
             'resources'=>[]
         ]);
-        $nosql_service_instance->save();
+        $nosql_api_instance->save();
 
         $scheduler = new \App\Scheduler([
             'name'=>'Echo Every Min',
             'cron' => '* * * * *',
-            'service_instance_id' => $service_instance->id,
+            'api_instance_id' => $api_instance->id,
             'route' => '/echo',
             'args'=>[['name'=>'hello','value'=>'world']],
             'verb'=>'GET',

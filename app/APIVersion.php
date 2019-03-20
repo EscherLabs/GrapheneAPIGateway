@@ -5,18 +5,18 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use App\ActivityLog;
 
-class ServiceVersion extends Model
+class APIVersion extends Model
 {
-
-  protected $fillable = ['service_id', 'summary', 'description', 'stable' ,'files', 'functions', 'resources', 'routes', 'user_id'];
+  protected $table = 'api_versions';
+  protected $fillable = ['api_id', 'summary', 'description', 'stable' ,'files', 'functions', 'resources', 'routes', 'user_id'];
   protected $casts = ['files' => 'object', 'functions'=> 'object','resources' => 'object', 'routes' => 'object'];
 
 
-  public function service() {
-    return $this->belongsTo(Service::class);
+  public function api() {
+    return $this->belongsTo(API::class);
   }
-  public function service_instances() {
-    return $this->hasOne(ServiceInstance::class);
+  public function api_instances() {
+    return $this->hasOne(APIInstance::class);
   }  
 
   // public static function boot()

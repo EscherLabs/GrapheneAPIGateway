@@ -28,27 +28,27 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
     $router->post('/environments',['uses'=>'EnvironmentsController@add']);
     $router->delete('/environments/{environment_id}',['uses'=>'EnvironmentsController@delete']);
 
-    $router->get('/services',['uses'=>'ServicesController@browse']);
-    $router->get('/services/{service_id}',['uses'=>'ServicesController@read']);
-    $router->get('/services/{service_id}/versions/latest',['uses'=>'ServicesController@latest_version']);
-    $router->get('/services/{service_id}/versions',['uses'=>'ServicesController@versions']);
-    $router->put('/services/{service_id}',['uses'=>'ServicesController@edit']);
-    $router->put('/services/{service_id}/publish',['uses'=>'ServicesController@publish']);
-    $router->put('/services/{service_id}/code',['uses'=>'ServicesController@code']);
-    $router->post('/services',['uses'=>'ServicesController@add']);
-    $router->delete('/services/{service_id}',['uses'=>'ServicesController@delete']);
+    $router->get('/apis',['uses'=>'APIsController@browse']);
+    $router->get('/apis/{api_id}',['uses'=>'APIsController@read']);
+    $router->get('/apis/{api_id}/versions/latest',['uses'=>'APIsController@latest_version']);
+    $router->get('/apis/{api_id}/versions',['uses'=>'APIsController@versions']);
+    $router->put('/apis/{api_id}',['uses'=>'APIsController@edit']);
+    $router->put('/apis/{api_id}/publish',['uses'=>'APIsController@publish']);
+    $router->put('/apis/{api_id}/code',['uses'=>'APIsController@code']);
+    $router->post('/apis',['uses'=>'APIsController@add']);
+    $router->delete('/apis/{api_id}',['uses'=>'APIsController@delete']);
 
-    $router->get('/service_versions',['uses'=>'ServiceVersionsController@browse']);
-    $router->get('/service_versions/{service_version_id}',['uses'=>'ServiceVersionsController@read']);
-    $router->put('/service_versions/{service_version_id}',['uses'=>'ServiceVersionsController@edit']);
-    $router->post('/service_versions',['uses'=>'ServiceVersionsController@add']);
-    $router->delete('/service_versions/{service_version_id}',['uses'=>'ServiceVersionsController@delete']);
+    $router->get('/api_versions',['uses'=>'APIVersionsController@browse']);
+    $router->get('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@read']);
+    $router->put('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@edit']);
+    $router->post('/api_versions',['uses'=>'APIVersionsController@add']);
+    $router->delete('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@delete']);
     
-    $router->get('/service_instances',['uses'=>'ServiceInstancesController@browse']);
-    $router->get('/service_instances/{service_instance_id}',['uses'=>'ServiceInstancesController@read']);
-    $router->put('/service_instances/{service_instance_id}',['uses'=>'ServiceInstancesController@edit']);
-    $router->post('/service_instances',['uses'=>'ServiceInstancesController@add']);
-    $router->delete('/service_instances/{service_instance_id}',['uses'=>'ServiceInstancesController@delete']);
+    $router->get('/api_instances',['uses'=>'APIInstancesController@browse']);
+    $router->get('/api_instances/{api_instance_id}',['uses'=>'APIInstancesController@read']);
+    $router->put('/api_instances/{api_instance_id}',['uses'=>'APIInstancesController@edit']);
+    $router->post('/api_instances',['uses'=>'APIInstancesController@add']);
+    $router->delete('/api_instances/{api_instance_id}',['uses'=>'APIInstancesController@delete']);
     
     $router->get('/resources',['uses'=>'ResourcesController@browse']);
     $router->get('/resources/{resource_id}',['uses'=>'ResourcesController@read']);
@@ -65,7 +65,7 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
 
     $router->get('/activity_log',['uses'=>'ActivityLogController@browse']);
 
-    $router->get('/service_docs/{service_instance_id}',['uses'=>'DocumentationController@fetch']);
+    $router->get('/api_docs/{api_instance_id}',['uses'=>'DocumentationController@fetch']);
 });
 
 $router->get('/{slug}', ['uses'=>'DocumentationController@docs']);

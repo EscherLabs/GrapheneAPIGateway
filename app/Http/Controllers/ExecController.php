@@ -2,16 +2,16 @@
 
 namespace App\Http\Controllers;
 
-use \App\Service;
-use \App\ServiceInstance;
-use \App\ServiceVersion;
+use \App\API;
+use \App\APIInstance;
+use \App\APIVersion;
 use \App\APIUser;
 use \App\Resource;
 use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
-use \App\Libraries\ExecService;
+use \App\Libraries\ExecAPI;
 use Illuminate\Http\Request;
 
 class ExecController extends Controller
@@ -19,11 +19,11 @@ class ExecController extends Controller
     public function __construct() {
     }
 
-    private function validate_user($service_instance) {
+    private function validate_user($api_instance) {
         $user_id_arr = [];
-        foreach($service_instance->route_user_map as $route_user_map_index => $route_user) {
+        foreach($api_instance->route_user_map as $route_user_map_index => $route_user) {
             $user_id_arr[] = $route_user->api_user;
-            $user_to_routes[$route_user->api_user][] = '/'.$service_instance->slug.$route_user->route;
+            $user_to_routes[$route_user->api_user][] = '/'.$api_instance->slug.$route_user->route;
         }
         $relevant_users = APIUser::whereIn('id',$user_id_arr)->get();
         $users = [];
@@ -54,7 +54,7 @@ class ExecController extends Controller
         }
         if (!($userisok && $ipisok && $routeisok)) {
             return response(json_encode(['error'=>'Unauthorized User']),401)
-                ->header('WWW-Authenticate', 'Basic realm="'.$service_instance->name.' API"')
+                ->header('WWW-Authenticate', 'Basic realm="'.$api_instance->name.' API"')
                 ->header('Content-type', 'application/json');
         } else {
             return true;
@@ -62,22 +62,22 @@ class ExecController extends Controller
     }
 
     public function exec($slug) {
-        $exec_service = new ExecService();
-        $service_instance = ServiceInstance::where('slug',$slug)->with('service')->whereHas('environment', function($q){
+        $exec_api = new ExecAPI();
+        $api_instance = APIInstance::where('slug',$slug)->with('api')->whereHas('environment', function($q){
             $q->where('domain','=',$_SERVER['HTTP_HOST']);
         })->first();
-        if (is_null($service_instance)) {
+        if (is_null($api_instance)) {
             return response(json_encode(['error'=>'API Not Found']),404)->header('Content-type', 'application/json');
         }
-        $service_version = $service_instance->find_version();
-        $ret = $this->validate_user($service_instance);
+        $api_version = $api_instance->find_version();
+        $ret = $this->validate_user($api_instance);
         if ($ret !== true) {
             return $ret;
         }
 
-        $exec_service->build_routes($service_instance,$service_version);
-        $exec_service->build_resources($service_instance);
-        return $exec_service->eval_code($service_instance,$service_version);
+        $exec_api->build_routes($api_instance,$api_version);
+        $exec_api->build_resources($api_instance);
+        return $exec_api->eval_code($api_instance,$api_version);
 
     }   
 }

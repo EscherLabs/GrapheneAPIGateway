@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateServiceVersionsTable extends Migration
+class CreateAPIVersionsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,9 @@ class CreateServiceVersionsTable extends Migration
      */
     public function up()
     {
-        Schema::create('service_versions', function (Blueprint $table) {
+        Schema::create('api_versions', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('service_id')->unsigned()->index();
+            $table->integer('api_id')->unsigned()->index();
             $table->string('summary')->default('');
             $table->string('description')->default('');
             $table->boolean('stable')->default(false);
@@ -25,7 +25,7 @@ class CreateServiceVersionsTable extends Migration
             $table->json('routes')->nullable();
             $table->string('user_id')->nullable()->default(null);
             $table->timestamps();
-            $table->foreign('service_id')->references('id')->on('services')->onDelete('cascade');
+            $table->foreign('api_id')->references('id')->on('apis')->onDelete('cascade');
         });
     }
 
@@ -36,6 +36,6 @@ class CreateServiceVersionsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('service_versions');
+        Schema::dropIfExists('api_versions');
     }
 }
