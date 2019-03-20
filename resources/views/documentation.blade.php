@@ -287,7 +287,7 @@ $envurl = function ($path) use ($service_instance) {
 $local_resources = [];
 foreach($service_instance->resources as $si_resource_index => $si_resource) {
     foreach($resources as $resource) {
-        if ( $si_resource->resource === $resource->id ) {
+        if ( $si_resource->resource == $resource->id ) {
             $local_resources[$si_resource->name] = $resource;
         }
     }
@@ -470,6 +470,7 @@ curl {{ $envurl($service_instance->slug.$si_route->path) }}
                   <tr>
                      <th>Parameter</th>
                      <th>Required</th>
+                     <th>Description</th>
                   </tr>
                </thead>
                <tbody>
@@ -483,6 +484,7 @@ curl {{ $envurl($service_instance->slug.$si_route->path) }}
                         false
                      @endif
                      </td>
+                     <td>@if(isset($param->description)) {{$param->description}} @else N/A @endif</td>
                   </tr>
                 @endforeach
                </tbody>
