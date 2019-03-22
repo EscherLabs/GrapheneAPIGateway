@@ -80,6 +80,18 @@ class ExecController extends Controller
 
         $exec_api->build_routes($api_instance,$api_version);
         $exec_api->build_resources($api_instance);
+
+        if ($api_instance->errors === 'all') {
+            error_reporting(E_ALL);
+            ini_set('display_errors', 1);
+        } else if ($api_instance->errors === 'none') {
+            error_reporting(0);
+            ini_set('display_errors', 0);
+            ini_set('display_startup_errors', 0);
+            config(['app.debug'=>false]);
+            putenv ("APP_DEBUG=false");
+        }
+
         return $exec_api->eval_code($api_instance,$api_version);
 
     }   

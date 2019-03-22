@@ -21,6 +21,7 @@ class CreateAPIInstancesTable extends Migration
             $table->string('name');
             $table->string('slug');
             $table->boolean('public')->default(false);
+            $table->enum('errors',['none','all'])->default('none');
             $table->json('route_user_map')->nullable();
             $table->json('resources')->nullable();
             $table->timestamps();

@@ -18,6 +18,10 @@ class APIUser extends Model
     }
   }
 
+  public function environment() {
+    return $this->belongsTo(Environment::class);
+  }
+
   public function getAppSecretAttribute($secret) {
     return '*****';
   }
