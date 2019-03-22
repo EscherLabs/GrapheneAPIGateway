@@ -101,35 +101,36 @@ class AnotherClass {
                     'path'=>'/hello_world',
                     'function_name' => 'hello_world',
                     'description'=>'Prints Hello World',
-                    'params'=>[['name'=>'other','required'=>false]],
+                    'required'=>[['name'=>'other','description'=>'Person Name','example'=>'Tim Cortesi']],
                     'verb' => 'GET',
                 ],
                 [
                     'path'=>'/whoami',
                     'function_name' => 'whoami',
                     'description'=>'Prints out who you are',
-                    'params'=>[['name'=>'name','required'=>true],['name'=>'other','required'=>false]],
+                    'required'=>[['name'=>'name','description'=>'Person Name','example'=>'Tim Cortesi']],
+                    'optional'=>[['name'=>'other','description'=>'Some Other Thing','example'=>'Pizzas']],
                     'verb' => 'ALL',
                 ],
                 [
                     'path'=>'/echo',
                     'function_name' => 'echo',
                     'description'=>'Prints out all args which are sent',
-                    'params'=>[],
+                    'required'=>[],
                     'verb' => 'POST',
                 ],
                 [
                     'path'=>'/mysql_test',
                     'function_name' => 'mysql_test',
                     'description'=>'Tests Database Connection for PharmacyEMR Database',
-                    'params'=>[],
+                    'required'=>[],
                     'verb' => 'GET',
                 ],
                 [
                     'path'=>'/mysql_test2',
                     'function_name' => 'mysql_test2',
                     'description'=>'Tests Lumen PDO Database Connection for PharmacyEMR Database',
-                    'params'=>[],
+                    'required'=>[],
                     'verb' => 'GET',
                 ]
             ],
@@ -175,7 +176,7 @@ EOD;
             'functions'=>json_decode($files),
             'files'=>[], 
             'resources'=>[], 
-            'routes'=>json_decode('[{"path": "/", "verb": "GET", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "0"}], "description": "", "function_name": "read"}, {"path": "/", "verb": "PUT", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "edit"}, {"path": "/", "verb": "POST", "params": [{"name": "type", "required": "true"}], "description": "", "function_name": "add"}, {"path": "/", "verb": "DELETE", "params": [{"name": "type", "required": "true"}, {"name": "id", "required": "true"}], "description": "", "function_name": "delete"}]'),
+            'routes'=>json_decode('[{"path": "/", "verb": "GET", "required": [{"name": "type"}], "optional": [{"name": "id"}], "description": "", "function_name": "read"}, {"path": "/", "verb": "PUT", "required": [{"name": "type"}, {"name": "id"}], "description": "", "function_name": "edit"}, {"path": "/", "verb": "POST", "required": [{"name": "type"}], "description": "", "function_name": "add"}, {"path": "/", "verb": "DELETE", "required": [{"name": "type"}, {"name": "id"}], "description": "", "function_name": "delete"}]'),
         ]);
         $nosql_api_version->save();
 

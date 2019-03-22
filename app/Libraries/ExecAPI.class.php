@@ -19,13 +19,9 @@ class ExecAPI {
         foreach($api_version->routes as $route_index =>$route) {
             $extra = [];
             if (isset($route->verb)) {$verb = $route->verb;} else { $verb = 'all';}
-            if (isset($route->params)) {
-                foreach($route->params as $param) {
-                    if ($param->required === true || $param->required == 'true') {
-                        $extra['required'][]=$param->name;
-                    } else if ($param->required === false || $param->required == 'false' || $param->required=="0") {
-                        $extra['optional'][]=$param->name;
-                    }
+            if (isset($route->required)) {
+                foreach($route->required as $required_param) {
+                    $extra['required'][]=$required_param->name;
                 }
             }
             Router::add_route(

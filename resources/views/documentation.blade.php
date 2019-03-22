@@ -237,7 +237,7 @@ $envurl = function ($path) use ($api_instance) {
                <a href="#api-routes" class="toc-h1 toc-link" data-title="API Routes">/{{$api_instance->slug}} API</a>
                <ul class="toc-list-h2">
                @foreach ($api_version->routes as $si_key => $si_route)
-               <?php if (!isset($si_route->params)) { $si_route->params = []; } ?>
+               <?php if (!isset($si_route->required)) { $si_route->required = []; } ?>
                   <li>
                      <a href="#api-route-{{$si_key}}" class="toc-h2 toc-link" data-title="/{{$api_instance->slug}}{{$si_route->path}}">@if($si_route->verb == 'ALL') [ALL] @else {{$si_route->verb}} @endif {{$si_route->path}}</a>
                   </li>
@@ -354,7 +354,7 @@ curl {{ $envurl($api_instance->slug) }}
 <!-- API --> 
             <h1 id='api-routes'>/{{$api_instance->slug}} API</h1>
 @foreach ($api_version->routes as $si_key => $si_route)
-<?php if (!isset($si_route->params)) { $si_route->params = []; } ?>
+<?php if (!isset($si_route->required)) { $si_route->required = []; } ?>
 <!-- First One -->
 
             <h2 id='api-route-{{$si_key}}'>@if($si_route->verb == 'ALL') GET,POST,PUT,DELETE @else {{$si_route->verb}} @endif /{{$api_instance->slug}}{{$si_route->path}}</h2>
@@ -383,26 +383,26 @@ Resource Path: {{ $si_route->path }}
 @if ($si_route->verb === 'ALL')
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
+curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
 
   -u username:password
 </code>
 <code>
 curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X POST
-  -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
+  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
 </code>
 <code>
 curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X PUT
-  -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
+  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
 </code>
 <code>
 curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X DELETE
-  -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
+  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
 </code>
 </pre>
@@ -410,7 +410,7 @@ curl {{ $envurl($api_instance->slug.$si_route->path) }}
 @if ($si_route->verb === 'GET')
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
+curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
 
   -u username:password
 </code>
@@ -420,7 +420,7 @@ curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->par
 <code>
 curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X {{$si_route->verb}}
-  -d "@foreach ($si_route->params as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
+  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
   -u username:password
 </code>
 </pre>
@@ -428,7 +428,7 @@ curl {{ $envurl($api_instance->slug.$si_route->path) }}
 @endif  
 <blockquote>
     <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials</p>
-    @if (count($si_route->params)>0)
+    @if (count($si_route->required)>0)
 </blockquote>
 <blockquote class="highlight shell tab-shell">
     <p>Make sure to replace <code>var0</code> through <code>varN</code> with the relevant values.</p>
@@ -438,55 +438,61 @@ curl {{ $envurl($api_instance->slug.$si_route->path) }}
             <p>{{$si_route->description}}</p>
             @if ($si_route->verb === 'ALL')
                 <h3 id='http-request'>HTTP Request</h3>
-                <p><code>GET {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>POST {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>PUT {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
-                <p><code>DELETE {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>GET {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->required as $param) { echo "/&lt;".$param->name."&gt;"; }?></code></p>
+                <p><code>POST {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->required as $param) { echo "/&lt;".$param->name."&gt;"; }?></code></p>
+                <p><code>PUT {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->required as $param) { echo "/&lt;".$param->name."&gt;"; }?></code></p>
+                <p><code>DELETE {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->required as $param) { echo "/&lt;".$param->name."&gt;"; }?></code></p>
                 <h3>Parameters</h3>
-                @if (count($si_route->params)>0)
-                    <aside class="note">Required parameters can be sent as x-www-form-urlencoded variables, query string variables (example: <code>?{{$si_route->params[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
+                @if (count($si_route->required)>0)
+                    <aside class="note">Required parameters can be sent as x-www-form-urlencoded variables, query string variables (example: <code>?{{$si_route->required[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
                 @endif
                 <aside class="note">Optional parameters can be sent as x-www-form-urlencoded variables or query string variables (example: <code>?tacos=good</code>)</aside>
             @else
                 <h3 id='http-request'>HTTP {{$si_route->verb}} Request</h3>
-                <p><code>{{$si_route->verb}} {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->params as $param) { if ($param->required === true || $param->required === "true") { echo "/&lt;".$param->name."&gt;"; } }?></code></p>
+                <p><code>{{$si_route->verb}} {{ $envurl($api_instance->slug.$si_route->path) }}<?php foreach($si_route->required as $param) { echo "/&lt;".$param->name."&gt;"; }?></code></p>
                 <h3>Parameters</h3>
                 @if ($si_route->verb === 'GET')
-                    @if (count($si_route->params)>0)
-                        <aside class="note">Required parameters can be sent as either query string variables (example: <code>?{{$si_route->params[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
+                    @if (count($si_route->required)>0)
+                        <aside class="note">Required parameters can be sent as either query string variables (example: <code>?{{$si_route->required[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
                     @endif
                     <aside class="note">Optional parameters must be sent as  query string variables (example: <code>?tacos=good</code>)</aside>
                 @else
-                    @if (count($si_route->params)>0)
-                        <aside class="note">Required parameters can be sent as x-www-form-urlencoded {{$si_route->verb}} variables, query string variables (example: <code>?{{$si_route->params[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
+                    @if (count($si_route->required)>0)
+                        <aside class="note">Required parameters can be sent as x-www-form-urlencoded {{$si_route->verb}} variables, query string variables (example: <code>?{{$si_route->required[0]->name}}=pizza)</code> or as part of the directory path (example: <code>/pizza</code>)</aside>
                     @endif
                     <aside class="note">Optional parameters can be sent as x-www-form-urlencoded {{$si_route->verb}} variables or query string variables (example: <code>?tacos=good</code>)</aside>
                 @endif
             @endif
 
-            @if (count($si_route->params)>0)
+            @if (count($si_route->required)>0 || (isset($si_route->optional) && count($si_route->optional)>0))
             <table>
                <thead>
                   <tr>
                      <th>Parameter</th>
                      <th>Required</th>
                      <th>Description</th>
+                     <th>Example</th>
                   </tr>
                </thead>
                <tbody>
-                @foreach ($si_route->params as $param)
+                @foreach ($si_route->required as $param)
                   <tr>
                      <td>{{$param->name}}</td>
-                     <td>
-                     @if ($param->required === true || $param->required === "true")
-                        true
-                     @else
-                        false
-                     @endif
-                     </td>
+                     <td>required</td>
                      <td>@if(isset($param->description)) {{$param->description}} @else N/A @endif</td>
+                     <td>@if(isset($param->example)) {{$param->example}} @else N/A @endif</td>
                   </tr>
                 @endforeach
+                @if (isset($si_route->optional) && is_array($si_route->optional))
+                @foreach ($si_route->optional as $param)
+                  <tr>
+                     <td>{{$param->name}}</td>
+                     <td>optional</td>
+                     <td>@if(isset($param->description)) {{$param->description}} @else N/A @endif</td>
+                     <td>@if(isset($param->example)) {{$param->example}} @else N/A @endif</td>
+                  </tr>
+                @endforeach
+                @endif
                </tbody>
             </table>
             <aside class="warning">There may be additional unlisted optional parameters</aside>
