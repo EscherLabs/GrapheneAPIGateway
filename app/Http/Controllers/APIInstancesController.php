@@ -16,8 +16,8 @@ class APIInstancesController extends Controller
     public function read($api_instance_id) {
         $api_instance =  APIInstance::where('id',$api_instance_id)
             ->with('api')
-            ->with('api_version')
             ->first();
+        $api_instance->api_version = $api_instance->find_version();
         if (!is_null($api_instance)) {
             return $api_instance;
         } else {
