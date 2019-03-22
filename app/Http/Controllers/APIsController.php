@@ -29,10 +29,13 @@ class APIsController extends Controller
 
     public function versions($api_id)
     {
-        $versions = APIVersion::select('id','summary','description','stable','user_id','created_at','updated_at')
-            ->orderby('updated_at')
-            ->where('api_id',$api_id)->get();
+        $versions = APIVersion::select('id','summary','description','created_at','user_id')
+            ->where('api_id',$api_id)->where('stable','=',1)
+            ->orderby('created_at','desc')->get();
         if (!is_null($versions)) {
+            foreach($versions as $i => $version) {
+                $versions[$i]->label = $version->created_at->format('Y-m-d').' - '.$version->summary;
+            }    
             return $versions;
         } else {
             return response('api not found', 404);

@@ -25,7 +25,10 @@ class ExecController extends Controller
             $user_id_arr[] = $route_user->api_user;
             $user_to_routes[$route_user->api_user][] = '/'.$api_instance->slug.$route_user->route;
         }
-        $relevant_users = APIUser::whereIn('id',$user_id_arr)->get();
+        $relevant_users = APIUser::whereIn('id',$user_id_arr)->whereHas('environment', function($q){
+            $q->where('domain','=',$_SERVER['HTTP_HOST']);
+        })->get();
+        
         $users = [];
         foreach($relevant_users as $user) {
             $users[$user->app_name] = ['user'=>$user, 'pass'=>$user->app_secret,'ips'=>[''],'routes'=>$user_to_routes[$user->id]];
