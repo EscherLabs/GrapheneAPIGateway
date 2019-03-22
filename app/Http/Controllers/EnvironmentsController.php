@@ -49,4 +49,10 @@ class EnvironmentsController extends Controller
         }
     }
 
+    public function api_users($environment_id)
+    {
+        $api_users = APIUser::where('environment_id',$environment_id)->get();
+        return $api_users;
+    }
+
 }

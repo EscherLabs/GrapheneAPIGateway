@@ -27,6 +27,7 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
     $router->put('/environments/{environment_id}',['uses'=>'EnvironmentsController@edit']);
     $router->post('/environments',['uses'=>'EnvironmentsController@add']);
     $router->delete('/environments/{environment_id}',['uses'=>'EnvironmentsController@delete']);
+    $router->get('/environments/{environment_id}/api_users',['uses'=>'EnvironmentsController@api_users']);
 
     $router->get('/apis',['uses'=>'APIsController@browse']);
     $router->get('/apis/{api_id}',['uses'=>'APIsController@read']);
