@@ -8,5 +8,6 @@ return [
     ],
 
     'locale' => env('LOCALE', isset($_SERVER['LOCALE'])?$_SERVER['LOCALE']:'US/Eastern'),
-
+    'key' => env('APP_KEY',''),
+    'cipher' => 'AES-256-CBC',
 ];

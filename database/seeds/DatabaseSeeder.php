@@ -46,7 +46,7 @@ class DatabaseSeeder extends Seeder
 
         $resource2 = new \App\Resource([
             'name'=>'PI',
-            'resource_type'=>'constant',
+            'resource_type'=>'secret',
             'type'=>'dev',
             'config'=>[
                 'value' => '3.14159',
@@ -94,7 +94,7 @@ class AnotherClass {
             ]], 
             'resources'=>[
                 ['name'=>'PharmacyEMR','type'=>'mysql'],
-                ['name'=>'PI','type'=>'constant'],
+                ['name'=>'PI','type'=>'secret'],
             ], 
             'routes'=>[
                 [

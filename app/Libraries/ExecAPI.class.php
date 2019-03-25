@@ -48,11 +48,13 @@ class ExecAPI {
         $resources = Resource::whereIn('id',$resources_arr)->get();
         foreach($resources as $resource) {
             if ($resource->resource_type == 'mysql') {
-                MySQLDB::config_database($resources_name_map[$resource->id],$resource->config);
+                MySQLDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
+                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
             } else if ($resource->resource_type == 'oracle') {
-                OracleDB::config_database($resources_name_map[$resource->id],$resource->config);
-            } else if ($resource->resource_type == 'constant') {
-                define($resources_name_map[$resource->id],$resource->config->value);
+                OracleDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
+                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
+            } else if ($resource->resource_type == 'secret' || $resource->resource_type == 'value') {
+                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets->value]);
             }
         }
 
@@ -96,7 +98,7 @@ class ExecAPI {
                     $function->content.
                     '}'."\n\n";
                 } else {
-                $main_class .= 'public function '.$function->name.'($args) {'."\n".
+                $main_class .= 'public function '.$function->name.'($args=[],$resources=[]) {'."\n".
                     $function->content."\n".
                     '}'."\n\n";
                 }

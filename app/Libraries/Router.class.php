@@ -76,7 +76,12 @@ class Router
             } else {
               $args = $response;
             }
-            $return = $routeHandlerClass->$routeHandlerFunction($args);
+            if (is_array(config('app.apiresources'))) {
+              $resources = config('app.apiresources');
+            } else {
+              $resources = [];
+            }
+            $return = $routeHandlerClass->$routeHandlerFunction($args,$resources);
             $output = ob_get_clean();
             if (strlen($output)) {
               echo $output;
