@@ -52,6 +52,7 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
     $router->delete('/api_instances/{api_instance_id}',['uses'=>'APIInstancesController@delete']);
     
     $router->get('/resources',['uses'=>'ResourcesController@browse']);
+    $router->get('/resources/type/{type}',['uses'=>'ResourcesController@browse_by_type']);
     $router->get('/resources/{resource_id}',['uses'=>'ResourcesController@read']);
     $router->put('/resources/{resource_id}',['uses'=>'ResourcesController@edit']);
     $router->post('/resources',['uses'=>'ResourcesController@add']);

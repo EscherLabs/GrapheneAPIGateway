@@ -13,6 +13,12 @@ class ResourcesController extends Controller
     public function browse() {
         return Resource::all();
     }   
+
+    public function browse_by_type($type) {
+        $resources  = Resource::where('type',$type)->get();
+        return $resources;
+    }  
+
     public function read($resource_id) {
         $resource  = Resource::where('id',$resource_id)->first();
         if (!is_null($resource)) {
