@@ -50,17 +50,6 @@ class ExecAPI {
             if ($resource->resource_type == 'mysql') {
                 MySQLDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
                 config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
-            } else if ($resource->resource_type == 'oracle') {
-                OracleDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
-                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
-            } else if ($resource->resource_type == 'secret' || $resource->resource_type == 'value') {
-                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets->value]);
-            }
-        }
-
-        /* Configure Lumen PDO Database Stuff -- Experimental*/
-        foreach($resources as $resource) {
-            if ($resource->resource_type == 'mysql') {
                 config(['database.connections.'.$resources_name_map[$resource->id] =>[
                     'driver'    => 'mysql',
                     'port'      => isset($resource->config->port)?$resource->config->port:3306,
@@ -70,6 +59,8 @@ class ExecAPI {
                     'password'  => isset($resource->config->pass)?$resource->config->pass:'',
                 ]]);
             } else if ($resource->resource_type == 'oracle') {
+                OracleDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
+                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
                 config(['database.connections.'.$resources_name_map[$resource->id] => [
                     'driver'        => 'oracle',
                     'tns'           => isset($resource->config->tns)?$resource->config->tns:'',
@@ -80,6 +71,8 @@ class ExecAPI {
                     'host'          => isset($resource->config->server)?$resource->config->server:'',
                     'database'      => isset($resource->config->name)?$resource->config->name:'',
                 ]]);
+            } else if ($resource->resource_type == 'secret' || $resource->resource_type == 'value') {
+                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets->value]);
             }
         }
     }
