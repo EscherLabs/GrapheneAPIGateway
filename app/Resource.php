@@ -53,7 +53,7 @@ class Resource extends Model
   public function setConfigAttribute($new_config)
   {
     $orig_config = [];
-    if (isset($this->attributes['config']) && is_array($this->attributes['config'])) {
+    if (isset($this->attributes['config'])) {
       $orig_config = json_decode($this->attributes['config'],true);
     }
     foreach($new_config as $index => $new_config_attr) {
