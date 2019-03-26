@@ -18,12 +18,12 @@ class Resource extends Model
       if (is_array($resource_config)) {
         foreach($resource_config as $index => $config_attr) {
           foreach($this->secret_fields as $secret_field) {
-            if ($index === $secret_field || $this->resource_type === $secret_field) {
+            if (($index === $secret_field || $this->resource_type === $secret_field) && $resource_config[$index] !== '') {
               if ($return_secrets === true) {
                 try {
                   $resource_config[$index] = Crypt::decrypt($resource_config[$index]);
                 } catch (\Exception $e) {
-                  $resource_config[$index] = $resource_config[$index];
+                  /* Do Nothing -- Don't Change Value */
                 }
               } else {
                 $resource_config[$index] = '*****';
