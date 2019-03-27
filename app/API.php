@@ -20,20 +20,25 @@ class API extends Model
     return $this->hasMany(APIVersion::class);
   }
 
-  // public static function boot()
-  // {
-  //   parent::boot();
-  //   self::saved(function($model){
-  //     if (!app()->runningInConsole()) {
-  //       $activity_log = new ActivityLog([
-  //         'event' => class_basename($model),
-  //         'data' => $model,
-  //       ]);
-  //       $activity_log->save();
-  //     }
-  //   });
-  // }
-
-
+  public static function boot()
+  {
+    parent::boot();
+    self::saved(function($model){
+      if (!app()->runningInConsole()) {
+        $orig = $model->getOriginal();
+        foreach($orig as $attr => $attr_val) {
+          if (isset($model->casts[$attr]) && $model->casts[$attr] === 'object') {
+            $orig[$attr] = json_decode($attr_val);
+          }
+        }
+        $activity_log = new ActivityLog([
+          'event' => class_basename($model),
+          'new' => $model,
+          'old' => $orig,
+        ]);
+        $activity_log->save();
+      }
+    });
+  }
 
 }

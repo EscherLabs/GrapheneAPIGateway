@@ -73,16 +73,27 @@ class Resource extends Model
     parent::boot();
     self::saved(function($model){
       if (!app()->runningInConsole()) {
+        $orig = $model->getOriginal();
+        foreach($orig as $attr => $attr_val) {
+          if ($attr === 'config') {
+            $orig[$attr] = json_decode($attr_val,true);
+            foreach($orig[$attr] as $index => $config_attr) {
+              foreach($model->secret_fields as $secret_field) {
+                if (($index === $secret_field || $orig['resource_type'] === $secret_field)) {
+                  $orig[$attr][$index] = '*****';
+                }
+              }
+            }
+          }
+        }
         $activity_log = new ActivityLog([
           'event' => class_basename($model),
           'new' => $model,
-          'old' => $model->getOriginal(),
+          'old' => $orig,
         ]);
         $activity_log->save();
       }
     });
   }
-
-
 
 }

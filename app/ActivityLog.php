@@ -33,10 +33,8 @@ class ActivityLog extends Model
             if (!is_null($environment)) {
                 $model->type = $environment->type;
             }
-        }
-        if ($model->type === 'dev') {
-            $model->new = [];
-            $model->old = [];
+        } else if (isset($model->old->type)) {
+            $model->type = $model->old->type;
         }
         if (app('request')->has('comment')) {
             $model->comment = app('request')->input('comment');
