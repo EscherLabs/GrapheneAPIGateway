@@ -71,6 +71,10 @@ class APIsController extends Controller
 
         $api_version = new APIVersion($request->all());
         $api_version->api_id = $api->id;
+        $api_version->files = [];
+        $api_version->functions = [];
+        $api_version->resources = [];
+        $api_version->routes = [];
         $api_version->save();
         return $api;
     }
