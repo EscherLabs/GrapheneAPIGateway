@@ -55,8 +55,10 @@ class InstallerCommand extends Command
             try{
                 Artisan::call('migrate',['--force' => true]);
                 $this->info("Sucessfully Ran Database Migrations!");
-                if ($this->confirm('Would you like to see the database with some defaults?')) {
-                    Artisan::call('db:seed',['--force' => true]);
+                if (env('APP_KEY') !== null) {
+                    if ($this->confirm('Would you like to seed the database with some defaults?')) {
+                        Artisan::call('db:seed',['--force' => true]);
+                    }
                 }
             }
             catch(\Illuminate\Database\QueryException $e) {
@@ -96,7 +98,7 @@ class InstallerCommand extends Command
             $APP_KEY = md5(microtime());
         }
         if (env('APP_DEBUG') === null) {
-            if ($this->confirm("Will this be running in a production environment? (Should we enable APP_DEBUG?)")) {
+            if ($this->confirm("Will this be running in a development environment? (Should we enable APP_DEBUG?)")) {
                 $APP_DEBUG = 'true';
             } else {
                 $APP_DEBUG = 'false';
