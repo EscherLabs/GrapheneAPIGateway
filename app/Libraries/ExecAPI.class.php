@@ -56,7 +56,7 @@ class ExecAPI {
                     'host'      => isset($resource->config->server)?$resource->config->server:'',
                     'database'  => isset($resource->config->name)?$resource->config->name:'',
                     'username'  => isset($resource->config->user)?$resource->config->user:'',
-                    'password'  => isset($resource->config->pass)?$resource->config_with_secrets->pass:'',
+                    'password'  => isset($resource->config_with_secrets->pass)?$resource->config_with_secrets->pass:'',
                 ]]);
             } else if ($resource->resource_type == 'oracle') {
                 OracleDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
@@ -66,7 +66,7 @@ class ExecAPI {
                     'tns'           => isset($resource->config->tns)?$resource->config->tns:'',
                     'port'          => isset($resource->config->port)?$resource->config->port:1521,
                     'username'      => isset($resource->config->user)?$resource->config->user:'',
-                    'password'      => isset($resource->config->pass)?$resource->config->pass:'',
+                    'password'      => isset($resource->config_with_secrets->pass)?$resource->config_with_secrets->pass:'',
                     'charset'       => isset($resource->config->charset)?$resource->config->charset:'AL32UTF8',
                     'host'          => isset($resource->config->server)?$resource->config->server:'',
                     'database'      => isset($resource->config->name)?$resource->config->name:'',
