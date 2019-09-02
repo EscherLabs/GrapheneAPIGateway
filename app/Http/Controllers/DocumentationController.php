@@ -29,9 +29,11 @@ class DocumentationController extends Controller
         $api_version = $api_instance->find_version();
 
         $user_id_arr = [];
-        foreach($api_instance->route_user_map as $route_user_map_index => $route_user) {
-            $user_id_arr[] = $route_user->api_user;
-            $user_to_routes[$route_user->api_user][] = '/'.$api_instance->slug.$route_user->route;
+        if (is_array($api_instance->route_user_map)) {
+            foreach($api_instance->route_user_map as $route_user_map_index => $route_user) {
+                $user_id_arr[] = $route_user->api_user;
+                $user_to_routes[$route_user->api_user][] = '/'.$api_instance->slug.$route_user->route;
+            }
         }
         $relevant_users = APIUser::whereIn('id',$user_id_arr)->whereHas('environment', function($q){
             $q->where('domain','=',$_SERVER['HTTP_HOST']);
@@ -64,9 +66,11 @@ class DocumentationController extends Controller
         }
         $api_version = $api_instance->find_version();
         $user_id_arr = [];
-        foreach($api_instance->route_user_map as $route_user_map_index => $route_user) {
-            $user_id_arr[] = $route_user->api_user;
-            $user_to_routes[$route_user->api_user][] = '/'.$api_instance->slug.$route_user->route;
+        if (is_array($api_instance->route_user_map)) {
+            foreach($api_instance->route_user_map as $route_user_map_index => $route_user) {
+                $user_id_arr[] = $route_user->api_user;
+                $user_to_routes[$route_user->api_user][] = '/'.$api_instance->slug.$route_user->route;
+            }
         }
         $relevant_users = APIUser::whereIn('id',$user_id_arr)->get();
         $resources = Resource::all();
