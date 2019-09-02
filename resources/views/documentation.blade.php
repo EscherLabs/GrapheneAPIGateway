@@ -280,7 +280,7 @@ $envurl = function ($path) use ($api_instance) {
             </table>
 <!-- Resources -->
             <h1 id='resources'>Resources</h1>
-            @if(count($api_instance->resources) > 0)
+            @if(is_array($api_instance->resources) && count($api_instance->resources) > 0)
             <p>These are the resources (databases, external APIs, etc) which are consumed by the <i>{{ $api_instance->name }}</i> API</p>
             <p>The table below can be used to identify the type of resources being used (mysql/oracle database), as well as the resource classification (dev/test/prod)</p>
 <?php
