@@ -77,7 +77,7 @@ class Resource extends Model
         foreach($orig as $attr => $attr_val) {
           if ($attr === 'config') {
             $orig[$attr] = json_decode($attr_val,true);
-            if (!is_array($orig[$attr])) { $orig[$arrr] = [];} // Initialize Empty Array
+            if (!is_array($orig[$attr])) { $orig[$attr] = [];} // Initialize Empty Array
             foreach($orig[$attr] as $index => $config_attr) {
               foreach($model->secret_fields as $secret_field) {
                 if (($index === $secret_field || $orig['resource_type'] === $secret_field)) {
