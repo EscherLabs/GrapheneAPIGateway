@@ -73,7 +73,7 @@ class InstallerCommand extends Command
                     $this->info("(The commands below may be of assistance in setting this up)\n");
                     $this->line("$ mysql -u root -h $DB_HOST -P $DB_PORT");
                     $this->line("> CREATE DATABASE $DB_DATABASE;");
-                    $this->line("> CREATE USER '$DB_USERNAME'@'$DB_HOST' IDENTIFIED BY '$DB_PASSWORD';");
+                    $this->line("> CREATE USER '$DB_USERNAME'@'$DB_HOST' IDENTIFIED WITH mysql_native_password BY '$DB_PASSWORD';");
                     $this->line("> GRANT ALL PRIVILEGES ON $DB_DATABASE.* TO '$DB_USERNAME'@'$DB_HOST' WITH GRANT OPTION;");
 
                     $this->info("\nOnce you have set up your database, create a new '.env' file at the root of the GrapheneAPIServer directory with the following contents:\n");
