@@ -26,19 +26,30 @@ class ExecController extends Controller
             $user_to_routes[$route_user->api_user][] = '/'.$api_instance->slug.$route_user->route;
         }
         $relevant_users = APIUser::whereIn('id',$user_id_arr)->whereHas('environment', function($q){
-            $q->where('domain','=',$_SERVER['HTTP_HOST']);
+            $q->where('domain','=',app('request')->getHost());
         })->get();
         
         $users = [];
         foreach($relevant_users as $user) {
             $users[$user->app_name] = ['user'=>$user, 'pass'=>$user->app_secret,'ips'=>[''],'routes'=>$user_to_routes[$user->id]];
         }
+        // Add 'public' user to users array
+        if (isset($user_to_routes[0])) {
+            $public_user = new APIUser(['app_name'=>'public','app_secret'=>'']);
+            $users['public'] = ['user'=>$public_user,'pass'=>$public_user->app_secret,'ips'=>[''],'routes'=>$user_to_routes[0]];
+        }
+
         $userisok = false; $ipisok = false; $routeisok = false;
+
+        // Check Auth Credentials (or assume public if none are passed)
+        $basic_auth_username = isset($_SERVER['PHP_AUTH_USER'])?$_SERVER['PHP_AUTH_USER']:'public';
+        $basic_auth_password = isset($_SERVER['PHP_AUTH_PW'])?$_SERVER['PHP_AUTH_PW']:'';
+
         /* Validate Username & Password */
-        $userisok = (isset($_SERVER['PHP_AUTH_USER']) && array_key_exists($_SERVER['PHP_AUTH_USER'],$users) && $users[$_SERVER['PHP_AUTH_USER']]['user']->check_app_secret($_SERVER['PHP_AUTH_PW']) );
+        $userisok = (isset($basic_auth_username) && array_key_exists($basic_auth_username,$users) && $users[$basic_auth_username]['user']->check_app_secret($basic_auth_password) );
         /* Validate IP Address */
         if ($userisok) {
-            foreach($users[$_SERVER['PHP_AUTH_USER']]['ips'] as $ip) {
+            foreach($users[$basic_auth_username]['ips'] as $ip) {
                 if (substr($_SERVER['REMOTE_ADDR'],0,strlen($ip)) == $ip) {
                     $ipisok = true;
                     break;
@@ -46,8 +57,8 @@ class ExecController extends Controller
             }
         }
         /* Validate Route */
-        if ($ipisok == true && isset($users[$_SERVER['PHP_AUTH_USER']]['routes'])) {
-            foreach($users[$_SERVER['PHP_AUTH_USER']]['routes'] as $path) {
+        if ($ipisok == true && isset($users[$basic_auth_username]['routes'])) {
+            foreach($users[$basic_auth_username]['routes'] as $path) {
                 $path = '/^'.str_replace('/','\/',$path).'/';
                 if (preg_match($path, $_SERVER['REQUEST_URI']) == 1) {
                     $routeisok = true;
@@ -64,10 +75,10 @@ class ExecController extends Controller
         }
     }
 
-    public function exec($slug) {
+    public function exec($slug,Request $request) {
         $exec_api = new ExecAPI();
         $api_instance = APIInstance::where('slug',$slug)->with('api')->whereHas('environment', function($q){
-            $q->where('domain','=',$_SERVER['HTTP_HOST']);
+            $q->where('domain','=',app('request')->getHost());
         })->first();
         if (is_null($api_instance)) {
             return response(json_encode(['error'=>'API Not Found']),404)->header('Content-type', 'application/json');

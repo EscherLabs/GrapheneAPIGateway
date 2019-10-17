@@ -21,7 +21,7 @@ class DocumentationController extends Controller
     
     public function docs($slug) {
         $api_instance = APIInstance::where('slug',$slug)->with('api')->with('environment')->whereHas('environment', function($q){
-            $q->where('domain','=',$_SERVER['HTTP_HOST']);
+            $q->where('domain','=',app('request')->getHost());
         })->first();
         if (is_null($api_instance)) {
             return response(json_encode(['error'=>'API Not Found']),404)->header('Content-type', 'application/json');;
@@ -36,13 +36,23 @@ class DocumentationController extends Controller
             }
         }
         $relevant_users = APIUser::whereIn('id',$user_id_arr)->whereHas('environment', function($q){
-            $q->where('domain','=',$_SERVER['HTTP_HOST']);
+            $q->where('domain','=',app('request')->getHost());
         })->get();
         $users = [];
         foreach($relevant_users as $user) {
             $users[$user->app_name] = ['user'=>$user, 'pass'=>$user->app_secret,'ips'=>[''],'routes'=>$user_to_routes[$user->id]];
         }
-        $userisok = (isset($_SERVER['PHP_AUTH_USER']) && array_key_exists($_SERVER['PHP_AUTH_USER'],$users) && $users[$_SERVER['PHP_AUTH_USER']]['user']->check_app_secret($_SERVER['PHP_AUTH_PW']) );
+        // Add 'public' user to users array
+        if (isset($user_to_routes[0])) {
+            $public_user = new APIUser(['app_name'=>'public','app_secret'=>'']);
+            $users['public'] = ['user'=>$public_user,'pass'=>$public_user->app_secret,'ips'=>[''],'routes'=>$user_to_routes[0]];
+        }
+        
+        // Check Auth Credentials (or assume public if none are passed)
+        $basic_auth_username = isset($_SERVER['PHP_AUTH_USER'])?$_SERVER['PHP_AUTH_USER']:'public';
+        $basic_auth_password = isset($_SERVER['PHP_AUTH_PW'])?$_SERVER['PHP_AUTH_PW']:'';
+        
+        $userisok = (isset($basic_auth_username) && array_key_exists($basic_auth_username,$users) && $users[$basic_auth_username]['user']->check_app_secret($basic_auth_password) );
         if (!($userisok)) {
             return response(json_encode(['error'=>'Unauthorized User']),401)
                 ->header('WWW-Authenticate', 'Basic realm="'.$api_instance->name.' API"')
