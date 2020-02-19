@@ -29,7 +29,7 @@ class APIsController extends Controller
 
     public function versions($api_id)
     {
-        $versions = APIVersion::select('id','summary','description','created_at','user_id')
+        $versions = APIVersion::select('id','summary','stable','description','created_at','user_id')
             ->where('api_id',$api_id)->where('stable','=',1)
             ->orderby('created_at','desc')->get();
         if (!is_null($versions)) {

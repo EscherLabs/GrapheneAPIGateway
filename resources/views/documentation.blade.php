@@ -343,6 +343,7 @@ curl {{ $envurl($api_instance->slug) }}
                <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials.</p>
             </blockquote>
             <p>The <i>{{ $api_instance->name }}</i> API uses HTTP basic authentication to allow access to the API.  Contact the API Developer @isset($api_instance->api->user)({{ $api_instance->api->user }}) @endisset to generate a username/password to use this API</a>.</p>
+            @if(is_array($api_instance->route_user_map))
             <aside class="success">There is/are currently {{count($api_instance->route_user_map)}} user account(s) / app username(s) for the <i>{{ $api_instance->name }}</i> API:
                 <ul>
                     @foreach($users as $user)
@@ -350,6 +351,9 @@ curl {{ $envurl($api_instance->slug) }}
                     @endforeach
                 </ul>
             </aside>
+            @else
+       	    <aside class="warning">This API has NO configured users!</aside>
+       	    @endif
 <!-- End Authentication -->
 <!-- API --> 
             <h1 id='api-routes'>/{{$api_instance->slug}} API</h1>
