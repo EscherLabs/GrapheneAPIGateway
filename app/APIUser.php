@@ -41,7 +41,7 @@ class APIUser extends Model
             $orig[$attr] = json_decode($attr_val);
           }
         }
-        if ($orig['app_secret'] !== '') {$orig['app_secret'] = '*****';}
+        if (isset($orig['app_secret']) && $orig['app_secret'] !== '') {$orig['app_secret'] = '*****';}
         $activity_log = new ActivityLog([
           'event' => class_basename($model),
           'new' => $model,
