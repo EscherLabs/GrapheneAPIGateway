@@ -44,7 +44,10 @@ class APIsController extends Controller
 
     public function latest_version($api_id)
     {
-        $api_version = APIVersion::where('api_id','=',$api_id)->orderBy('created_at', 'desc')->first();
+        $latest_version = $versions = APIVersion::select('id')
+            ->where('api_id',$api_id)
+            ->orderby('created_at','desc')->first();
+        $api_version = APIVersion::where('api_id','=',$latest_version->id)->orderBy('created_at', 'desc')->toSql();//first();
         if (!is_null($api_version)) {
             return $api_version;
         } else {
