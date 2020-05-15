@@ -24,9 +24,18 @@ class APIInstance extends Model
   public function find_version() {
     $api_version = null;
     if(is_null($this->api_version_id)){
-        $api_version = APIVersion::where('api_id','=',$this->api_id)->orderBy('created_at', 'desc')->first();
+        // $api_version = APIVersion::where('api_id','=',$this->api_id)->orderBy('created_at', 'desc')->first();
+        $latest_version = APIVersion::select('id')
+            ->where('api_id',$this->api_id)
+            ->orderby('created_at','desc')->first();
+        $api_version = APIVersion::where('id','=',$latest_version->id)->orderBy('created_at', 'desc')->first();
     }else if($this->api_version_id == 0){
-        $api_version = APIVersion::where('api_id','=',$this->api_id)->where('stable','=',1)->orderBy('created_at', 'desc')->first();
+        // $api_version = APIVersion::where('api_id','=',$this->api_id)->where('stable','=',1)->orderBy('created_at', 'desc')->first();
+        $latest_version = APIVersion::select('id')
+            ->where('api_id',$this->api_id)
+            ->where('stable','=',1)
+            ->orderby('created_at','desc')->first();
+        $api_version = APIVersion::where('id','=',$latest_version->id)->orderBy('created_at', 'desc')->first();
     }else{
         $api_version = APIVersion::where('id','=',$this->api_version_id)->first();
     }
