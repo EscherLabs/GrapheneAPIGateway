@@ -92,7 +92,7 @@ class OracleDB {
     {
       \oci_rollback(self::$objConnect);
       $e = \oci_error($stid);
-      throw new Exception($e['message']);
+      throw new \Exception($e['message']);
     }
     if (!is_null($index_name)) {
       return $rowid;
