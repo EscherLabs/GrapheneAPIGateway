@@ -40,7 +40,7 @@ class OracleDB {
     $params = self::find_params_in_query($query,$params);
     if (!$stid) {
       $e = \oci_error(self::$objConnect);
-      throw new Excepton($e['message']);
+      throw new \Exception($e['message']);
     }
 
     foreach($params as $param_name => $param_value) {
@@ -53,7 +53,7 @@ class OracleDB {
     $r = \oci_execute($stid);
     if (!$r) {
       $e = \oci_error($stid);
-      throw new Excepton($e['message']);
+      throw new \Exception($e['message']);
     }
 
     $row_num = 0;
