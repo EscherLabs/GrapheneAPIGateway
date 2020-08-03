@@ -99,7 +99,7 @@ class Router
       return response(json_encode(['error'=>$_SERVER['REQUEST_METHOD'].' Method not allowed']),405)
         ->header('Content-type', 'application/json');
     }
-    return response(json_encode(['error'=>'API "'.$thisRoute.'"call does not exist']),404)
+    return response(json_encode(['error'=>'API call does not exist']),404)
       ->header('Content-type', 'application/json');
   }
 
