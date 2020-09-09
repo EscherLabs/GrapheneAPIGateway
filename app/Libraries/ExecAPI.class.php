@@ -83,6 +83,8 @@ class ExecAPI {
             'use \App\Libraries\MySQLDB;'."\n".
             'use \App\Libraries\OracleDB;'."\n".
             'use Illuminate\Support\Facades\DB;'."\n\n".
+            'use Illuminate\Support\Arr;'."\n\n".
+            'use \Carbon\Carbon;'."\n\n".
             'class '.$api_instance->api->name.' {'."\n";
 
         foreach($api_version->functions as $function) {
