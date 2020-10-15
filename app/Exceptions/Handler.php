@@ -47,8 +47,16 @@ class Handler extends ExceptionHandler
      *
      * @throws \Throwable
      */
-    public function render($request, Throwable $exception)
+    public function render($request, Throwable $e)
     {
-        return parent::render($request, $exception);
+        $rendered = parent::render($request, $e);
+        return response()->json([
+            'error' => [
+                'code' => 'error',
+                'message' => $e->getMessage(),
+                'line' => $e->getLine(),
+                'file' => $e->getFile(),
+            ]
+        ], $rendered->getStatusCode());
     }
 }
