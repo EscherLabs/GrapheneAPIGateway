@@ -80,7 +80,6 @@ class ExecAPI {
                     'username'      => isset($resource->config->user)?$resource->config->user:'',
                     'password'      => isset($resource->config_with_secrets->pass)?$resource->config_with_secrets->pass:'',
                     'port'          => isset($resource->config->port)?$resource->config->port:1433,
-                    'charset'       => isset($resource->config->charset)?$resource->config->charset:'ut48',
                 ]]);
             } else if ($resource->resource_type == 'secret' || $resource->resource_type == 'value') {
                 config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets->value]);
