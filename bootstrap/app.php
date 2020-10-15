@@ -1,17 +1,11 @@
 <?php
-
 require_once __DIR__.'/../vendor/autoload.php';
 
-try {
-    (new Dotenv\Dotenv(__DIR__.'/../'))->load();
-} catch (Dotenv\Exception\InvalidPathException $e) {
-    /* Do nothing if .env file is missing */
-}
-/* .env defaults */
-putenv('DB_CONNECTION=mysql');
-putenv('CACHE_DRIVER=array');
-putenv('SESSION_DRIVER=array');
-putenv('QUEUE_DRIVER=array');
+(new Laravel\Lumen\Bootstrap\LoadEnvironmentVariables(
+    dirname(__DIR__)
+))->bootstrap();
+
+date_default_timezone_set(env('APP_TIMEZONE', 'America/New_York'));
 
 /*
 |--------------------------------------------------------------------------

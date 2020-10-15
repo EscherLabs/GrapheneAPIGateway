@@ -93,8 +93,8 @@ class ExecAPI {
         $main_class = "\n".
             'use \App\Libraries\MySQLDB;'."\n".
             'use \App\Libraries\OracleDB;'."\n".
-            'use Illuminate\Support\Facades\DB;'."\n\n".
-            'use Illuminate\Support\Arr;'."\n\n".
+            'use Illuminate\Support\Facades\DB;'."\n".
+            'use Illuminate\Support\Arr;'."\n".
             'use \Carbon\Carbon;'."\n\n".
             'class '.$api_instance->api->name.' {'."\n";
 
@@ -110,7 +110,6 @@ class ExecAPI {
                 }
         }
         $main_class .= "}?>";
-        // dd($main_class);
         eval($main_class);
 
         /* Evaluate Files */
