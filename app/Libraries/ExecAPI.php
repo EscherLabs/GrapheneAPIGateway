@@ -12,6 +12,7 @@ use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
 use Illuminate\Http\Request;
+use PDO;
 
 class ExecAPI {
 
@@ -80,6 +81,7 @@ class ExecAPI {
                     'username'      => isset($resource->config->user)?$resource->config->user:'',
                     'password'      => isset($resource->config_with_secrets->pass)?$resource->config_with_secrets->pass:'',
                     'port'          => isset($resource->config->port)?$resource->config->port:1433,
+                    'options'       => [ PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT ],
                 ]]);
             } else if ($resource->resource_type == 'secret' || $resource->resource_type == 'value') {
                 config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets->value]);
