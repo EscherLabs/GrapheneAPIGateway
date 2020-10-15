@@ -14,8 +14,7 @@ class APIUsersController extends Controller
         return APIUser::all();
     }   
 
-    public function read($apiuser_id)
-    {
+    public function read($apiuser_id) {
         $apiuser = APIUser::where('id',$apiuser_id)->first();
         if (!is_null($apiuser)) {
             return $apiuser;
@@ -24,8 +23,7 @@ class APIUsersController extends Controller
         }
     }
 
-    public function edit(Request $request, $apiuser_id)
-    {
+    public function edit(Request $request, $apiuser_id) {
         $apiuser = APIUser::where('id',$apiuser_id)->first();
         if (!is_null($apiuser)) {
             $apiuser->update($request->all());
@@ -35,15 +33,22 @@ class APIUsersController extends Controller
         }
     }
 
-    public function add(Request $request)
-    {
+    public function add(Request $request) {
         $apiuser = new APIUser($request->all());
         $apiuser->save();
         return $apiuser;
     }
 
-    public function delete($apiuser_id)
-    {
+    public function decrypted_app_secret(Request $request, $apiuser_id) {
+        $apiuser = APIUser::where('id',$apiuser_id)->first();
+        if (!is_null($apiuser)) {
+            return ['api_secret'=>$apiuser->decrypted_app_secret];
+        } else {
+            return response('apiuser not found', 404);
+        }
+    }
+
+    public function delete($apiuser_id) {
         if ( APIUser::where('id',$apiuser_id)->delete() ) {
             return [true];
         }

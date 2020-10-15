@@ -5,16 +5,19 @@ namespace App;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
 use App\ActivityLog;
+use Illuminate\Support\Facades\Crypt;
 
 class APIUser extends Model
 {
-  protected $fillable = ['app_name', 'app_secret', 'config','environment_id'];
+  protected $fillable = ['app_name','app_secret','config','environment_id'];
   protected $casts = ['config' => 'object'];
   protected $table = 'api_users';
+  protected $hidden = ['encrypted_app_secret'];
 
   public function setAppSecretAttribute($secret) {
     if ($secret !== '*****') {
       $this->attributes['app_secret'] = Hash::make($secret);
+      $this->attributes['encrypted_app_secret'] = Crypt::encrypt($secret);
     }
   }
 
@@ -24,6 +27,14 @@ class APIUser extends Model
 
   public function getAppSecretAttribute($secret) {
     return '*****';
+  }
+
+  public function getDecryptedAppSecretAttribute($secret) {
+    try {
+        return base64_encode(Crypt::decrypt($this->attributes['encrypted_app_secret']));
+    } catch (\Exception $e) {
+        return base64_encode("ERROR");
+    }
   }
 
   public function check_app_secret($secret) {

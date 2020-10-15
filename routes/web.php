@@ -18,6 +18,7 @@ $router->get('/', [function () {
 $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function () use ($router) {
     $router->get('/api_users',['uses'=>'APIUsersController@browse']);
     $router->get('/api_users/{apiuser_id}',['uses'=>'APIUsersController@read']);
+    $router->get('/api_users/{apiuser_id}/decrypted_secret',['uses'=>'APIUsersController@decrypted_app_secret']);
     $router->put('/api_users/{apiuser_id}',['uses'=>'APIUsersController@edit']);
     $router->post('/api_users',['uses'=>'APIUsersController@add']);
     $router->delete('/api_users/{apiuser_id}',['uses'=>'APIUsersController@delete']);

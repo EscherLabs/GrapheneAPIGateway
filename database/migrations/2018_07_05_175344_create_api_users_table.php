@@ -16,8 +16,9 @@ class CreateAPIUsersTable extends Migration
         Schema::create('api_users', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('environment_id')->unsigned()->index();
-            $table->string('app_name')->nullable()->default(null);
-            $table->string('app_secret')->nullable();
+            $table->string('app_name',255)->nullable()->default(null);
+            $table->string('app_secret',255)->nullable()->default(null);
+            $table->string('encrypted_app_secret',1024)->nullable()->default(null);
             $table->unique(['environment_id', 'app_name']);
             $table->timestamps();
         });
