@@ -88,39 +88,56 @@ class ExecAPI {
         }
     }
 
-    public function eval_code($api_instance, $api_version) {
-        /* Evaluate Functions */
-        $main_class = "\n".
-            'use \App\Libraries\MySQLDB;'."\n".
-            'use \App\Libraries\OracleDB;'."\n".
-            'use Illuminate\Support\Facades\DB;'."\n".
-            'use Illuminate\Support\Arr;'."\n".
-            'use \Carbon\Carbon;'."\n\n".
-            'class '.$api_instance->api->name.' {'."\n";
+    public function build_file($filename=null, $api_instance, $api_version) {
+        $file_content = '';
+        if (is_null($filename)) {
+            $file_content = "\n".
+                'use \App\Libraries\MySQLDB;'."\n".
+                'use \App\Libraries\OracleDB;'."\n".
+                'use Illuminate\Support\Facades\DB;'."\n".
+                'use Illuminate\Support\Arr;'."\n".
+                'use \Carbon\Carbon;'."\n\n".
+                'class '.$api_instance->api->name.' {'."\n";
 
-        foreach($api_version->functions as $function) {
-            if ($function->name === 'Constructor') {
-                $main_class .= 'function __construct($args=[]) {'."\n".
-                    $function->content.
-                    '}'."\n\n";
-                } else {
-                $main_class .= 'public function '.$function->name.'($args=[],$resources=[]) {'."\n".
-                    $function->content."\n".
-                    '}'."\n\n";
+            foreach($api_version->functions as $function) {
+                if ($function->name === 'Constructor') {
+                    $file_content .= 'function __construct($args=[]) {'."\n".
+                        $function->content.
+                        '}'."\n\n";
+                    } else {
+                    $file_content .= 'public function '.$function->name.'($args=[],$resources=[]) {'."\n".
+                        $function->content."\n".
+                        '}'."\n\n";
+                    }
+            }
+            $file_content .= "}?>";
+        } else {
+            foreach($api_version->files as $code_file) {
+                if ($code_file->name === $filename) {
+                    $prepended_code = 
+                        '?><?php'."\n".
+                        'use \App\Libraries\MySQLDB;'."\n".
+                        'use \App\Libraries\OracleDB;'."\n".
+                        'use Illuminate\Support\Facades\DB;'."\n".
+                        'use Illuminate\Support\Arr;'."\n".
+                        'use \Carbon\Carbon;'."\n".        
+                        '?>'."\n";
+                    $file_content = $prepended_code.$code_file->content;
+                    break;
                 }
+            }
         }
-        $main_class .= "}?>";
+        return $file_content;
+    }
+
+    public function eval_code($api_instance, $api_version) {
+        $main_class = $this->build_file(null,$api_instance, $api_version);
         eval($main_class);
 
         /* Evaluate Files */
         foreach($api_version->files as $code_file) {
-            $prepended_code = 
-                '?><?php'."\n".
-                'use \App\Libraries\MySQLDB;'."\n".
-                'use \App\Libraries\OracleDB;'."\n".
-                'use Illuminate\Support\Facades\DB;'."\n".
-                '?>'."\n";
-            eval($prepended_code.$code_file->content);
+            $file_code = $this->build_file($code_file->name,$api_instance, $api_version);
+            eval($file_code);
         }
 
         /* Run Code */

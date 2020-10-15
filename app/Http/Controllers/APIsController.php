@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use \App\API;
 use \App\APIVersion;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Input;
 use \Carbon\Carbon;
 
 class APIsController extends Controller
@@ -110,7 +109,7 @@ class APIsController extends Controller
         $latest_version = APIVersion::select('id')->where('api_id',$api_id)->orderby('created_at','desc')->first();
         $api_version = APIVersion::where('id','=',$latest_version->id)->orderBy('created_at', 'desc')->first();
 
-        $post_data = Input::all();
+        $post_data = $request->all();
         if(!isset($post_data['updated_at']) && !isset($post_data['force']) ){
             abort(403, $api_version);
         }
