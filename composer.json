@@ -16,7 +16,8 @@
         "phpunit/phpunit": "^8.5"
     },
     "suggest": {
-        "yajra/laravel-oci8": "Adds support for Oracle.  Version matches lumen-framework."
+        "yajra/laravel-oci8": "Adds support for Oracle.  Version matches lumen-framework.",
+        "google/apiclient": "Adds support for Google APIs"
     },
     "autoload": {
         "psr-4": {
