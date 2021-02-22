@@ -6,10 +6,8 @@ use Illuminate\Console\Scheduling\Schedule;
 use Carbon\Carbon;
 use Cron\CronExpression;
 use \App\Service;
-use \App\ServiceInstance;
-use \App\ServiceVersion;
-use \App\APIUser;
-use \App\DatabaseInstance;
+use \App\APIInstance;
+use \App\APIVersion;
 use \App\Scheduler;
 use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
@@ -58,12 +56,12 @@ class Kernel extends ConsoleKernel
                     $task->last_exec_start = Carbon::now()->format("Y-m-d H:i:s");
                     $task->update();
                     $exec_service = new ExecService();
-                    $service_instance = ServiceInstance::where('id',$task->service_instance_id)->with('Service')->first();
-                    if (is_null($service_instance)) {
+                    $api_instance = APIInstance::where('id',$task->service_instance_id)->with('Service')->first();
+                    if (is_null($api_instance)) {
                         abort(404);
                     }
                     $_SERVER['REQUEST_METHOD'] = $task->verb;
-                    $_SERVER['REQUEST_URI'] = '/'.$service_instance->slug.$task->route;
+                    $_SERVER['REQUEST_URI'] = '/'.$api_instance->slug.$task->route;
                     $args = [];
                     if (isset($task->args) && is_array($task->args)) {
                         foreach($task->args as $arg) {
@@ -71,10 +69,10 @@ class Kernel extends ConsoleKernel
                         }
                     }
                     $_GET = $args;
-                    $service_version = $service_instance->find_version();
-                    $exec_service->build_routes($service_instance,$service_version);
-                    $exec_service->build_resources($service_instance);
-                    $result =  $exec_service->eval_code($service_version);
+                    $api_version = $api_instance->find_version();
+                    $exec_service->build_routes($api_instance,$api_version);
+                    $exec_service->build_resources($api_instance);
+                    $result =  $exec_service->eval_code($api_instance, $api_version);
                     $task->last_response = $result;
                     $task->last_exec_stop = Carbon::now()->format("Y-m-d H:i:s");
                     $task->update();

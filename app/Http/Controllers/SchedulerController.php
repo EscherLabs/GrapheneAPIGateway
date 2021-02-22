@@ -79,7 +79,7 @@ class SchedulerController extends Controller
             $api_version = $api_instance->find_version();
             $exec_api->build_routes($api_instance,$api_version);
             $exec_api->build_resources($api_instance);
-            $result =  $exec_api->eval_code($api_version);
+            $result =  $exec_api->eval_code($api_instance, $api_version);
             return $result;
         } else {
             return response('scheduler task not found', 404);
