@@ -13,7 +13,7 @@ use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
-use \App\Libraries\ExecService;
+use \App\Libraries\ExecAPI;
 use Illuminate\Http\Request;
 
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
@@ -55,10 +55,11 @@ class Kernel extends ConsoleKernel
                     $task->last_exec_cron = $current_minute;
                     $task->last_exec_start = Carbon::now()->format("Y-m-d H:i:s");
                     $task->update();
-                    $exec_service = new ExecService();
-                    $api_instance = APIInstance::where('id',$task->service_instance_id)->with('Service')->first();
+
+                    $exec_api = new ExecAPI();
+                    $api_instance = APIInstance::where('id',$task->api_instance_id)->with('api')->first();    
                     if (is_null($api_instance)) {
-                        abort(404);
+                        echo 'api instance not found'; exit();
                     }
                     $_SERVER['REQUEST_METHOD'] = $task->verb;
                     $_SERVER['REQUEST_URI'] = '/'.$api_instance->slug.$task->route;
@@ -70,9 +71,9 @@ class Kernel extends ConsoleKernel
                     }
                     $_GET = $args;
                     $api_version = $api_instance->find_version();
-                    $exec_service->build_routes($api_instance,$api_version);
-                    $exec_service->build_resources($api_instance);
-                    $result =  $exec_service->eval_code($api_instance, $api_version);
+                    $exec_api->build_routes($api_instance,$api_version);
+                    $exec_api->build_resources($api_instance);
+                    $result =  $exec_api->eval_code($api_instance, $api_version);
                     $task->last_response = $result;
                     $task->last_exec_stop = Carbon::now()->format("Y-m-d H:i:s");
                     $task->update();

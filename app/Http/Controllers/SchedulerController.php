@@ -65,7 +65,7 @@ class SchedulerController extends Controller
         $task = Scheduler::where('id',$scheduler_id)->first();
         if (!is_null($task)) {
             $exec_api = new ExecAPI();
-            $api_instance = APIInstance::where('id',$task->api_instance_id)->with('API')->first();
+            $api_instance = APIInstance::where('id',$task->api_instance_id)->with('api')->first();    
             if (is_null($api_instance)) {
                 response('api instance not found', 404);
             }
