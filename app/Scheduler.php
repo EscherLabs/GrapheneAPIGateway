@@ -10,9 +10,13 @@ class Scheduler extends Model
 {
   protected $table = 'scheduler';
 
-  protected $fillable = ['cron','api_instance_id','route','name','args','type'];
-  protected $casts = ['args' => 'object','last_response'=>'object'];
+  protected $fillable = ['cron','api_instance_id','route','name','args','enabled'];
+  protected $casts = ['args' => 'object','last_response'=>'object','enabled'=>'boolean'];
   protected $appends = ['next_runtimes'];
+
+  public function api_instance() {
+    return $this->belongsTo(APIInstance::class);
+  }
 
   public function getNextRuntimesAttribute() {
     try {
@@ -35,11 +39,11 @@ class Scheduler extends Model
     self::saved(function($model){
       if (!app()->runningInConsole()) {
         $orig = $model->getOriginal();
-        foreach($orig as $attr => $attr_val) {
-          if (isset($model->casts[$attr]) && $model->casts[$attr] === 'object') {
-            $orig[$attr] = json_decode($attr_val);
-          }
-        }
+        // foreach($orig as $attr => $attr_val) {
+        //   if (isset($model->casts[$attr]) && $model->casts[$attr] === 'object') {
+        //     $orig[$attr] = json_decode($attr_val);
+        //   }
+        // }
         $activity_log = new ActivityLog([
           'event' => class_basename($model),
           'new' => $model,

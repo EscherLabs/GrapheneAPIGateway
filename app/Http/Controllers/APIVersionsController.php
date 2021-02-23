@@ -11,7 +11,8 @@ class APIVersionsController extends Controller
     }
     
     public function browse() {
-        return APIVersion::all();
+        return APIVersion::select('api_id','description','id','stable','summary','user_id','created_at','updated_at')
+            ->orderby('api_id')->orderby('summary')->get();
     }   
 
     public function read($api_version_id)

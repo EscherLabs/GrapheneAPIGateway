@@ -11,7 +11,8 @@ class APIInstancesController extends Controller
     }
     
     public function browse() {
-        return APIInstance::all();
+        return APIInstance::with('environment')
+            ->orderby('environment_id')->orderby('name')->get();
     }   
     public function read($api_instance_id) {
         $api_instance =  APIInstance::where('id',$api_instance_id)

@@ -26,11 +26,11 @@ class API extends Model
     self::saved(function($model){
       if (!app()->runningInConsole()) {
         $orig = $model->getOriginal();
-        foreach($orig as $attr => $attr_val) {
-          if (isset($model->casts[$attr]) && $model->casts[$attr] === 'object') {
-            $orig[$attr] = json_decode($attr_val);
-          }
-        }
+        // foreach($orig as $attr => $attr_val) {
+        //   if (isset($model->casts[$attr]) && $model->casts[$attr] === 'object') {
+        //     $orig[$attr] = json_decode($attr_val);
+        //   }
+        // }
         $activity_log = new ActivityLog([
           'event' => class_basename($model),
           'new' => $model,

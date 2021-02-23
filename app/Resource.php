@@ -76,7 +76,7 @@ class Resource extends Model
         $orig = $model->getOriginal();
         foreach($orig as $attr => $attr_val) {
           if ($attr === 'config') {
-            $orig[$attr] = json_decode($attr_val,true);
+            // $orig[$attr] = json_decode($attr_val,true);
             if (!is_array($orig[$attr])) { $orig[$attr] = [];} // Initialize Empty Array
             foreach($orig[$attr] as $index => $config_attr) {
               foreach($model->secret_fields as $secret_field) {

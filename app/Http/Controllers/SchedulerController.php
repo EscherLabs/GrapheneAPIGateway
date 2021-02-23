@@ -22,7 +22,9 @@ class SchedulerController extends Controller
     }
     
     public function browse() {
-        return Scheduler::all();
+        return Scheduler::with(['api_instance'=>function($query){
+            $query->with('environment');
+        }])->orderby('name')->get();
     }   
 
     public function read($scheduler_id)

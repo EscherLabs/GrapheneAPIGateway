@@ -13,7 +13,7 @@ class APIsController extends Controller
     }
     
     public function browse() {
-        return API::all();
+        return API::orderby('name')->get();
     }   
 
     public function read($api_id)

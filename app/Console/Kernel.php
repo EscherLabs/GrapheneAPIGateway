@@ -38,7 +38,7 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->call(function () {
-            $schedule = Scheduler::all();
+            $schedule = Scheduler::where('enabled',true)->get();
             $to_do = [];
             foreach($schedule as $task) {
                 $cron = CronExpression::factory($task->cron);
