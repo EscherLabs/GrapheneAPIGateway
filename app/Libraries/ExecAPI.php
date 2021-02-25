@@ -97,6 +97,7 @@ class ExecAPI {
                 'use \App\Libraries\OracleDB;'."\n".
                 'use Illuminate\Support\Facades\DB;'."\n".
                 'use Illuminate\Support\Arr;'."\n".
+                'use Illuminate\Support\Facades\Mail;'."\n".
                 'use \Carbon\Carbon;'."\n\n".
                 'class '.$api_instance->api->name.' {'."\n";
 
@@ -119,9 +120,9 @@ class ExecAPI {
                         '?><?php'."\n".
                         'use \App\Libraries\MySQLDB;'."\n".
                         'use \App\Libraries\OracleDB;'."\n".
-                        'use \Illuminate\Support\Facades\DB;'."\n".
-                        'use \Illuminate\Support\Arr;'."\n".
-                        'use \Illuminate\Support\Facades\Mail;'."\n".
+                        'use Illuminate\Support\Facades\DB;'."\n".
+                        'use Illuminate\Support\Arr;'."\n".
+                        'use Illuminate\Support\Facades\Mail;'."\n".
                         'use \Carbon\Carbon;'."\n".  
                         '?>'."\n";
                     $file_content = $prepended_code.$code_file->content;
