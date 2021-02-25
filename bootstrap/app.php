@@ -77,14 +77,30 @@ $app->routeMiddleware([
 |
 */
 
-// $app->register(App\Providers\AppServiceProvider::class);
+//$app->register(App\Providers\AppServiceProvider::class);
 // $app->register(App\Providers\AuthServiceProvider::class);
 // $app->register(App\Providers\EventServiceProvider::class);
+$app->register(\Illuminate\Mail\MailServiceProvider::class);
 
 // Only Include Oci8 ServiceProvider if Installed
 if (class_exists(Yajra\Oci8\Oci8ServiceProvider::class)) {
     $app->register(Yajra\Oci8\Oci8ServiceProvider::class);
 }
+
+/*
+|------------
+| Register Mailer Stuff
+|------------
+*/
+$app->configure('mail');
+
+$app->alias('mail.manager', Illuminate\Mail\MailManager::class);
+$app->alias('mail.manager', Illuminate\Contracts\Mail\Factory::class);
+
+$app->alias('mailer', Illuminate\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\Mailer::class);
+$app->alias('mailer', Illuminate\Contracts\Mail\MailQueue::class);
+
 
 /*
 |--------------------------------------------------------------------------
