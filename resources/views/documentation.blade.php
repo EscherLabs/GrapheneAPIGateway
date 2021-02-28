@@ -339,9 +339,6 @@ curl {{ $envurl($api_instance->slug) }}
     -u username:password
             </code>
             </pre>
-            <blockquote class="highlight">
-               <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials.</p>
-            </blockquote>
             <p>The <i>{{ $api_instance->name }}</i> API uses HTTP basic authentication to allow access to the API.  Contact the API Developer @isset($api_instance->api->user)({{ $api_instance->api->user }}) @endisset to generate a username/password to use this API</a>.</p>
             @if(is_array($api_instance->route_user_map))
             <aside class="success">There is/are currently {{count($api_instance->route_user_map)}} user account(s) / app username(s) for the <i>{{ $api_instance->name }}</i> API:
@@ -366,47 +363,49 @@ curl {{ $envurl($api_instance->slug) }}
 <b><u>Endpoint Definition</u></b>
 Auth Type: HTTP Basic Auth
 URL: {{ $envurl($api_instance->slug) }}
-Username: username
-Password: password
 
 <b><u>MicroApp</u></b>
-Resource Path: {{ $si_route->path }}
-<?php if ($si_route->verb === 'ALL') {
-    echo "Resource Fetch: true or false (configurable)\n";
-    echo "JavaScript Methods: this.app.get, this.app.post, this.app.put, this.app.delete\n";
-
-} else if ($si_route->verb === 'GET') {
-    echo "Resource Fetch: true or false (configurable)\n";
-    echo "JavaScript Method: this.app.".strtolower($si_route->verb)."\n";
-
-} else {
-    echo "Resource Fetch: false (Can't perform fetch on non GET API!)\n";
-    echo "JavaScript Method: this.app.".strtolower($si_route->verb)."\n";
-}?>
+@if ($si_route->verb === 'ALL')
+app.get('{{$si_route->function_name}}',{@foreach ($si_route->required as $param_index => $param){{$param->name}}:@if($param->example !== '')"{{$param->example}}"@else"var{{$param_index}}"@endif, @endforeach },function(response) {
+    app.update({api:response});
+});
+app.post('{{$si_route->function_name}}',{@foreach ($si_route->required as $param_index => $param){{$param->name}}:@if($param->example !== '')"{{$param->example}}"@else"var{{$param_index}}"@endif, @endforeach },function(response) {
+    app.update({api:response});
+});
+app.put('{{$si_route->function_name}}',{@foreach ($si_route->required as $param_index => $param){{$param->name}}:@if($param->example !== '')"{{$param->example}}"@else"var{{$param_index}}"@endif, @endforeach },function(response) {
+    app.update({api:response});
+});
+app.delete('{{$si_route->function_name}}',{@foreach ($si_route->required as $param_index => $param){{$param->name}}:@if($param->example !== '')"{{$param->example}}"@else"var{{$param_index}}"@endif, @endforeach },function(response) {
+    app.update({api:response});
+});
+@else 
+app.{{strtolower($si_route->verb)}}('{{$si_route->function_name}}',{@foreach ($si_route->required as $param_index => $param){{$param->name}}:@if($param->example !== '')"{{$param->example}}"@else"var{{$param_index}}"@endif, @endforeach },function(response) {
+    app.update({api:response});
+});
+@endif
 </pre>
 @if ($si_route->verb === 'ALL')
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
-
+curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->required as $param_index => $param){{$param->name}}=@if($param->example !== ''){{$param->example}} @else var{{$param_index}} @endif &@endforeach
   -u username:password
 </code>
 <code>
 curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X POST
-  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
+  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=@if($param->example !== ''){{$param->example}} @else var {{$param_index}} @endif & @endforeach"
   -u username:password
 </code>
 <code>
 curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X PUT
-  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
+  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=@if($param->example !== ''){{$param->example}} @else var{{$param_index}} @endif & @endforeach"
   -u username:password
 </code>
 <code>
 curl {{ $envurl($api_instance->slug.$si_route->path) }}
   -X DELETE
-  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach"
+  -d "@foreach ($si_route->required as $param_index => $param){{$param->name}}=@if($param->example !== ''){{$param->example}} @else var{{$param_index}} @endif & @endforeach"
   -u username:password
 </code>
 </pre>
@@ -414,7 +413,7 @@ curl {{ $envurl($api_instance->slug.$si_route->path) }}
 @if ($si_route->verb === 'GET')
 <pre class="highlight shell tab-shell">
 <code>
-curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->required as $param_index => $param){{$param->name}}=var{{$param_index}}&@endforeach
+curl {{ $envurl($api_instance->slug.$si_route->path) }}?@foreach ($si_route->required as $param_index => $param){{$param->name}}=@if($param->example !== ''){{$param->example}} @else var {{$param_index}} @endif & @endforeach
 
   -u username:password
 </code>
@@ -430,15 +429,6 @@ curl {{ $envurl($api_instance->slug.$si_route->path) }}
 </pre>
 @endif
 @endif  
-<blockquote>
-    <p>Make sure to replace <code>username</code> and <code>password</code> with your API credentials</p>
-    @if (count($si_route->required)>0)
-</blockquote>
-<blockquote class="highlight shell tab-shell">
-    <p>Make sure to replace <code>var0</code> through <code>varN</code> with the relevant values.</p>
-    @endif
-</blockquote>
-
             <p>{{$si_route->description}}</p>
             @if ($si_route->verb === 'ALL')
                 <h3 id='http-request'>HTTP Request</h3>
