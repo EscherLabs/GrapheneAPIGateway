@@ -67,31 +67,8 @@ class SchedulerController extends Controller
     {
         $task = Scheduler::where('id',$scheduler_id)->first();
         if (!is_null($task)) {
-            $task->last_exec_start = Carbon::now()->format("Y-m-d H:i:s");
-            $task->update();
-
-            $exec_api = new ExecAPI();
-            $api_instance = APIInstance::where('id',$task->api_instance_id)->with('api')->first();    
-            if (is_null($api_instance)) {
-                response('api instance not found', 404);
-            }
-            $_SERVER['REQUEST_METHOD'] = $task->verb;
-            $_SERVER['REQUEST_URI'] = '/'.$api_instance->slug.$task->route;
-            $args = [];
-            foreach($task->args as $arg) {
-                $args[$arg->name] = $arg->value;
-            }
-            $_GET = $args;
-            $api_version = $api_instance->find_version();
-            $exec_api->build_routes($api_instance,$api_version);
-            $exec_api->build_resources($api_instance);
-            $result =  $exec_api->eval_code($api_instance, $api_version);
-
-            $task->last_response = $result;
-            $task->last_exec_stop = Carbon::now()->format("Y-m-d H:i:s");
-            $task->update();
-
-            return $result;
+            $exitCode = Artisan::call('schedule:exec', ['id' => $scheduler_id]);
+            return $exitCode;
         } else {
             return response('scheduler task not found', 404);
         }
