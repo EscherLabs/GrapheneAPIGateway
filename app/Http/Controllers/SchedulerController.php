@@ -16,6 +16,7 @@ use \App\Libraries\ValidateUser;
 use \App\Libraries\ExecAPI;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
+use Illuminate\Support\Facades\Artisan;
 
 class SchedulerController extends Controller
 {
