@@ -48,10 +48,7 @@ class ScheduleExecCommand extends Command
                 }
             }
             $_GET = $args;
-            $api_version = $api_instance->find_version();
-            $exec_api->build_routes($api_instance,$api_version);
-            $exec_api->build_resources($api_instance);
-            $result =  $exec_api->eval_code($api_instance, $api_version);
+            $result = $exec_api->eval_code($api_instance);
             $task->last_response = $result;
             $task->last_exec_stop = Carbon::now()->format("Y-m-d H:i:s");
             $task->update();

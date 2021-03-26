@@ -21,27 +21,26 @@ class APIInstance extends Model
   public function environment() {
     return $this->belongsTo(Environment::class);
   }
-  public function find_version() {
-    $api_version = null;
+  public function find_version_id() {
+    $api_version_id = null;
     if(is_null($this->api_version_id)){
-        // $api_version = APIVersion::where('api_id','=',$this->api_id)->orderBy('created_at', 'desc')->first();
-        $latest_version = APIVersion::select('id')
+        $api_version_id = APIVersion::select('id')
             ->where('api_id',$this->api_id)
             ->orderby('created_at','desc')->first();
-        $api_version = APIVersion::where('id','=',$latest_version->id)->orderBy('created_at', 'desc')->first();
-    }else if($this->api_version_id == 0){
-        // $api_version = APIVersion::where('api_id','=',$this->api_id)->where('stable','=',1)->orderBy('created_at', 'desc')->first();
-        $latest_version = APIVersion::select('id')
+    } else if($this->api_version_id == 0) {
+        $api_version_id = APIVersion::select('id')
             ->where('api_id',$this->api_id)
             ->where('stable','=',1)
             ->orderby('created_at','desc')->first();
-        $api_version = APIVersion::where('id','=',$latest_version->id)->orderBy('created_at', 'desc')->first();
-    }else{
-        $api_version = APIVersion::where('id','=',$this->api_version_id)->first();
+    } else {
+        $api_version_id = APIVersion::select('id')->where('id','=',$this->api_version_id)->first();
     }
-    return $api_version;
+    return $api_version_id->id;
   }
-
+  public function find_version() {
+      $latest_version = $this->find_version_id();
+      return APIVersion::where('id','=',$latest_version)->orderBy('created_at', 'desc')->first();
+  }
   public static function boot()
   {
     parent::boot();

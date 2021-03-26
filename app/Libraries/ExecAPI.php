@@ -16,7 +16,7 @@ use PDO;
 
 class ExecAPI {
 
-    public function build_routes($api_instance,$api_version) {
+    private function build_routes($api_instance,$api_version) {
         foreach($api_version->routes as $route_index =>$route) {
             $extra = [];
             if (isset($route->verb)) {$verb = $route->verb;} else { $verb = 'all';}
@@ -35,7 +35,7 @@ class ExecAPI {
         }
     } 
 
-    public function build_resources($api_instance) {
+    private function build_resources($api_instance) {
         /* Fetch and Configure Database for this API Instance */
         $resources_arr = [];
         $resources_name_map = [];
@@ -89,10 +89,10 @@ class ExecAPI {
         }
     }
 
-    public function build_file($filename=null, $api_instance, $api_version) {
+    private function build_file($filename=null, $api_instance, $api_version) {
         $file_content = '';
         if (is_null($filename)) {
-            $file_content = "\n".
+            $file_content = '<?php'."\n".
                 'use \App\Libraries\MySQLDB;'."\n".
                 'use \App\Libraries\OracleDB;'."\n".
                 'use Illuminate\Support\Facades\DB;'."\n".
@@ -112,12 +112,12 @@ class ExecAPI {
                         '}'."\n\n";
                     }
             }
-            $file_content .= "}?>";
+            $file_content .= "}";
         } else {
             foreach($api_version->files as $code_file) {
                 if ($code_file->name === $filename) {
                     $prepended_code = 
-                        '?><?php'."\n".
+                        '<?php'."\n".
                         'use \App\Libraries\MySQLDB;'."\n".
                         'use \App\Libraries\OracleDB;'."\n".
                         'use Illuminate\Support\Facades\DB;'."\n".
@@ -133,14 +133,42 @@ class ExecAPI {
         return $file_content;
     }
 
-    public function eval_code($api_instance, $api_version) {
-        $main_class = $this->build_file(null,$api_instance, $api_version);
-        eval($main_class);
+    private function build_module_cache($code_path, $api_instance) {
+        $api_version_id = $api_instance->find_version_id();
+        $api_version_metadata = APIVersion::select('id','updated_at')->where('id',$api_version_id)->first();
 
-        /* Evaluate Files */
+        if (file_exists($code_path.DIRECTORY_SEPARATOR.'api_version.json')) {
+            $api_version = json_decode(file_get_contents($code_path.DIRECTORY_SEPARATOR.'api_version.json'));
+            if ($api_version_id == $api_version_metadata->id && $api_version->updated_at == $api_version_metadata->updated_at->toJSON()) {
+                // Local Cache looks 'ok' and is up-to-date.  No need to update cache.
+                return $api_version;
+            }
+        }
+        if (!file_exists($code_path)) { mkdir($code_path, 0777, true); }
+        $api_version = APIVersion::where('id',$api_version_id)->first();
+        file_put_contents($code_path.DIRECTORY_SEPARATOR.'api_version.json',$api_version->toJson());  
+        
+        $main_class = $this->build_file(null,$api_instance, $api_version);
+        file_put_contents($code_path.DIRECTORY_SEPARATOR.'Module.php',$main_class);
+        
         foreach($api_version->files as $code_file) {
             $file_code = $this->build_file($code_file->name,$api_instance, $api_version);
-            eval($file_code);
+            file_put_contents($code_path.DIRECTORY_SEPARATOR.$code_file->name,$file_code);
+        }
+        return $api_version;
+    }
+
+    public function eval_code($api_instance) {
+        $code_path = app()->basePath().DIRECTORY_SEPARATOR.'storage'.DIRECTORY_SEPARATOR.'app'.DIRECTORY_SEPARATOR.'modules_cache'.DIRECTORY_SEPARATOR.$api_instance->id;
+        $api_version = $this->build_module_cache($code_path, $api_instance);
+
+        $this->build_routes($api_instance,$api_version);
+        $this->build_resources($api_instance);
+
+        /* Dynamically Include Relevant Files */
+        include_once($code_path.DIRECTORY_SEPARATOR.'Module.php');
+        foreach($api_version->files as $code_file) {
+            include_once($code_path.DIRECTORY_SEPARATOR.$code_file->name);
         }
 
         /* Run Code */

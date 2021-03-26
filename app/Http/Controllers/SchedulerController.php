@@ -13,7 +13,6 @@ use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
-use \App\Libraries\ExecAPI;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;

@@ -83,14 +83,10 @@ class ExecController extends Controller
         if (is_null($api_instance)) {
             return response(json_encode(['error'=>'API Not Found']),404)->header('Content-type', 'application/json');
         }
-        $api_version = $api_instance->find_version();
         $ret = $this->validate_user($api_instance);
         if ($ret !== true) {
             return $ret;
         }
-
-        $exec_api->build_routes($api_instance,$api_version);
-        $exec_api->build_resources($api_instance);
 
         if ($api_instance->errors === 'all') {
             error_reporting(E_ALL);
@@ -102,8 +98,7 @@ class ExecController extends Controller
             config(['app.debug'=>false]);
             putenv ("APP_DEBUG=false");
         }
-
-        return $exec_api->eval_code($api_instance,$api_version);
+        return $exec_api->eval_code($api_instance);
 
     }   
 }

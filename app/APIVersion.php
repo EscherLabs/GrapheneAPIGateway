@@ -11,7 +11,6 @@ class APIVersion extends Model
   protected $fillable = ['api_id', 'summary', 'description', 'stable' ,'files', 'functions', 'resources', 'routes', 'user_id'];
   protected $casts = ['files' => 'object', 'functions'=> 'object','resources' => 'object', 'routes' => 'object'];
 
-
   public function api() {
     return $this->belongsTo(API::class);
   }
