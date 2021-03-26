@@ -12,6 +12,7 @@ use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
 use PDO;
 
 class ExecAPI {
@@ -144,9 +145,9 @@ class ExecAPI {
                 return $api_version;
             }
         }
+
         if (!file_exists($code_path)) { mkdir($code_path, 0777, true); }
         $api_version = APIVersion::where('id',$api_version_id)->first();
-        file_put_contents($code_path.DIRECTORY_SEPARATOR.'api_version.json',$api_version->toJson());  
         
         $main_class = $this->build_file(null,$api_instance, $api_version);
         file_put_contents($code_path.DIRECTORY_SEPARATOR.'Module.php',$main_class);
@@ -155,6 +156,15 @@ class ExecAPI {
             $file_code = $this->build_file($code_file->name,$api_instance, $api_version);
             file_put_contents($code_path.DIRECTORY_SEPARATOR.$code_file->name,$file_code);
         }
+
+        // Clear out File Content in App Version Cache to reduce size (no need for that)
+        $api_version->files = collect($api_version->files)->map(function($item,$key) {
+            return isset($item->name)?(Object)['name'=>$item->name]:(Object)[];
+        });
+        // Store Local copy of App Version, excluding File Content to reduce size (no need for that) 
+        file_put_contents($code_path.DIRECTORY_SEPARATOR.'api_version.json',
+            json_encode(Arr::except($api_version->toArray(),['functions']))
+        );  
         return $api_version;
     }
 

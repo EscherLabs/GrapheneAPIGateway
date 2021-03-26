@@ -65,10 +65,11 @@ class SchedulerController extends Controller
 
     public function run($scheduler_id)
     {
-        $task = Scheduler::where('id',$scheduler_id)->first();
+        $task = Scheduler::select('id')->where('id',$scheduler_id)->first();
         if (!is_null($task)) {
             $exitCode = Artisan::call('schedule:exec', ['id' => $scheduler_id]);
-            return $exitCode;
+            $task = Scheduler::where('id',$scheduler_id)->first();
+            return $task->last_response;
         } else {
             return response('scheduler task not found', 404);
         }
