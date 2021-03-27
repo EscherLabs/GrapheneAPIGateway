@@ -22,20 +22,20 @@ class APIInstance extends Model
     return $this->belongsTo(Environment::class);
   }
   public function find_version_id() {
-    $api_version_id = null;
     if(is_null($this->api_version_id)){
         $api_version_id = APIVersion::select('id')
             ->where('api_id',$this->api_id)
             ->orderby('created_at','desc')->first();
+        return $api_version_id->id;
     } else if($this->api_version_id == 0) {
         $api_version_id = APIVersion::select('id')
             ->where('api_id',$this->api_id)
             ->where('stable','=',1)
             ->orderby('created_at','desc')->first();
+        return $api_version_id->id;
     } else {
-        $api_version_id = $this->api_version_id;
+        return $this->api_version_id;
     }
-    return $api_version_id->id;
   }
   public function find_version() {
       $latest_version = $this->find_version_id();
