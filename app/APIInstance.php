@@ -33,7 +33,7 @@ class APIInstance extends Model
             ->where('stable','=',1)
             ->orderby('created_at','desc')->first();
     } else {
-        $api_version_id = APIVersion::select('id')->where('id','=',$this->api_version_id)->first();
+        $api_version_id = $this->api_version_id;
     }
     return $api_version_id->id;
   }
