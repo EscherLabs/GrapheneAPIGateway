@@ -96,9 +96,43 @@ class ExecController extends Controller
             ini_set('display_errors', 0);
             ini_set('display_startup_errors', 0);
             config(['app.debug'=>false]);
-            putenv ("APP_DEBUG=false");
+            putenv("APP_DEBUG=false");
         }
-        return $exec_api->eval_code($api_instance);
 
+        // Throw warnings as exceptions!
+        set_error_handler(function ($severity, $message, $file, $line) {
+            throw new \ErrorException($message, $severity, $severity, $file, $line);
+        });
+        
+        try {
+            return $exec_api->eval_code($api_instance);
+        } catch (\Exception $e) {
+            if (ini_get('display_errors') == 1) {
+                $error_line = $e->getLine();
+                $file_contents = explode("\n",file_get_contents($e->getFile()));
+                $file_contents_abridged = [];
+                for ($line_number = $error_line-10; $line_number <= $error_line+10; $line_number++) {
+                    if (isset($file_contents[$line_number])) {
+                        $file_contents_abridged[] = str_pad($line_number+1,strlen(strval(count($file_contents))),' ',STR_PAD_LEFT).':  '.$file_contents[$line_number];
+                    }
+                }
+                return response()->json([
+                    'error' => [
+                        'code' => 'error',
+                        'message' => $e->getMessage(),
+                        'line' => $error_line,
+                        'file' => $e->getFile(),
+                        'file_contents' => $file_contents_abridged,
+                    ]
+                ], 500);
+            } else {
+                return response()->json([
+                    'error' => [
+                        'code' => 'error',
+                        'message' => $e->getMessage()
+                    ]
+                ], 500);
+            }
+        }
     }   
 }
