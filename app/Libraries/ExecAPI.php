@@ -13,6 +13,7 @@ use \App\Libraries\OracleDB;
 use \App\Libraries\ValidateUser;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
+use Illuminate\Support\Facades\DB;
 use PDO;
 
 class ExecAPI {
@@ -180,6 +181,11 @@ class ExecAPI {
         foreach($api_version->files as $code_file) {
             include_once($code_path.DIRECTORY_SEPARATOR.$code_file->name);
         }
+
+        // Disconnect from the APIGateay database while we execute the code.
+        // This is to avoid having too many simulataenous connections to the database,
+        // especially when a given API takes a very long time to execute.
+        DB::connection()->disconnect(); 
 
         /* Run Code */
         $ret = Router::handle_route();
