@@ -33,7 +33,11 @@ class APIsController extends Controller
             ->orderby('created_at','desc')->get();
         if (!is_null($versions)) {
             foreach($versions as $i => $version) {
-                $versions[$i]->label = $version->updated_at->format('Y-m-d').' - '.$version->summary;
+                $version_label = $version->created_at->format('Y-m-d').' - '.$version->summary;
+                if (!is_null($version->updated_at)) {
+                    $version_label = $version->updated_at->format('Y-m-d').' - '.$version->summary;
+                }
+                $versions[$i]->label = $version_label;
             }    
             return $versions;
         } else {
