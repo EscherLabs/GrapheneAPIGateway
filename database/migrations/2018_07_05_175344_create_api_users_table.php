@@ -19,6 +19,7 @@ class CreateAPIUsersTable extends Migration
             $table->string('app_name',255)->nullable()->default(null);
             $table->string('app_secret',255)->nullable()->default(null);
             $table->string('encrypted_app_secret',1024)->nullable()->default(null);
+            $table->json('ips')->nullable();
             $table->unique(['environment_id', 'app_name']);
             $table->timestamps();
         });

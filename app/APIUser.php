@@ -9,8 +9,8 @@ use Illuminate\Support\Facades\Crypt;
 
 class APIUser extends Model
 {
-  protected $fillable = ['app_name','app_secret','config','environment_id'];
-  protected $casts = ['config' => 'object'];
+  protected $fillable = ['app_name','app_secret','ips','environment_id'];
+  protected $casts = ['ips' => 'array'];
   protected $table = 'api_users';
   protected $hidden = ['encrypted_app_secret'];
 
