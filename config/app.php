@@ -2,6 +2,9 @@
 
 return [
 
+    'resources' => [],
+    'args' => [],
+
     'auth' => [
         'user' => env('AUTH_USER','graphene_proxyserver'),
         'password' => env('AUTH_PASSWORD','graphene_proxyserver'),

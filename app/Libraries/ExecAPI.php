@@ -52,7 +52,7 @@ class ExecAPI {
         foreach($resources as $resource) {
             if ($resource->resource_type == 'mysql') {
                 MySQLDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
-                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
+                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
                 config(['database.connections.'.$resources_name_map[$resource->id] =>[
                     'driver'    => 'mysql',
                     'port'      => isset($resource->config->port)?$resource->config->port:3306,
@@ -63,7 +63,7 @@ class ExecAPI {
                 ]]);
             } else if ($resource->resource_type == 'oracle') {
                 OracleDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
-                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
+                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
                 config(['database.connections.'.$resources_name_map[$resource->id] => [
                     'driver'        => 'oracle',
                     'tns'           => isset($resource->config->tns)?$resource->config->tns:'',
@@ -75,7 +75,7 @@ class ExecAPI {
                     'database'      => isset($resource->config->name)?$resource->config->name:'',
                 ]]);
             } else if ($resource->resource_type == 'sqlsrv') {
-                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
+                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
                 config(['database.connections.'.$resources_name_map[$resource->id] => [
                     'driver'        => 'sqlsrv',
                     'host'          => isset($resource->config->server)?$resource->config->server:'',
@@ -86,7 +86,7 @@ class ExecAPI {
                     'options'       => [ PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT ],
                 ]]);
             } else if ($resource->resource_type == 'secret' || $resource->resource_type == 'value') {
-                config(['app.apiresources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets->value]);
+                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets->value]);
             }
         }
     }
@@ -104,15 +104,18 @@ class ExecAPI {
                 'class '.$api_instance->api->name.' {'."\n";
 
             foreach($api_version->functions as $function) {
+                $code = implode("\n    ",explode("\n",$function->content));
                 if ($function->name === 'Constructor') {
-                    $file_content .= 'function __construct($args=[]) {'."\n".
-                        $function->content.
+                    $file_content .= 'function __construct($args=null,$resources=null) {'."\n".
+                        '    if(is_null($args)){$args=config("app.args");}if(is_null($resources)){$resources=config("app.resources");}'."\n".
+                        '    '.$code."\n".
                         '}'."\n\n";
-                    } else {
-                    $file_content .= 'public function '.$function->name.'($args=[],$resources=[]) {'."\n".
-                        $function->content."\n".
+                } else {
+                    $file_content .= 'public function '.$function->name.'($args=null,$resources=null) {'."\n".
+                        '    if(is_null($args)){$args=config("app.args");}if(is_null($resources)){$resources=config("app.resources");}'."\n".
+                        '    '.$code."\n".
                         '}'."\n\n";
-                    }
+                }
             }
             $file_content .= "}";
         } else {
