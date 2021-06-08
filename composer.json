@@ -10,7 +10,8 @@
         "laravel/lumen-framework": "^7.0",
         "symfony/var-dumper": "^5.1",
         "illuminate/mail": "^7.0",
-        "google/apiclient": "^2.9"
+        "google/apiclient": "^2.9",
+        "mustache/mustache": "^2.13"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9.1",
