@@ -9,8 +9,8 @@ use Illuminate\Database\Eloquent\Model;
 class APIInstance extends Model
 {
   protected $table = 'api_instances';
-  protected $fillable = ['name','slug','public','api_version_id','environment_id','api_id','route_user_map','resources','errors'];
-  protected $casts = ['route_user_map' => 'object', 'resources' => 'object','public'=>'boolean'];
+  protected $fillable = ['name','slug','public','api_version_id','environment_id','api_id','route_user_map','resources','options','errors'];
+  protected $casts = ['route_user_map' => 'object', 'resources' => 'object', 'options' => 'array', 'public'=>'boolean'];
 
   public function api() {
     return $this->belongsTo(API::class);

@@ -24,6 +24,7 @@ class CreateAPIInstancesTable extends Migration
             $table->enum('errors',['none','all'])->default('none');
             $table->json('route_user_map')->nullable();
             $table->json('resources')->nullable();
+            $table->json('options')->nullable();
             $table->timestamps();
             $table->foreign('api_id')->references('id')->on('apis');
             $table->foreign('environment_id')->references('id')->on('environments');

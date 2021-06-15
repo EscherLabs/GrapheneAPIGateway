@@ -23,6 +23,7 @@ class CreateAPIVersionsTable extends Migration
             $table->json('functions')->nullable();
             $table->json('resources')->nullable();
             $table->json('routes')->nullable();
+            $table->json('options')->nullable();
             $table->string('user_id')->nullable()->default(null);
             $table->timestamps();
             $table->foreign('api_id')->references('id')->on('apis')->onDelete('cascade');

@@ -91,7 +91,15 @@ class ExecAPI {
         }
     }
 
-    private function build_file($filename=null, $api_instance, $api_version) {
+    private function build_options($api_instance) {
+        if (isset($api_instance->options) && is_array($api_instance->options)) {
+            config(['app.options' => $api_instance->options]);
+        } else {
+            config(['app.options' => []]);
+        }
+    }
+
+    private function build_file($filename, $api_instance, $api_version) {
         $file_content = '';
         if (is_null($filename)) {
             $file_content = '<?php'."\n".
@@ -106,13 +114,13 @@ class ExecAPI {
             foreach($api_version->functions as $function) {
                 $code = implode("\n    ",explode("\n",$function->content));
                 if ($function->name === 'Constructor') {
-                    $file_content .= 'function __construct($args=null,$resources=null) {'."\n".
-                        '    if(is_null($args)){$args=config("app.args");}if(is_null($resources)){$resources=config("app.resources");}'."\n".
+                    $file_content .= 'function __construct($args=null,$resources=null,$options=null) {'."\n".
+                        '    if(is_null($args)){$args=config("app.args");}if(is_null($resources)){$resources=config("app.resources");}if(is_null($options)){$options=config("app.options");}'."\n".
                         '    '.$code."\n".
                         '}'."\n\n";
                 } else {
-                    $file_content .= 'public function '.$function->name.'($args=null,$resources=null) {'."\n".
-                        '    if(is_null($args)){$args=config("app.args");}if(is_null($resources)){$resources=config("app.resources");}'."\n".
+                    $file_content .= 'public function '.$function->name.'($args=null,$resources=null,$options=null) {'."\n".
+                        '    if(is_null($args)){$args=config("app.args");}if(is_null($resources)){$resources=config("app.resources");}if(is_null($options)){$options=config("app.options");}'."\n".
                         '    '.$code."\n".
                         '}'."\n\n";
                 }
@@ -178,6 +186,7 @@ class ExecAPI {
 
         $this->build_routes($api_instance,$api_version);
         $this->build_resources($api_instance);
+        $this->build_options($api_instance);
 
         /* Dynamically Include Relevant Files */
         include_once($code_path.DIRECTORY_SEPARATOR.'Module.php');

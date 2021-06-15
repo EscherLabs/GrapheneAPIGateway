@@ -3,6 +3,7 @@
 return [
 
     'resources' => [],
+    'options' => [],
     'args' => [],
 
     'auth' => [

@@ -8,8 +8,8 @@ use App\ActivityLog;
 class APIVersion extends Model
 {
   protected $table = 'api_versions';
-  protected $fillable = ['api_id', 'summary', 'description', 'stable' ,'files', 'functions', 'resources', 'routes', 'user_id'];
-  protected $casts = ['files' => 'object', 'functions'=> 'object','resources' => 'object', 'routes' => 'object'];
+  protected $fillable = ['api_id', 'summary', 'description', 'stable' ,'files', 'functions', 'resources', 'routes', 'options', 'user_id'];
+  protected $casts = ['files' => 'object', 'functions'=> 'object','resources' => 'object','options' => 'object', 'routes' => 'object'];
 
   public function api() {
     return $this->belongsTo(API::class);
