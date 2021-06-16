@@ -5,6 +5,7 @@ namespace App\Console;
 use Illuminate\Console\Scheduling\Schedule;
 use Laravel\Lumen\Console\Kernel as ConsoleKernel;
 use Illuminate\Support\Facades\DB;
+use Schema;
 
 class Kernel extends ConsoleKernel
 {
@@ -26,12 +27,15 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        $tasks = DB::table('scheduler')->select('id','cron')->get();
-        foreach($tasks as $task) {
-            $schedule->command('schedule:exec '.$task->id)
-                ->cron($task->cron)
-                ->onOneServer()
-                ->runInBackground();
+        // Only run scheduled tasks if the scheduler table exists
+        if (Schema::hasTable('scheduler')) {
+            $tasks = DB::table('scheduler')->select('id','cron')->get();
+            foreach($tasks as $task) {
+                $schedule->command('schedule:exec '.$task->id)
+                    ->cron($task->cron)
+                    ->onOneServer()
+                    ->runInBackground();
+            }
         }
     }
 
