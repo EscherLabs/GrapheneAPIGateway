@@ -25,7 +25,10 @@ class ScheduleExecCommand extends Command
         $schedule_id = $this->argument('id');
         $task = Scheduler::where('id',$schedule_id)->first();
         if (is_null($task)) {
-            echo 'Scheduled Task not found'."\n"; exit();
+            $this->error('Scheduled Task Not Found!'); exit();
+        }
+        if ($task->enabled !== true) {
+            $this->error('Scheduled Task "'.$task->name.'" is not Enabled... skipping'); exit();
         }
 
         $current_minute = Carbon::now()->format("Y-m-d H:i:00");
@@ -36,7 +39,7 @@ class ScheduleExecCommand extends Command
         $exec_api = new ExecAPI();
         $api_instance = APIInstance::where('id',$task->api_instance_id)->with('api')->first();    
         if (is_null($api_instance)) {
-            echo 'api instance not found'; exit();
+            $this->error('API Instance Not Found!'); exit();
         }
         $_SERVER['REQUEST_METHOD'] = $task->verb;
         $_SERVER['REQUEST_URI'] = '/'.$api_instance->slug.$task->route;
