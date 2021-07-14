@@ -5,14 +5,13 @@ class Router {
     static private $routes = [];
 
     static public function get_pwd() {
-        $PWD = explode('/', $_SERVER['REQUEST_URI']);
+        $full_path_without_args = explode('?',$_SERVER['REQUEST_URI'])[0];
+        $PWD = explode('/', $full_path_without_args);
         unset($PWD[0]);
         $PWD = array_values($PWD);
         foreach ($PWD as $key => $piece) {
             $PWD[$key] = urldecode($piece);
         }
-        $last = $PWD[count($PWD) - 1];
-        $PWD[count($PWD) - 1] = substr($last, 0, strpos($last, '?') !== false ? strpos($last, '?') : strlen($last));
         return $PWD;
     }
 
