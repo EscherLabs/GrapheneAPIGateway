@@ -27,15 +27,20 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // Only run scheduled tasks if the scheduler table exists
-        if (Schema::hasTable('scheduler')) {
-            $tasks = DB::table('scheduler')->select('id','cron')->get();
-            foreach($tasks as $task) {
-                $schedule->command('schedule:exec '.$task->id)
-                    ->cron($task->cron)
-                    ->onOneServer()
-                    ->runInBackground();
-            }
+        // Only run scheduled tasks if the database is connected and the scheduler table exists
+        try {
+            DB::connection()->getPdo();
+            if (Schema::hasTable('scheduler')) {
+                $tasks = DB::table('scheduler')->select('id','cron')->get();
+                foreach($tasks as $task) {
+                    $schedule->command('schedule:exec '.$task->id)
+                        ->cron($task->cron)
+                        ->onOneServer()
+                        ->runInBackground();
+                }
+            }    
+        } catch (\Exception $e) {
+            // Do nothing... we don't really care
         }
     }
 
