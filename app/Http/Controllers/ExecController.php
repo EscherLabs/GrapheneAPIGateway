@@ -33,17 +33,12 @@ class ExecController extends Controller
         foreach($relevant_users as $user) {
             $users[$user->app_name] = ['user'=>$user, 'pass'=>$user->app_secret,'ips'=>$user->ips,'routes'=>$user_to_routes[$user->id]];
         }
-        // Add 'public' user to users array
-        if (isset($user_to_routes[0])) {
-            $public_user = new APIUser(['app_name'=>'public','app_secret'=>'']);
-            $users['public'] = ['user'=>$public_user,'pass'=>$public_user->app_secret,'ips'=>$user->ips,'routes'=>$user_to_routes[0]];
-        }
 
         $userisok = false; $ipisok = false; $routeisok = false;
 
-        // Check Auth Credentials (or assume public if none are passed)
+        // Check Auth Credentials (or assume public/public if none are passed)
         $basic_auth_username = isset($_SERVER['PHP_AUTH_USER'])?$_SERVER['PHP_AUTH_USER']:'public';
-        $basic_auth_password = isset($_SERVER['PHP_AUTH_PW'])?$_SERVER['PHP_AUTH_PW']:'';
+        $basic_auth_password = isset($_SERVER['PHP_AUTH_PW'])?$_SERVER['PHP_AUTH_PW']:'public';
 
         /* Validate Username & Password */
         $userisok = (isset($basic_auth_username) && array_key_exists($basic_auth_username,$users) && $users[$basic_auth_username]['user']->check_app_secret($basic_auth_password) );
