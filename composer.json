@@ -11,7 +11,8 @@
         "symfony/var-dumper": "^5.1",
         "illuminate/mail": "^7.0",
         "google/apiclient": "^2.9",
-        "mustache/mustache": "^2.13"
+        "mustache/mustache": "^2.13",
+        "adldap2/adldap2": "^10.3"
     },
     "require-dev": {
         "fzaninotto/faker": "^1.9.1",
