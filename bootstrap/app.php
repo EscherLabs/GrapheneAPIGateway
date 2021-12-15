@@ -76,6 +76,9 @@ $app->routeMiddleware([
     'public.api.auth' => App\Http\Middleware\PublicAPIAuth::class,
 ]);
 
+$app->middleware([
+    App\Http\Middleware\TrustedProxiesMiddleware::class
+]);
 
 /*
 |--------------------------------------------------------------------------
