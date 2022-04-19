@@ -6,25 +6,29 @@ use Illuminate\Http\Request;
 
 class TrustedProxiesMiddleware
 {
-
      /**
       *  use 0.0.0.0/0 if you trust any proxy, otherwise replace it with your proxy ips
       * 
       * @var string[]
       */
-     protected $trustedProxies = [
-         '0.0.0.0/0'
-     ];
+    protected $trustedProxies = [
+        '0.0.0.0/0'
+    ];
 
     /**
      * The headers that should be used to detect proxies.
      *
      * @var int
      */
-    protected $headers = Request::HEADER_X_FORWARDED_ALL;
+    protected $headers =    
+        Request::HEADER_X_FORWARDED_FOR |
+        Request::HEADER_X_FORWARDED_HOST |
+        Request::HEADER_X_FORWARDED_PORT |
+        Request::HEADER_X_FORWARDED_PROTO |
+        Request::HEADER_X_FORWARDED_AWS_ELB;
 
-     public function handle(Request $request, \Closure $next){
-         Request::setTrustedProxies($this->trustedProxies,$this->headers);
-         return $next($request);
-     }
+    public function handle(Request $request, \Closure $next){
+        Request::setTrustedProxies($this->trustedProxies,$this->headers);
+        return $next($request);
+    }
 }
