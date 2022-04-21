@@ -51,8 +51,9 @@ class ExecAPI {
         $resources = Resource::whereIn('id',$resources_arr)->get();
         foreach($resources as $resource) {
             if ($resource->resource_type == 'mysql') {
+                $resource_config = $resource->config_with_secrets; $resource_config->name = $resource->name;
                 MySQLDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
-                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
+                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource_config]);
                 config(['database.connections.'.$resources_name_map[$resource->id] =>[
                     'driver'    => 'mysql',
                     'port'      => isset($resource->config->port)?$resource->config->port:3306,
@@ -62,8 +63,9 @@ class ExecAPI {
                     'password'  => isset($resource->config_with_secrets->pass)?$resource->config_with_secrets->pass:'',
                 ]]);
             } else if ($resource->resource_type == 'oracle') {
+                $resource_config = $resource->config_with_secrets; $resource_config->name = $resource->name;
                 OracleDB::config_database($resources_name_map[$resource->id],$resource->config_with_secrets);
-                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
+                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource_config]);
                 config(['database.connections.'.$resources_name_map[$resource->id] => [
                     'driver'        => 'oracle',
                     'tns'           => isset($resource->config->tns)?$resource->config->tns:'',
@@ -75,7 +77,8 @@ class ExecAPI {
                     'database'      => isset($resource->config->name)?$resource->config->name:'',
                 ]]);
             } else if ($resource->resource_type == 'sqlsrv') {
-                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets]);
+                $resource_config = $resource->config_with_secrets; $resource_config->name = $resource->name;
+                config(['app.resources.'.$resources_name_map[$resource->id]=>$resource_config]);
                 config(['database.connections.'.$resources_name_map[$resource->id] => [
                     'driver'        => 'sqlsrv',
                     'host'          => isset($resource->config->server)?$resource->config->server:'',
