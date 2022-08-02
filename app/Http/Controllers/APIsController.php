@@ -130,6 +130,7 @@ class APIsController extends Controller
         $api_version->files = $request->input('files');
         $api_version->functions = $request->functions;
         $api_version->resources = $request->resources;
+        $api_version->options = $request->options;
         if ($request->has('routes')) {
             $api_version->routes = $request->routes;
         }
