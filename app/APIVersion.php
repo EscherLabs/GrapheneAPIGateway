@@ -17,7 +17,7 @@ class APIVersion extends Model
   public function api_instances() {
     return $this->hasOne(APIInstance::class);
   }  
-  // protected $fillable = ['api_id', 'summary', 'description', 'stable' ,'files', 'functions', 'resources', 'routes', 'options', 'user_id']
+
   // public static function boot()
   // {
   //   parent::boot();
