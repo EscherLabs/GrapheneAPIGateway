@@ -40,6 +40,8 @@ class EnvironmentsController extends Controller
     {
         $environment = new Environment($request->all());
         $environment->save();
+        $apiuser = new APIUser(["app_name"=>"public","app_secret"=>"public","environment_id"=>$environment->id]);
+        $apiuser->save();
         return $environment;
     }
 

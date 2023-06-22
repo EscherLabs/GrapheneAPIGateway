@@ -17,6 +17,7 @@ class Kernel extends ConsoleKernel
     protected $commands = [
         \App\Console\Commands\InstallerCommand::class,
         \App\Console\Commands\ScheduleExecCommand::class,
+        \App\Console\Commands\APICall::class,
     ];
 
     /**
