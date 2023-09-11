@@ -1,5 +1,7 @@
 <?php
 
+namespace Database\Seeders;
+ 
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -11,27 +13,27 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        $environment = new \App\Environment([
-            'domain'=>'localhost:8000',
+        $environment = new \App\Models\Environment([
+            'domain'=>'localhost',
             'name'=>'localdev',
             'type'=>'dev',
         ]);
         $environment->save();
 
-        $api_user = new \App\APIUser(['app_name'=>'test']);
+        $api_user = new \App\Models\APIUser(['app_name'=>'test']);
         $api_user->app_secret = 'test';
         $api_user->environment_id = $environment->id;
         $api_user->save();
-        $api_user2 = new \App\APIUser(['app_name'=>'test2']);
+        $api_user2 = new \App\Models\APIUser(['app_name'=>'test2']);
         $api_user2->app_secret = 'test2';
         $api_user2->environment_id = $environment->id;
         $api_user2->save();
-        $api_user3 = new \App\APIUser(['app_name'=>'test3']);
+        $api_user3 = new \App\Models\APIUser(['app_name'=>'test3']);
         $api_user3->app_secret = 'test3';
         $api_user3->environment_id = $environment->id;
         $api_user3->save();
 
-        $resource = new \App\Resource([
+        $resource = new \App\Models\Resource([
             'name'=>'PharmacyEMR_local',
             'resource_type'=>'mysql',
             'type'=>'dev',
@@ -44,7 +46,7 @@ class DatabaseSeeder extends Seeder
         ]);
         $resource->save();
 
-        $resource2 = new \App\Resource([
+        $resource2 = new \App\Models\Resource([
             'name'=>'PI',
             'resource_type'=>'secret',
             'type'=>'dev',
@@ -54,10 +56,10 @@ class DatabaseSeeder extends Seeder
         ]);
         $resource2->save();
 
-        $api = new \App\API(['name'=>'TestAPI','description'=>'This is a test']);
+        $api = new \App\Models\API(['name'=>'TestAPI','description'=>'This is a test']);
         $api->save();
 
-        $api_version = new \App\APIVersion([
+        $api_version = new \App\Models\APIVersion([
             'api_id'=>$api->id, 
             'summary'=>'First Version',
             'description'=>'From DB Seed',
@@ -137,7 +139,7 @@ class AnotherClass {
         ]);
         $api_version->save();
 
-        $nosql_api = new \App\API(['name'=>'NoSQLDB','description'=>'This is a default NoSQL Database API']);
+        $nosql_api = new \App\Models\API(['name'=>'NoSQLDB','description'=>'This is a default NoSQL Database API']);
         $nosql_api->save();
 
         $files = <<<'EOD'
@@ -169,7 +171,7 @@ class AnotherClass {
 ]
 EOD;
 
-        $nosql_api_version = new \App\APIVersion([
+        $nosql_api_version = new \App\Models\APIVersion([
             'api_id'=>$nosql_api->id, 
             'summary'=>'First Version',
             'description'=>'From DB Seed',
@@ -180,7 +182,7 @@ EOD;
         ]);
         $nosql_api_version->save();
 
-        $api_instance = new \App\APIInstance([
+        $api_instance = new \App\Models\APIInstance([
             'name'=>'New TestAPI Instance',
             'slug'=>'test',
             'public'=>false,
@@ -214,7 +216,7 @@ EOD;
         ]);
         $api_instance->save();
 
-        $nosql_api_instance = new \App\APIInstance([
+        $nosql_api_instance = new \App\Models\APIInstance([
             'name'=>'NoSQL Demo',
             'slug'=>'nosqldb_demo',
             'public'=>false,
@@ -231,7 +233,7 @@ EOD;
         ]);
         $nosql_api_instance->save();
 
-        $scheduler = new \App\Scheduler([
+        $scheduler = new \App\Models\Scheduler([
             'name'=>'Echo Every Min',
             'cron' => '* * * * *',
             'api_instance_id' => $api_instance->id,
@@ -241,12 +243,12 @@ EOD;
         ]);
         $scheduler->save();
 
-        $nosqldoc = new \App\NoSQLDB([
+        $nosqldoc = new \App\Models\NoSQLDB([
             'type'=>'demo',
             'data' => ["hello"=>"world"],
         ]);
         $nosqldoc->save();
-        $nosqldoc = new \App\NoSQLDB([
+        $nosqldoc = new \App\Models\NoSQLDB([
             'type'=>'demo',
             'data' => [1,3,4,5,6,7,8,9,0],
         ]);

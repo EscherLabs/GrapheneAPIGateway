@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use \App\API;
-use \App\APIVersion;
+use \App\Models\API;
+use \App\Models\APIVersion;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
 

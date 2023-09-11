@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use \App\APIInstance;
+use \App\Models\APIInstance;
 use Illuminate\Http\Request;
 
 class APIInstancesController extends Controller

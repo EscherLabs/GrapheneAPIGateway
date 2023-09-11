@@ -1,10 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Hash;
-use App\ActivityLog;
+use App\Models\ActivityLog;
 use Illuminate\Support\Facades\Crypt;
 
 class APIUser extends Model

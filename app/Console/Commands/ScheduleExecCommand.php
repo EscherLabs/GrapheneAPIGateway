@@ -2,14 +2,14 @@
 
 namespace App\Console\Commands;
 
-use App\Environment;
+use App\Models\Environment;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
-use App\Scheduler;
+use App\Models\Scheduler;
 use Carbon\Carbon;
 use \App\Libraries\ExecAPI;
-use \App\APIInstance;
-use \App\APIVersion;
+use \App\Models\APIInstance;
+use \App\Models\APIVersion;
 
 class ScheduleExecCommand extends Command
 {

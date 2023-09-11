@@ -2,11 +2,11 @@
 
 namespace App\Libraries;
 
-use \App\API;
-use \App\APIInstance;
-use \App\APIVersion;
-use \App\APIUser;
-use \App\Resource;
+use \App\Models\API;
+use \App\Models\APIInstance;
+use \App\Models\APIVersion;
+use \App\Models\APIUser;
+use \App\Models\Resource;
 use \App\Libraries\Router;
 use \App\Libraries\MySQLDB;
 use \App\Libraries\OracleDB;

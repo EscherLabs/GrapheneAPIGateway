@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use \App\APIVersion;
+use \App\Models\APIVersion;
 use Illuminate\Http\Request;
 
 class APIVersionsController extends Controller

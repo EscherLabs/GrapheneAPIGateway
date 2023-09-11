@@ -1,23 +1,16 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\ActivityLog;
+use App\Models\ActivityLog;
 
-class API extends Model
+class Environment extends Model
 {
-  protected $table = 'apis';
-
-  protected $fillable = ['name', 'description', 'tags' ,'user_id'];
+  protected $fillable = ['domain', 'name' ,'type'];
 
   public function api_instances() {
     return $this->hasMany(APIInstance::class);
-  }
-
-  public function api_versions()
-  {
-    return $this->hasMany(APIVersion::class);
   }
 
   public static function boot()

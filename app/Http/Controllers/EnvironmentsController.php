@@ -2,8 +2,8 @@
 
 namespace App\Http\Controllers;
 
-use \App\Environment;
-use \App\APIUser;
+use \App\Models\Environment;
+use \App\Models\APIUser;
 use Illuminate\Http\Request;
 
 class EnvironmentsController extends Controller

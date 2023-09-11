@@ -3,16 +3,16 @@
 namespace App\Http\Controllers;
 
 use Cron\CronExpression;
-use \App\API;
-use \App\APIInstance;
-use \App\APIVersion;
-use \App\APIUser;
-use \App\DatabaseInstance;
-use \App\Scheduler;
-use \App\Libraries\Router;
-use \App\Libraries\MySQLDB;
-use \App\Libraries\OracleDB;
-use \App\Libraries\ValidateUser;
+use \App\Models\API;
+use \App\Models\APIInstance;
+use \App\Models\APIVersion;
+use \App\Models\APIUser;
+use \App\Models\DatabaseInstance;
+use \App\Models\Scheduler;
+use \App\Models\Libraries\Router;
+use \App\Models\Libraries\MySQLDB;
+use \App\Models\Libraries\OracleDB;
+use \App\Models\Libraries\ValidateUser;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
 use Illuminate\Support\Facades\Artisan;

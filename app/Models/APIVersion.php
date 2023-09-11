@@ -1,9 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\ActivityLog;
+use App\Models\ActivityLog;
 
 class APIVersion extends Model
 {

@@ -1,9 +1,9 @@
 <?php
 
-namespace App;
+namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use App\Environment;
+use App\Models\Environment;
 
 class ActivityLog extends Model
 {

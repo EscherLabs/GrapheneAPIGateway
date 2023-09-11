@@ -77,7 +77,7 @@ $app->routeMiddleware([
 ]);
 
 $app->middleware([
-    App\Http\Middleware\TrustedProxiesMiddleware::class
+    App\Http\Middleware\TrustProxies::class
 ]);
 
 /*

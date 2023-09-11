@@ -2,7 +2,7 @@
 
 namespace App\Console\Commands;
 
-use App\Environment;
+use App\Models\Environment;
 use Illuminate\Console\Command;
 use Illuminate\Support\Facades\Artisan;
 
