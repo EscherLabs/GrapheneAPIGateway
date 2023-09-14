@@ -87,26 +87,19 @@ class ExecController extends Controller
             return $ret;
         }
 
-        if ($api_instance->errors === 'all') {
-            error_reporting(E_ALL);
-            ini_set('display_errors', 1);
-        } else if ($api_instance->errors === 'none') {
-            error_reporting(0);
-            ini_set('display_errors', 0);
-            ini_set('display_startup_errors', 0);
-            config(['app.debug'=>false]);
-            putenv("APP_DEBUG=false");
-        }
-
         // Throw warnings as exceptions!
         set_error_handler(function ($severity, $message, $file, $line) {
             throw new \ErrorException($message, $severity, $severity, $file, $line);
         });
-        
+
+        // Suppress normal PHP Errors (Handle Errors Manually)
+        ini_set('display_errors', 0);
+        ini_set('display_startup_errors', 0);
+
         try {
             return $exec_api->eval_code($api_instance);
         } catch (\Exception $e) {
-            if (ini_get('display_errors') == 1) {
+            if ($api_instace->errors === 'all') {
                 $error_line = $e->getLine();
                 $file_contents = explode("\n",file_get_contents($e->getFile()));
                 $file_contents_abridged = [];

@@ -132,6 +132,8 @@ class ExecAPI {
         } else {
             foreach($api_version->files as $code_file) {
                 if ($code_file->name === $filename) {
+                    // Prepending Code blocks PHP namespace definitions. This needs to be removed
+                    /*
                     $prepended_code = 
                         '<?php'."\n".
                         'use \App\Libraries\MySQLDB;'."\n".
@@ -141,6 +143,8 @@ class ExecAPI {
                         'use Illuminate\Support\Facades\Mail;'."\n".
                         'use \Carbon\Carbon;'."\n".  
                         '?>'."\n";
+                    */
+                    $prepended_code = '';
                     $file_content = $prepended_code.$code_file->content;
                     break;
                 }
