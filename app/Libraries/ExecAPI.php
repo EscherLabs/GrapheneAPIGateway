@@ -132,20 +132,28 @@ class ExecAPI {
         } else {
             foreach($api_version->files as $code_file) {
                 if ($code_file->name === $filename) {
-                    // Prepending Code blocks PHP namespace definitions. This needs to be removed
-                    /*
-                    $prepended_code = 
-                        '<?php'."\n".
+                    // List of Libraries and utilities to use:
+                    $use_directive = 
                         'use \App\Libraries\MySQLDB;'."\n".
                         'use \App\Libraries\OracleDB;'."\n".
                         'use Illuminate\Support\Facades\DB;'."\n".
                         'use Illuminate\Support\Arr;'."\n".
                         'use Illuminate\Support\Facades\Mail;'."\n".
-                        'use \Carbon\Carbon;'."\n".  
-                        '?>'."\n";
-                    */
-                    $prepended_code = '';
-                    $file_content = $prepended_code.$code_file->content;
+                        'use \Carbon\Carbon;'."\n";
+
+                    // If a namespace is specified, add the use directives directly after the namespace
+                    $file_content = $code_file->content = preg_replace(
+                        '/(namespace .*;)/',
+                        "$1\n".$use_directive,
+                        $code_file->content,
+                        1,
+                        $found
+                    );
+
+                    // If a namespace is not specified, prepend the use directives at the beginning of the file
+                    if ($found === 0) {
+                        $file_content = "<?php\n".$use_directive."?>\n".$code_file->content;
+                    }                    
                     break;
                 }
             }
