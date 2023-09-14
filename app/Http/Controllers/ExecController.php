@@ -99,7 +99,7 @@ class ExecController extends Controller
         try {
             return $exec_api->eval_code($api_instance);
         } catch (\Exception $e) {
-            if ($api_instace->errors === 'all') {
+            if ($api_instance->errors === 'all') {
                 $error_line = $e->getLine();
                 $file_contents = explode("\n",file_get_contents($e->getFile()));
                 $file_contents_abridged = [];
