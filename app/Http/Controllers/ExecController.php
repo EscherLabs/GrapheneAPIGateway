@@ -111,9 +111,9 @@ class ExecController extends Controller
             Log::error('API ERROR: "'.$api_instance->api->name.'" on instance '.$api_instance->id."\n".
                 'MESSAGE: '.$e->getMessage()."\n".
                 'LINE: '.$error_line."\n".
+                'HOST: '.app('request')->getHost()."\n\n".
                 'FILE: '.$e->getFile()."\n".
-                'CONTENTS: '.implode("\n",$file_contents_abridged)."\n".
-                'HOST: '.app('request')->getHost()."\n\n"
+                'CONTENTS: '."\n".implode("\n",$file_contents_abridged)."\n"
             );
             if ($api_instance->errors === 'all') {
                 return response()->json([
