@@ -108,13 +108,13 @@ class ExecController extends Controller
                     $file_contents_abridged[] = str_pad($line_number+1,strlen(strval(count($file_contents))),' ',STR_PAD_LEFT).':  '.$file_contents[$line_number];
                 }
             }
-            Log::error('API Error: "'.$api_instance->api->name.'" on instance '.$api_instance->id,[
-                'message' => $e->getMessage(),
-                'line' => $error_line,
-                'file' => $e->getFile(),
-                'file_contents' => $file_contents_abridged,
-                'domain' => app('request')->getHost()
-            ]);
+            Log::error('API ERROR: "'.$api_instance->api->name.'" on instance '.$api_instance->id."\n".
+                'MESSAGE: '.$e->getMessage()."\n".
+                'LINE: '.$error_line."\n".
+                'FILE: '.$e->getFile()."\n".
+                'CONTENTS: '.implode("\n",$file_contents_abridged)."\n".
+                'HOST: '.app('request')->getHost()."\n\n"
+            );
             if ($api_instance->errors === 'all') {
                 return response()->json([
                     'error' => [
