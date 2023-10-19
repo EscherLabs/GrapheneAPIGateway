@@ -113,7 +113,7 @@ class ExecController extends Controller
                 'LINE: '.$error_line."\n".
                 'HOST: '.app('request')->getHost()."\n\n".
                 'FILE: '.$e->getFile()."\n".
-                'CONTENTS: '."\n".implode("\n",$file_contents_abridged)."\n"
+                'CONTENTS: '."\n".implode("\n",$file_contents_abridged)
             );
             if ($api_instance->errors === 'all') {
                 return response()->json([
