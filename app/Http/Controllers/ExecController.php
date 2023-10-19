@@ -100,22 +100,22 @@ class ExecController extends Controller
         try {
             return $exec_api->eval_code($api_instance);
         } catch (\Exception $e) {
-            if ($api_instance->errors === 'all') {
-                $error_line = $e->getLine();
-                $file_contents = explode("\n",file_get_contents($e->getFile()));
-                $file_contents_abridged = [];
-                for ($line_number = $error_line-10; $line_number <= $error_line+10; $line_number++) {
-                    if (isset($file_contents[$line_number])) {
-                        $file_contents_abridged[] = str_pad($line_number+1,strlen(strval(count($file_contents))),' ',STR_PAD_LEFT).':  '.$file_contents[$line_number];
-                    }
+            $error_line = $e->getLine();
+            $file_contents = explode("\n",file_get_contents($e->getFile()));
+            $file_contents_abridged = [];
+            for ($line_number = $error_line-10; $line_number <= $error_line+10; $line_number++) {
+                if (isset($file_contents[$line_number])) {
+                    $file_contents_abridged[] = str_pad($line_number+1,strlen(strval(count($file_contents))),' ',STR_PAD_LEFT).':  '.$file_contents[$line_number];
                 }
-                Log::error('API Error: "'.$api_instance->api->name.'" on instance '.$api_instance->id,[
-                    'message' => $e->getMessage(),
-                    'line' => $error_line,
-                    'file' => $e->getFile(),
-                    'file_contents' => $file_contents_abridged,
-                    'domain' => app('request')->getHost()
-                ]);
+            }
+            Log::error('API Error: "'.$api_instance->api->name.'" on instance '.$api_instance->id,[
+                'message' => $e->getMessage(),
+                'line' => $error_line,
+                'file' => $e->getFile(),
+                'file_contents' => $file_contents_abridged,
+                'domain' => app('request')->getHost()
+            ]);
+            if ($api_instance->errors === 'all') {
                 return response()->json([
                     'error' => [
                         'code' => 'error',
@@ -126,13 +126,6 @@ class ExecController extends Controller
                     ]
                 ], 500);
             } else {
-                Log::error('API Error: "'.$api_instance->api->name.'" on instance '.$api_instance->id,[
-                    'message' => $e->getMessage(),
-                    'line' => $error_line,
-                    'file' => $e->getFile(),
-                    'file_contents' => $file_contents_abridged,
-                    'domain' => app('request')->getHost()
-                ]);
                 return response()->json([
                     'error' => [
                         'code' => 'error',
