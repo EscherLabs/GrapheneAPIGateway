@@ -112,7 +112,7 @@ class ExecController extends Controller
                 'MESSAGE: '.$e->getMessage()."\n".
                 'LINE: '.$error_line."\n".
                 'URL: '.$request->fullUrl()."\n".
-                'PARAMS: '.$request->all()."\n".
+                'PARAMS: '.json_encode($request->all())."\n".
                 'FILE: '.$e->getFile()."\n".
                 'CONTENTS: '."\n".implode("\n",$file_contents_abridged)."\n"
             );
