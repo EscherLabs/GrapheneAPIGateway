@@ -12,7 +12,8 @@
         "illuminate/mail": "^10.22",
         "google/apiclient": "^2.9",
         "mustache/mustache": "^2.14",
-        "adldap2/adldap2": "^10.3"
+        "adldap2/adldap2": "^10.3",
+        "directorytree/ldaprecord": "^3.2"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
