@@ -13,6 +13,7 @@ return [
             'password' => env('MAIL_SMTP_PASSWORD'),
             'timeout' => null,
             'auth_mode' => null,
+            'ses_tenant' => env('MAIL_SES_TENANT',null)
         ],
     ],
 

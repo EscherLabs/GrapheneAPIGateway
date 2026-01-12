@@ -91,6 +91,7 @@ $app->middleware([
 |
 */
 
+$app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
 
 // Only Include Oci8 ServiceProvider if Installed
