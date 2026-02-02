@@ -86,7 +86,8 @@ class ExecAPI {
                     'username'      => isset($resource->config->user)?$resource->config->user:'',
                     'password'      => isset($resource->config_with_secrets->pass)?$resource->config_with_secrets->pass:'',
                     'port'          => isset($resource->config->port)?$resource->config->port:1433,
-                    'options'       => [ PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT, PDO::SQLSRV_ATTR_TRUST_SERVER_CERTIFICATE => true ],
+                    'options'       => [ PDO::ATTR_ERRMODE => PDO::ERRMODE_SILENT],
+                    'trust_server_certificate' => true
                 ]]);
             } else if ($resource->resource_type == 'secret' || $resource->resource_type == 'value') {
                 config(['app.resources.'.$resources_name_map[$resource->id]=>$resource->config_with_secrets->value]);
