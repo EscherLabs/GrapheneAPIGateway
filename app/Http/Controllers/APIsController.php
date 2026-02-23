@@ -3,9 +3,11 @@
 namespace App\Http\Controllers;
 
 use \App\Models\API;
+use App\Models\APIDeveloper;
 use \App\Models\APIVersion;
 use Illuminate\Http\Request;
 use \Carbon\Carbon;
+use Illuminate\Support\Facades\Auth;
 
 class APIsController extends Controller
 {
@@ -13,12 +15,24 @@ class APIsController extends Controller
     }
     
     public function browse() {
-        return API::orderby('name')->get();
+        if (Auth::user()->admin || Auth::user()->developer){
+            return API::where('api_type','php')->orderby('name')->get();
+        }else{
+            return API::where('api_type','php')
+                ->where(function ($query) {
+                    $query->where('user_id', Auth::id())
+                        ->orWhereHas('developers', function ($q) {
+                            $q->where('users.id', Auth::id());
+                        });
+                })
+                ->orderby('name')->get();
+        }
+
     }   
 
     public function read($api_id)
     {
-        $api = API::where('id',$api_id)->first();
+        $api = API::where('id',$api_id)->where('api_type','php')->first();
         if (!is_null($api)) {
             return $api;
         } else {
@@ -62,8 +76,9 @@ class APIsController extends Controller
 
     public function edit(Request $request, $api_id)
     {
-        $api = API::where('id',$api_id)->first();
+        $api = API::where('id',$api_id)->where('api_type','php')->first();
         if (!is_null($api)) {
+            $api->updated_by = Auth::id();
             $api->update($request->all());
             return $api;
         } else {
@@ -74,10 +89,16 @@ class APIsController extends Controller
     public function add(Request $request)
     {
         $api = new API($request->all());
+        $api->created_by = Auth::id();
+        $api->updated_by = Auth::id();
+        $api->user_id = Auth::id();
+        $api->api_type = 'php';
         $api->save();
 
         $api_version = new APIVersion($request->all());
         $api_version->api_id = $api->id;
+        $api_version->updated_by = Auth::id();
+        $api_version->user_id = Auth::id();
         $api_version->files = [];
         $api_version->functions = [];
         $api_version->resources = [];
@@ -99,9 +120,7 @@ class APIsController extends Controller
             $api_version->summary = $request->summary;
             $api_version->description = $request->description;
             $api_version->stable = true;
-            if ($request->has('user_id')) {
-                $api_version->user_id = $request->user_id;
-            }
+            $api_version->user_id = Auth::id();
             $api_version->save();
             return $api_version;
         }else{
@@ -110,7 +129,6 @@ class APIsController extends Controller
     }
 
     public function code(Request $request, $api_id) { 
-        // $api_version = APIVersion::where('api_id','=',$api_id)->orderBy('created_at', 'desc')->first();
         $latest_version = APIVersion::select('id')->where('api_id',$api_id)->orderby('created_at','desc')->first();
         $api_version = APIVersion::where('id','=',$latest_version->id)->orderBy('created_at', 'desc')->first();
 
@@ -135,11 +153,27 @@ class APIsController extends Controller
         if ($request->has('routes')) {
             $api_version->routes = $request->routes;
         }
-        $api_version->user_id = null;
+        $api_version->user_id = Auth::id();
+        $api_version->updated_by = Auth::id();
         $api_version->save();
         return $api_version;
     }
 
+    public function browseDevelopers(Request $request, $api_id){
+        return APIDeveloper::where('api_id','=',$api_id)->get();
+    }
+
+    public function addDeveloper(Request $request, $api_id, $user_id){
+        $api_developer = new APIDeveloper(['user_id'=>$user_id,'api_id'=>$api_id]);
+        $api_developer->save();
+
+        return $api_developer;
+    }
+
+    public function deleteDeveloper(Request $request, $api_id, $user_id){
+        APIDeveloper::where('api_id','=',$api_id)->where('user_id','=',$user_id)->delete();
+        return [ 'message'=> "Success" ];
+    }
 
 
 }

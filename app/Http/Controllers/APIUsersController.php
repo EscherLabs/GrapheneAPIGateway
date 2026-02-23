@@ -11,7 +11,9 @@ class APIUsersController extends Controller
     }
     
     public function browse() {
-        return APIUser::all();
+        return APIUser::whereHas('environment', function ($q) {
+            $q->where('server_name', config('app.server_name'));
+        })->get();
     }   
 
     public function read($apiuser_id) {
@@ -35,6 +37,7 @@ class APIUsersController extends Controller
 
     public function add(Request $request) {
         $apiuser = new APIUser($request->all());
+
         $apiuser->save();
         return $apiuser;
     }

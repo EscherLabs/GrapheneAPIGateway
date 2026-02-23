@@ -14,4 +14,5 @@ return [
     'locale' => env('LOCALE','US/Eastern'),
     'key' => env('APP_KEY',''),
     'cipher' => 'AES-256-CBC',
+    'server_name' => env('SITE_SERVER_NAME', 'dataproxy'),
 ];

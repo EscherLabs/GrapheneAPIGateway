@@ -24,9 +24,12 @@ class CreateAPIVersionsTable extends Migration
             $table->json('resources')->nullable();
             $table->json('routes')->nullable();
             $table->json('options')->nullable();
-            $table->string('user_id')->nullable()->default(null);
+            $table->integer('user_id')->unsigned()->index();
+            $table->integer('updated_by')->unsigned()->index();
             $table->timestamps();
             $table->foreign('api_id')->references('id')->on('apis')->onDelete('cascade');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+            $table->foreign('updated_by')->references('id')->on('users')->onDelete('cascade');
         });
     }
 

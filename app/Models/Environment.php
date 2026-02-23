@@ -7,7 +7,7 @@ use App\Models\ActivityLog;
 
 class Environment extends Model
 {
-  protected $fillable = ['domain', 'name' ,'type'];
+  protected $fillable = ['domain', 'name' ,'type','server_name'];
 
   public function api_instances() {
     return $this->hasMany(APIInstance::class);

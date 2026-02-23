@@ -15,8 +15,9 @@ class CreateEnvironmentsTable extends Migration
     {
         Schema::create('environments', function (Blueprint $table) {
             $table->increments('id');
+            $table->string('server_name')->index();
             $table->string('domain')->unique();
-            $table->string('name')->nullalble()->default(null);
+            $table->string('name')->nullable()->default(null);
             $table->enum('type',['dev','test','prod'])->default('dev');
             $table->timestamps();
             $table->softDeletes();

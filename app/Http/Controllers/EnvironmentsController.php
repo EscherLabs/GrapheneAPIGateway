@@ -12,12 +12,13 @@ class EnvironmentsController extends Controller
     }
     
     public function browse() {
-        return Environment::all();
+
+        return Environment::where('server_name',config('app.server_name'))->get();
     }   
 
     public function read($environment_id)
     {
-        $environment = Environment::where('id',$environment_id)->first();
+        $environment = Environment::where('id',$environment_id)->where('server_name',config('app.server_name'))->first();
         if (!is_null($environment)) {
             return $environment;
         } else {
@@ -27,7 +28,7 @@ class EnvironmentsController extends Controller
 
     public function edit(Request $request, $environment_id)
     {
-        $environment = Environment::where('id',$environment_id)->first();
+        $environment = Environment::where('id',$environment_id)->where('server_name',config('app.server_name'))->first();
         if (!is_null($environment)) {
             $environment->update($request->all());
             return $environment;
@@ -39,6 +40,7 @@ class EnvironmentsController extends Controller
     public function add(Request $request)
     {
         $environment = new Environment($request->all());
+        $environment->server_name=config('app.server_name');
         $environment->save();
         $apiuser = new APIUser(["app_name"=>"public","app_secret"=>"public","environment_id"=>$environment->id]);
         $apiuser->save();
@@ -47,7 +49,7 @@ class EnvironmentsController extends Controller
 
     public function delete($environment_id)
     {
-        if ( Environment::where('id',$environment_id)->delete() ) {
+        if ( Environment::where('id',$environment_id)->where('server_name',config('app.server_name'))->delete() ) {
             return [true];
         }
     }

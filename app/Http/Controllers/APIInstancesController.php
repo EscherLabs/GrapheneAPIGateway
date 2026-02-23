@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use \App\Models\APIInstance;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class APIInstancesController extends Controller
 {
@@ -11,13 +12,36 @@ class APIInstancesController extends Controller
     }
     
     public function browse() {
-        return APIInstance::with('environment')
-            ->orderby('environment_id')->orderby('name')->get();
+        if (Auth::user()->admin){
+            return APIInstance::withHas('environment',function($query) {
+                $query->where('server_name', config('app.server_name'));
+            })
+                ->orderby('environment_id')
+                ->with(['api' => function ($query) {
+                    $query->where('api_type', 'php');
+                }
+                ])->orderby('name')->get();
+        }else{
+            return APIInstance::whereHas('environment',function($query) {
+                $query->where('server_name', config('app.server_name'));
+            })->whereHas('api',function ($query) {
+                    $query->where('api_type', 'php')->where(function ($query) {
+                        $query->where('user_id', Auth::id())
+                            ->orWhereHas('developers', function ($q) {
+                                $q->where('users.id', Auth::id());
+                            });
+                    });
+                }
+                )->orderby('name')->get();
+        }
+
     }   
     public function read($api_instance_id) {
         $api_instance =  APIInstance::where('id',$api_instance_id)
             ->with('api')
-            ->with('environment')
+            ->whereHas('environment',function($query) {
+                $query->where('server_name', config('app.server_name'));
+            })
             ->first();
         $api_instance->api_version = $api_instance->find_version();
         if (!is_null($api_instance)) {

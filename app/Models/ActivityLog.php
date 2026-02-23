@@ -26,6 +26,9 @@ class ActivityLog extends Model
         if (app('request')->has('user_id')) {
             $model->user_id = app('request')->input('user_id');
         }
+        if (app('request')->headers->has('X-Unique-Id')) {
+            $model->user_id = app('request')->header('X-Unique-Id');
+        }
         if (app('request')->has('type')) {
             $model->type = app('request')->input('type');
         } else if (app('request')->has('environment_id')) {

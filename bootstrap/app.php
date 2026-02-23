@@ -74,10 +74,12 @@ $app->configure('app');
 
 $app->routeMiddleware([
     'public.api.auth' => App\Http\Middleware\PublicAPIAuth::class,
+    'can'  => App\Http\Middleware\Authorize::class,
 ]);
 
 $app->middleware([
-    App\Http\Middleware\TrustProxies::class
+    App\Http\Middleware\HeaderUserAuth::class,
+    App\Http\Middleware\TrustProxies::class,
 ]);
 
 /*
@@ -93,6 +95,7 @@ $app->middleware([
 
 $app->register(App\Providers\EventServiceProvider::class);
 $app->register(\Illuminate\Mail\MailServiceProvider::class);
+$app->register(App\Providers\AuthServiceProvider::class);
 
 // Only Include Oci8 ServiceProvider if Installed
 if (class_exists(Yajra\Oci8\Oci8ServiceProvider::class)) {
