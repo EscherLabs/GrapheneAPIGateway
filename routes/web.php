@@ -47,10 +47,10 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
     $router->delete('/apis/{api_id}/developers/{user_id}',['uses'=>'APIsController@deleteDeveloper','middleware' => 'can:delete,api_id']);
 
     $router->get('/api_versions',['uses'=>'APIVersionsController@browse','middleware' => 'can:viewAny,App\Models\APIVersion']);
-    $router->get('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@read','middleware' => 'can:view,api_version_id']);
-    $router->put('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@edit','middleware' => 'can:view,api_version_id']);
+    $router->get('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@read','middleware' => 'can:viewAny,App\Models\APIVersion']);
+    $router->put('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@edit','middleware' => 'can:view_manage,api_version_id']);
     $router->post('/api_versions',['uses'=>'APIVersionsController@add']);
-    $router->delete('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@delete','middleware' => 'can:manage,api_version_id']);
+    $router->delete('/api_versions/{api_version_id}',['uses'=>'APIVersionsController@delete','middleware' => 'can:view_manage,api_version_id']);
     
     $router->get('/api_instances',['uses'=>'APIInstancesController@browse','middleware' => 'can:viewAny,App\Models\APIInstance']);
     $router->get('/api_instances/{api_instance_id}',['uses'=>'APIInstancesController@read','middleware' => 'can:view,api_instance_id']);

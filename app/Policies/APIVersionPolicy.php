@@ -19,7 +19,7 @@ class APIVersionPolicy
         $api = API::where('id',$api_version->api_id)->first();
         $is_api_developer = false;
         if ($api){
-            $is_api_developer = APIDeveloper::where('id',$user->id)->where('api_id',$api->id)->exists();
+            $is_api_developer = APIDeveloper::where('user_id',$user->id)->where('api_id',$api->id)->exists();
         }
         return  $user->id == $api->user_id || $is_api_developer;
     }

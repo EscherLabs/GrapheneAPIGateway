@@ -13,7 +13,7 @@ class APIInstancesController extends Controller
     
     public function browse() {
         if (Auth::user()->admin){
-            return APIInstance::withHas('environment',function($query) {
+            return APIInstance::whereHas('environment',function($query) {
                 $query->where('server_name', config('app.server_name'));
             })
                 ->orderby('environment_id')
@@ -39,9 +39,9 @@ class APIInstancesController extends Controller
     public function read($api_instance_id) {
         $api_instance =  APIInstance::where('id',$api_instance_id)
             ->with('api')
-            ->whereHas('environment',function($query) {
+            ->with(['environment'=>function($query) {
                 $query->where('server_name', config('app.server_name'));
-            })
+            }])
             ->first();
         $api_instance->api_version = $api_instance->find_version();
         if (!is_null($api_instance)) {
