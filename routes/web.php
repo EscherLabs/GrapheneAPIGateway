@@ -69,13 +69,13 @@ $router->group(['middleware' => 'public.api.auth','prefix' => 'api'], function (
     $router->get('/scheduler/{scheduler_id}',['uses'=>'SchedulerController@read','middleware' => 'can:view,scheduler_id']);
     $router->get('/scheduler/{scheduler_id}/run',['uses'=>'SchedulerController@run','middleware' => 'can:manage,scheduler_id']);
     $router->put('/scheduler/{scheduler_id}',['uses'=>'SchedulerController@edit','middleware' => 'can:manage,scheduler_id']);
-    $router->post('/scheduler',['uses'=>'SchedulerController@add','middleware' => 'can:create,scheduler_id']);
+    $router->post('/scheduler',['uses'=>'SchedulerController@add','middleware' => 'can:view,App\Models\Scheduler']);
     $router->delete('/scheduler/{scheduler_id}',['uses'=>'SchedulerController@delete','middleware' => 'can:delete,scheduler_id']);
 
     $router->get('/users',['uses'=>'UsersController@browse','middleware' => 'can:viewAny,App\Models\User']);
     $router->get('/users/{user_id}',['uses'=>'UsersController@read','middleware' => 'can:view,user_id']);
     $router->put('/users/{user_id}',['uses'=>'UsersController@edit','middleware' => 'can:manage,user_id']);
-    $router->post('/users',['uses'=>'UsersController@add','middleware' => 'can:create,user_id']);
+    $router->post('/users',['uses'=>'UsersController@add','middleware' => 'can:manage,App\Models\User']);
     $router->delete('/users/{user_id}',['uses'=>'UsersController@delete','middleware' => 'can:delete,user_id']);
 
     $router->get('/activity_log',['uses'=>'ActivityLogController@browse','middleware' => 'can:viewAny,App\Models\ActivityLog']);

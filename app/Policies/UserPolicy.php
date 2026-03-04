@@ -14,7 +14,6 @@ class UserPolicy
 
     public function view(User $user)
     {
-
         return $user->admin;
     }
 

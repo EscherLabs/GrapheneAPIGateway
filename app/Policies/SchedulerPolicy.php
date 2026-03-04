@@ -13,7 +13,6 @@ class SchedulerPolicy
     }
     public function view(User $user)
     {
-
         return $user->admin || $user->developer;
     }
 
