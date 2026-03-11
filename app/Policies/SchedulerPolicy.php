@@ -2,6 +2,7 @@
 
 namespace App\Policies;
 
+use App\Models\Scheduler;
 use App\Models\User;
 use App\Models\API;
 
@@ -16,9 +17,9 @@ class SchedulerPolicy
         return $user->admin || $user->developer;
     }
 
-    public function manage(User $user, API $api)
+    public function manage(User $user, Scheduler $scheduler)
     {
-        return $user->admin || $user->developer || $user->id == $api->user_id;
+        return $user->admin || $user->developer;
     }
 
     public function delete(User $user)
